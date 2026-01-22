@@ -1,0 +1,54 @@
+/* Container for the home page */
+.home-container {
+  width: 100vw;
+  height: 100vh;
+  background: radial-gradient(circle at top right, #3b5c85, #061a36 70%);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  text-align: center;
+  overflow: hidden;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+/* Welcome text */
+.home-container h1 {
+  font-size: 48px;
+  margin-bottom: 40px;
+  text-shadow: 2px 2px 6px rgba(0,0,0,0.4);
+  animation: fadeInText 1s ease-in-out;
+}
+
+/* Buttons container */
+.home-buttons {
+  display: flex;
+  gap: 30px;
+}
+
+/* Button styles */
+.home-btn {
+  padding: 12px 28px;
+  border-radius: 30px;
+  background-color: #4f46e5;
+  color: white;
+  font-weight: bold;
+  font-size: 18px;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+
+/* Hover effect for buttons */
+.home-btn:hover {
+  background-color: #4338ca;
+  transform: scale(1.05);
+  box-shadow: 0 6px 16px rgba(0,0,0,0.3);
+}
+
+/* Fade-in animation for heading */
+@keyframes fadeInText {
+  0% { opacity: 0; transform: translateY(-20px); }
+  100% { opacity: 1; transform: translateY(0); }
+}

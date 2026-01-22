@@ -1,0 +1,133 @@
+/* ===== Login Container ===== */
+.login-container {
+  width: 100vw;
+  height: 100vh;
+  background: radial-gradient(circle at top right, #3b5c85, #061a36 70%);
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  position: relative;
+  overflow: hidden;
+}
+
+/* ===== Logo ===== */
+.top-logo {
+  position: absolute;
+  top: 20px;
+  left: 30px;
+  display: flex;
+  align-items: center;
+}
+
+.top-logo img {
+  width: 100px;
+}
+
+/* ===== Character on left ===== */
+.loginCharacter-left {
+  position: absolute;
+  left: 50px;
+  bottom: 0;
+}
+
+.loginCharacter-left img {
+  width: 400px;
+  height: 600px;
+  transition: transform 0.3s ease;
+  animation: float 3s ease-in-out infinite;
+}
+
+.loginCharacter-left img:hover {
+  transform: translateY(-10px) scale(1.05);
+  animation-play-state: paused; /* optional: pause float on hover */
+}
+
+/* ===== Floating Animation ===== */
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-20px); }
+}
+
+/* ===== Glass Card ===== */
+.login-card {
+  margin-right: 120px;
+  width: 360px;
+  padding: 40px;
+  border-radius: 28px;
+  background: rgba(255, 255, 255, 0.25);
+  backdrop-filter: blur(18px);
+  color: white;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+  transition: all 0.3s ease;
+}
+
+.login-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 24px rgba(0,0,0,0.25);
+}
+
+.login-card h2 {
+  font-size: 36px;
+  margin-bottom: 30px;
+}
+
+/* ===== Form Inputs ===== */
+.form-group {
+  background: white;
+  border-radius: 30px;
+  display: flex;
+  align-items: center;
+  padding: 10px 16px;
+  margin-bottom: 18px;
+  position: relative;
+}
+
+.form-group input {
+  border: none;
+  outline: none;
+  flex: 1;
+  font-size: 14px;
+}
+
+.eye-icon {
+  cursor: pointer;
+}
+
+/* ===== Error Text ===== */
+.error {
+  position: absolute;
+  bottom: -18px;
+  left: 16px;
+  font-size: 11px;
+  color: #ffdddd;
+}
+
+/* ===== Login Button ===== */
+.login-btn {
+  width: 100%;
+  padding: 12px;
+  border-radius: 30px;
+  border: none;
+  background: #0b2b52;
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.login-btn:hover {
+  background-color: #0b1f3a;
+  transform: scale(1.05);
+  box-shadow: 0 6px 12px rgba(0,0,0,0.2);
+}
+
+/* ===== Signup Footer ===== */
+.signup-text {
+  margin-top: 14px;
+  font-size: 12px;
+}
+
+.signup-text a {
+  color: #dbe9ff;
+  text-decoration: underline;
+}
