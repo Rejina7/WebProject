@@ -2,9 +2,9 @@ import { Link } from "react-router-dom";
 import "../../css/home.css";
 import logo from "../../assets/logo.png";
 
-function Home() {
+function Landing() {
   return (
-    <div className="home-container">
+    <div className="landing-container">
       {/* Floating Logo on Top-Left */}
       <div className="floating-logo">
         <img src={logo} alt="Logo" className="logo-image" />
@@ -115,4 +115,4 @@ function Home() {
   );
 }
 
-export default Home;
+export default Landing;
