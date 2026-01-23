@@ -38,23 +38,21 @@ function Signup() {
 
   return (
     <div className="signup-container">
-      <div className="auth-left">
-        <div className="top-logo">
-          <img src={logo} alt="Quizzy Logo" />
-        </div>
+      {/* Top-right logo */}
+      <div className="top-logo">
+        <img src={logo} alt="Quizzy Bee" />
+      </div>
 
+      {/* Left card */}
+      <div className="auth-left">
         <div className="glass-card">
-          <h2 className="auth-title">Sign Up</h2>
+          <h2 className="auth-title">Sign up</h2>
 
           <form onSubmit={handleSubmit(onSignupClick)}>
             {/* Username */}
             <div className="form-group">
-              <input
-                {...register("username")}
-                placeholder="Username"
-                onFocus={(e) => (e.target.placeholder = "")}
-                onBlur={(e) => (e.target.placeholder = "Username")}
-              />
+              <label htmlFor="username">Username</label>
+              <input id="username" {...register("username")} />
               {errors.username && (
                 <p className="error-text">{errors.username.message}</p>
               )}
@@ -62,44 +60,37 @@ function Signup() {
 
             {/* Email */}
             <div className="form-group">
-              <input
-                {...register("email")}
-                type="email"
-                placeholder="Email Address"
-                onFocus={(e) => (e.target.placeholder = "")}
-                onBlur={(e) => (e.target.placeholder = "Email Address")}
-              />
+              <label htmlFor="email">Email Address</label>
+              <input id="email" type="email" {...register("email")} />
               {errors.email && (
                 <p className="error-text">{errors.email.message}</p>
               )}
             </div>
 
-           {/* Password */}
+            {/* Password */}
             <div className="form-group password-group">
-              <input
-                {...register("password")}
-                type={showPassword ? "text" : "password"}
-                placeholder="Password"
-                onFocus={(e) => (e.target.placeholder = "")}
-                onBlur={(e) => (e.target.placeholder = "Password")}
-              />
+              <label htmlFor="password">Password</label>
+              <div className="password-input">
+                <input
+                  id="password"
+                  type={showPassword ? "text" : "password"}
+                  {...register("password")}
+                />
+                <button
+                  type="button"
+                  className="eye-toggle"
+                  onClick={() => setShowPassword((prev) => !prev)}
+                  aria-label={showPassword ? "Hide password" : "Show password"}
+                >
+                  {showPassword ? "👁️" : "🙈"}
+                </button>
+              </div>
+              {errors.password && (
+                <p className="error-text">{errors.password.message}</p>
+              )}
+            </div>
 
-              <span
-                className="eye-toggle"
-                onClick={() => setShowPassword(prev => !prev)}
-               style={{ cursor: "pointer" }}
-       >
-        {showPassword ? "👁️" : "🙈"}
-  </span>
-
-  {errors.password && (
-    <p className="error-text">{errors.password.message}</p>
-  )}
-</div>
-
-            <button type="submit" className="auth-btn">
-              Sign Up
-            </button>
+            <button type="submit" className="auth-btn">Sign up</button>
           </form>
 
           <p className="footer-text">
@@ -108,12 +99,9 @@ function Signup() {
         </div>
       </div>
 
+      {/* Right illustration */}
       <div className="auth-right">
-        <img
-          src={signupCharacter}
-          alt="Quizzy Character"
-          className="floating-img"
-        />
+        <img src={signupCharacter} alt="Character" className="floating-img" />
       </div>
     </div>
   );
