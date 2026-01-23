@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import "../../css/home.css";
+import "../../css/landing.css";
 import logo from "../../assets/logo.png";
 
 function Landing() {

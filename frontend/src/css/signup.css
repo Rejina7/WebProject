@@ -1,141 +1,188 @@
+/* =========================
+   Signup Page Container
+   ========================= */
 .signup-container {
   width: 100vw;
   height: 100vh;
   background: radial-gradient(circle at top right, #3b5c85, #061a36 70%);
   display: flex;
   align-items: center;
-  justify-content: flex-start; /* form on left */
-  position: relative;
-  overflow: hidden;
+  justify-content: flex-start; /* 👈 anchor to LEFT */
+  padding-left: 6rem;          /* controls how far from left edge */
+  gap: 1rem;                   /* space between form & image */
 }
 
-.auth-page {
-  display: flex;
-  min-height: 100vh;
-  background: linear-gradient(135deg, #f0f4f8, #d9e2ec);
+
+
+.signup-container:hover {
+  filter: brightness(1.05);
 }
 
-.auth-left, .auth-right {
-  flex: 1;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 2rem;
-}
+/* =========================
+   Left & Right Sections
+   ========================= */
 
 .auth-left {
-  flex-direction: column;
+  flex: 0 0 420px; /* form width */
 }
 
+.auth-right {
+  flex: 0 0 400px; /* image area */
+
+
+}
+.auth-right {
+  margin-left: -95px; /* pulls image TOWARD form */
+}
+
+
+/* =========================
+   Glass Card
+   ========================= */
 .glass-card {
-  background: rgba(255,255,255,0.2);
+  background: rgba(255, 255, 255, 0.2);
   backdrop-filter: blur(10px);
   padding: 2rem;
   border-radius: 20px;
-  box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
   width: 100%;
   max-width: 400px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
+.glass-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.25);
+}
+
+/* =========================
+   Top Logo
+   ========================= */
 .top-logo img {
   width: 120px;
   margin-bottom: 2rem;
 }
 
+/* =========================
+   Signup Title
+   ========================= */
+.signup-title {
+  font-family: "Poppins", sans-serif;
+  font-size: 34px;
+  font-weight: 700;
+  color: #ffffff;
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+/* =========================
+   Form Elements
+   ========================= */
 .form-group {
   margin-bottom: 1rem;
+  position: relative;
 }
 
-.input-error {
-  border: 1px solid red;
+.form-group input {
+  width: 250px;
+  padding: 0.5rem 1.5rem;
+  border-radius: 50px;
+  border: none;
+  outline: none;
+  font-size: 1rem;
 }
 
+/* =========================
+   Password Eye Toggle
+   ========================= */
+.password-group {
+  position: relative;
+}
+
+.eye-toggle {
+  position: absolute;
+  right: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  font-size: 18px;
+}
+
+/* =========================
+   Error Styles
+   ========================= */
 .error-text {
-  color: red;
+  color: #ffcccc;
   font-size: 0.8rem;
-  margin-top: 0.2rem;
+  margin-top: 0.3rem;
 }
 
+/* =========================
+   Signup Button
+   ========================= */
 .auth-btn {
   width: 100%;
   padding: 0.8rem;
   border: none;
-  background-color: #4f46e5;
+  background-color: #3b5c85;
   color: white;
   font-weight: bold;
-  border-radius: 10px;
+  border-radius: 50px;
   cursor: pointer;
   margin-top: 1rem;
+  transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
 .auth-btn:hover {
-  background-color: #4338ca;
+  background-color: #061a36;
+  transform: translateY(-2px);
 }
 
+/* =========================
+   Footer Text
+   ========================= */
 .footer-text {
   margin-top: 1rem;
   text-align: center;
+  color: #ffffff;
 }
 
+.footer-text a {
+  color: #061a36;
+  text-decoration: none;
+}
+
+/* =========================
+   Right Side Image
+   ========================= */
 .auth-right .floating-img {
-  width: 80%;
+ 
   max-width: 400px;
   animation: float 3s ease-in-out infinite;
+  width: 70%;
 }
 
+/* =========================
+   Floating Animation
+   ========================= */
 @keyframes float {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-20px); }
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-20px);
+  }
 }
 
-/* Overrides to match the provided Sign up UI */
-.signup-container {
-  background: linear-gradient(135deg, #0e2746 0%, #0a1b34 60%);
-  justify-content: space-between;
+/* =========================
+   Remove Browser Password Icons
+   ========================= */
+input::-ms-reveal,
+input::-ms-clear {
+  display: none;
 }
 
-.signup-container::after {
-  content: "";
-  position: absolute;
-  top: -20%;
-  right: -10%;
-  width: 80%;
-  height: 160%;
-  background: linear-gradient(35deg, rgba(255,255,255,0.12), rgba(255,255,255,0) 55%);
-  pointer-events: none;
+input[type="password"]::-webkit-credentials-auto-fill-button {
+  display: none !important;
+  visibility: hidden !important;
 }
-
-.top-logo { position: absolute; top: 24px; right: 36px; }
-.top-logo img { width: 64px; margin: 0; }
-
-.glass-card {
-  background: rgba(255,255,255,0.14);
-  backdrop-filter: blur(14px);
-  border-radius: 28px;
-  box-shadow: 0 18px 48px rgba(0,0,0,0.35);
-  max-width: 460px;
-}
-
-.auth-title { color: #fff; font-size: 2.2rem; font-weight: 700; margin-bottom: 1.5rem; }
-
-.form-group label { display:block; color:#e6edf7; margin-bottom:8px; font-size:0.95rem; }
-.glass-card input {
-  width: 100%; height: 44px; border: none; border-radius: 9999px; padding: 0 16px;
-  background: rgba(255,255,255,0.95); color: #0a1b34;
-  box-shadow: inset 0 0 10px rgba(255,255,255,0.35), 0 2px 8px rgba(0,0,0,0.15);
-}
-
-.password-input { position: relative; }
-.password-input .eye-toggle {
-  position: absolute; right: 10px; top: 50%; transform: translateY(-50%);
-  background: transparent; border: none; cursor: pointer; font-size: 1rem;
-}
-
-.auth-btn {
-  width: 100%; height: 46px; border: none; background-color: #102a4a; color: #fff;
-  font-weight: 600; border-radius: 9999px; cursor: pointer; margin-top: 1rem;
-  box-shadow: 0 6px 18px rgba(0,0,0,0.25);
-}
-.auth-btn:hover { background-color: #0c2240; }
-
-.auth-right .floating-img { width: 60%; max-width: 460px; }
