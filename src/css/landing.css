@@ -10,8 +10,8 @@ body {
   color: #333;
 }
 
-/* Home Container */
-.home-container {
+/* landing Container */
+.landing-container {
   width: 100%;
   background: radial-gradient(circle at top right, #3b5c85, #061a36 70%);
   color: white;
