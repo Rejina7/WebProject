@@ -23,6 +23,10 @@ function Login() {
 
   return (
     <div className="login-container">
+      {/* Top Logo */}
+      <div className="top-logo">
+        <img src={logo} alt="Logo" />
+      </div>
       {/* Left: Character */}
       <div className="loginCharacter-left">
         <img src={loginCharacter} alt="Login Character" className="floating-img" />

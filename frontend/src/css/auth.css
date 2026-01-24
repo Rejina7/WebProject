@@ -5,10 +5,14 @@
   background: radial-gradient(circle at top right, #3b5c85, #061a36 70%);
   display: flex;
   align-items: center;
-  justify-content: flex-end;
+  justify-content: flex-end; /* 👈 anchor RIGHT */
+  padding-right: 5rem;       /* distance from right edge */
+  gap: 1rem;                 /* space between character & card */
   position: relative;
-  overflow: hidden;
+  
+  
 }
+
 
 /* ===== Logo ===== */
 .top-logo {
@@ -25,22 +29,36 @@
 
 /* ===== Character on left ===== */
 .loginCharacter-left {
+  flex: 0 0 300px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: -100px; /* 👈 THIS is the real move */
   position: absolute;
-  left: 50px;
-  bottom: 0;
+  left: 55.5%;
+  z-index: 10;
+  
 }
 
 .loginCharacter-left img {
-  width: 400px;
-  height: 600px;
+  width: 300px;
+  height: auto;
   transition: transform 0.3s ease;
   animation: float 3s ease-in-out infinite;
+  margin-right: -120px; /* 👈 THIS is the real move */
+  transform: translateX(60px);
+  
+  
 }
 
 .loginCharacter-left img:hover {
   transform: translateY(-10px) scale(1.05);
   animation-play-state: paused; /* optional: pause float on hover */
 }
+
+
+
+
 
 /* ===== Floating Animation ===== */
 @keyframes float {
@@ -50,16 +68,18 @@
 
 /* ===== Glass Card ===== */
 .login-card {
-  margin-right: 120px;
-  width: 360px;
+  flex: 0 0 360px;
   padding: 40px;
   border-radius: 28px;
   background: rgba(255, 255, 255, 0.25);
   backdrop-filter: blur(18px);
   color: white;
   box-shadow: 0 8px 32px rgba(0,0,0,0.1);
-  transition: all 0.3s ease;
+  z-index: 1;
+  position: relative;
+
 }
+
 
 .login-card:hover {
   transform: translateY(-5px);
