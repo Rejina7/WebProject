@@ -1,24 +1,41 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import "../../css/auth.css";
 import { LoginSchema } from "./Schema/Login.schema";
+import { apiCall } from "../../Utils/api";
 import logo from "../../assets/logo.png";
 import loginCharacter from "../../assets/loginCharacter.png";
 
 function Login() {
   const [showPassword, setShowPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
+  const navigate = useNavigate();
 
   const { register, handleSubmit, formState: { errors } } = useForm({
     resolver: zodResolver(LoginSchema),
   });
 
-  const onLoginClick = (loginData) => {
+  const onLoginClick = async (loginData) => {
     console.log("Login form data:", loginData);
     console.log("Remember Me:", rememberMe);
-    alert("Login form submitted successfully!");
+    
+    try {
+      const response = await apiCall("POST", "/api/auth/login", loginData);
+      
+      // Save token to localStorage
+      if (response.token) {
+        localStorage.setItem("token", response.token);
+      }
+      
+      alert("Login successful!");
+      console.log("Server response:", response);
+      
+      navigate("/home");
+    } catch (error) {
+      alert(error.message);
+    }
   };
 
   return (

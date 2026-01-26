@@ -8,7 +8,6 @@ import { SignupSchema } from "./Schema/Signup.schema";
 
 import logo from "../../assets/logo.png";
 import signupCharacter from "../../assets/signupCharacter.png";
-import { apiCall } from "../../Utils/api";
 
 function Signup() {
   const [showPassword, setShowPassword] = useState(false);
@@ -23,15 +22,23 @@ function Signup() {
   });
 
   const onSignupClick = async (signupData) => {
-    console.log("sign up button clicked ");
+    const { email, password, username } = signupData;
+
     try {
-      const response = await apiCall("POST", "/api/auth/signup", signupData);
+      // Call your backend API for signup
+      const response = await fetch("http://localhost:5000/api/auth/signup", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password, username }),
+      });
+
+      const data = await response.json();
+
 
       alert("Signup successful!");
-      console.log("Server response:", response);
-
-      navigate("/login");
+      navigate("/home");
     } catch (error) {
+      console.error("Signup error:", error);
       alert(error.message);
     }
   };
@@ -74,7 +81,7 @@ function Signup() {
               )}
             </div>
 
-           {/* Password */}
+            {/* Password */}
             <div className="form-group password-group">
               <input
                 {...register("password")}
@@ -86,16 +93,16 @@ function Signup() {
 
               <span
                 className="eye-toggle"
-                onClick={() => setShowPassword(prev => !prev)}
-               style={{ cursor: "pointer" }}
-       >
-        {showPassword ? "👁️" : "🙈"}
-  </span>
+                onClick={() => setShowPassword((prev) => !prev)}
+                style={{ cursor: "pointer" }}
+              >
+                {showPassword ? "👁️" : "🙈"}
+              </span>
 
-  {errors.password && (
-    <p className="error-text">{errors.password.message}</p>
-  )}
-</div>
+              {errors.password && (
+                <p className="error-text">{errors.password.message}</p>
+              )}
+            </div>
 
             <button type="submit" className="auth-btn">
               Sign Up

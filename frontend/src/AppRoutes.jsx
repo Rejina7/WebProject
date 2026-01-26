@@ -8,6 +8,7 @@ import Login from "./Pages/Public/Login.jsx";
 import Signup from "./Pages/Public/Signup.jsx";
 
 // Private pages
+import Homepage from "./Pages/Public/Homepage.jsx";
 import Product from "./Pages/Private/Product.jsx";
 import ProductList from "./Pages/Private/ProductList.jsx";
 import Feedback from "./Pages/Private/Feedback.jsx";
@@ -23,6 +24,7 @@ const AppRoutes = () => (
 
 		{/* Private routes */}
 		<Route element={<PrivateRoute />}>
+			<Route path="/home" element={<Homepage />} />
 			<Route path="/product" element={<Product />} />
 			<Route path="/products" element={<ProductList />} />
 			<Route path="/feedback" element={<Feedback />} />
