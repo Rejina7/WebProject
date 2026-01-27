@@ -9,19 +9,23 @@ export const apiCall = async (method, endpoint, options = {}) => {
     const response = await axios({
       method,
       url: `${BASE_URL}${endpoint}`,
-      data,
+      data,        // ✅ IMPORTANT (for POST/PUT)
       params,
       headers: {
         "Content-Type": "application/json",
         ...headers,
       },
     });
-    return response?.data;
+
+    return response.data;
+
   } catch (error) {
-    if (error.response && error.response.message) {
-      throw Error(error.response.message || "Something went wrong");
+    if (error.response && error.response.data?.message) {
+      throw new Error(error.response.data.message);
     } else {
-      throw Error("Server unreachable");
+      throw new Error("Server unreachable");
     }
   }
 };
+
+export default apiCall;

@@ -6,12 +6,10 @@ import PrivateRoute from "./Routes/PrivateRoute.jsx";
 import Landing from "./Pages/Public/Landing.jsx";
 import Login from "./Pages/Public/Login.jsx";
 import Signup from "./Pages/Public/Signup.jsx";
-
-// Private pages
 import Homepage from "./Pages/Public/Homepage.jsx";
-import Product from "./Pages/Private/Product.jsx";
-import ProductList from "./Pages/Private/ProductList.jsx";
-import Feedback from "./Pages/Private/Feedback.jsx";
+import Dashboard from "./Pages/Public/Dashboard.jsx";
+
+
 
 const AppRoutes = () => (
 	<Routes>
@@ -20,18 +18,9 @@ const AppRoutes = () => (
 			<Route path="/" element={<Landing />} />
 			<Route path="/login" element={<Login />} />
 			<Route path="/signup" element={<Signup />} />
-		</Route>
-
-		{/* Private routes */}
-		<Route element={<PrivateRoute />}>
+			<Route path="/dashboard" element={<Dashboard />} />
 			<Route path="/home" element={<Homepage />} />
-			<Route path="/product" element={<Product />} />
-			<Route path="/products" element={<ProductList />} />
-			<Route path="/feedback" element={<Feedback />} />
 		</Route>
-
-		{/* Fallback */}
-		<Route path="*" element={<Landing />} />
 	</Routes>
 );
 

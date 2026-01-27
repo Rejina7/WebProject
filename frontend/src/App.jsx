@@ -5,7 +5,8 @@ import Landing from "./Pages/Public/Landing.jsx";
 import Login from "./Pages/Public/Login.jsx";
 import Signup from "./Pages/Public/Signup.jsx";
 import Homepage from "./Pages/Public/Homepage.jsx";
-import PrivateRoute from "./Routes/PrivateRoute.jsx";
+import Dashboard from "./Pages/Public/Dashboard.jsx";
+
 
 function App() {
   const [showSplashScreen, setShowSplashScreen] = useState(true);
@@ -26,11 +27,10 @@ function App() {
       <Route path="/" element={<Landing />} />
       <Route path="/login" element={<Login />} />
       <Route path="/signup" element={<Signup />} />
+      <Route path="/dashboard" element={<Dashboard />} />
       
-      {/* Private routes */}
-      <Route element={<PrivateRoute />}>
-        <Route path="/home" element={<Homepage />} />
-      </Route>
+      <Route path="/home" element={<Homepage />} />
+     
     </Routes>
   );
 }
