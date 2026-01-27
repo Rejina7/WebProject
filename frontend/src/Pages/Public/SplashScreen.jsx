@@ -2,9 +2,9 @@ import { useEffect } from "react";
 import logo from "../../assets/logo.png";
 import "../../css/splashscreen.css";
 
-function SplashScreen({ onFinish }) {
+function SplashScreen({ onFinish = () => {} }) {
   useEffect(() => {
-    const timer = setTimeout(() => onFinish(), 2500); // 2.5 sec
+    const timer = setTimeout(() => onFinish(), 2500);
     return () => clearTimeout(timer);
   }, [onFinish]);
 

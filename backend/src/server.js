@@ -1,26 +1,28 @@
 import express from "express";
 import cors from "cors";
 import authRoutes from "./routes/authRoutes.js";
+import { sequelize } from "./db.js";
 
 const app = express();
 
-// Middleware
-app.use(cors()); // allow frontend to call backend
+app.use(cors({ origin: "http://localhost:5173" }));
 app.use(express.json());
 
-// ✅ ADD THIS HERE
 app.get("/", (req, res) => {
   res.send("Backend is running 🚀");
 });
 
-// Routes
 app.use("/api/auth", authRoutes);
 
-
-
-// Start server
 const PORT = 5000;
-app.listen(PORT, () => {
-  console.log(`Backend running on http://localhost:${PORT}`);
-});
 
+sequelize.authenticate()
+  .then(() => {
+    console.log("Database connected ✅");
+    app.listen(PORT, () => {
+      console.log(`Server running on port ${PORT}`);
+    });
+  })
+  .catch(err => {
+    console.error("Database connection failed ❌", err);
+  });

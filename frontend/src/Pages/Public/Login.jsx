@@ -22,15 +22,18 @@ function Login() {
     console.log("Remember Me:", rememberMe);
     
     try {
-      const response = await apiCall("POST", "/api/auth/login", loginData);
+      const response = await apiCall("POST", "/api/auth/login", {
+        username:loginData.username,
+        password: loginData.password,
+      });
       
       // Save token to localStorage
       if (response.token) {
         localStorage.setItem("token", response.token);
+        localStorage.setItem("username", response.username);
       }
       
       alert("Login successful!");
-      console.log("Server response:", response);
       
       navigate("/home");
     } catch (error) {
@@ -56,12 +59,12 @@ function Login() {
         <form onSubmit={handleSubmit(onLoginClick)}>
           <div className="form-group">
             <input
-              {...register("email")}
-              type="email"
+              {...register("username")}
+              type="text"
               placeholder="Username"
-              className={errors.email ? "input-error" : ""}
+              className={errors.username ? "input-error" : ""}
             />
-            {errors.email && <span className="error">{errors.email.message}</span>}
+            {errors.username && <span className="error">{errors.username.message}</span>}
           </div>
 
           <div className="form-group password-group">

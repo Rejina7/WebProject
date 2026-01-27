@@ -1,31 +1,74 @@
-// backend/controllers/authController.js
-import { auth } from "../config/firebase.js";
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
+import { sequelize } from "../db.js";
+import bcrypt from "bcrypt";
 
-// Signup controller
 export const signup = async (req, res) => {
-  const { email, password, username } = req.body;
+  const { username, email, password } = req.body;
 
-  // basic validation
-  if (!email || !password) {
-    return res.status(400).json({ message: "Email and password required" });
+  if (!username || !email || !password) {
+    return res.status(400).json({ message: "All fields are required" });
   }
 
   try {
-    const userRecord = await auth.createUser({
-      email,
-      password,
-      displayName: username,
-    });
+    const hashedPassword = await bcrypt.hash(password, 10);
 
-    return res.status(201).json({
+    const [result] = await sequelize.query(
+      `INSERT INTO users (username, email, password)
+       VALUES (:username, :email, :password)
+       RETURNING id, username, email`,
+      {
+        replacements: {
+          username,
+          email,
+          password: hashedPassword,
+        },
+      }
+    );
+
+    res.status(201).json({
       message: "Signup successful",
-      uid: userRecord.uid,
+      user: result[0],
     });
-  } catch (error) {
-    return res.status(400).json({
-      message: error.message,
-    });
+  } catch (err) {
+    console.error(err);
+
+    if (err.original?.code === "23505") {
+      return res.status(409).json({ message: "Email already exists" });
+    }
+
+    res.status(500).json({ message: "Database error" });
   }
 };
 
+export const login = async (req, res) => {
+  const { email, password } = req.body;
+
+  try {
+    const [result] = await sequelize.query(
+      "SELECT * FROM users WHERE email = :email",
+      { replacements: { email } }
+    );
+
+    if (result.length === 0) {
+      return res.status(401).json({ message: "User not found" });
+    }
+
+    const user = result[0];
+    const match = await bcrypt.compare(password, user.password);
+
+    if (!match) {
+      return res.status(401).json({ message: "Invalid password" });
+    }
+
+    res.json({
+      message: "Login successful",
+      user: {
+        id: user.id,
+        username: user.username,
+        email: user.email,
+      },
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Server error" });
+  }
+};

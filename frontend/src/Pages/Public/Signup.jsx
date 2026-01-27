@@ -33,13 +33,12 @@ function Signup() {
       });
 
       const data = await response.json();
-
-
-      alert("Signup successful!");
+      console.log("Backend response:", data);  // shows in browser console
+      alert("Backend says: " + data.message);  // popup
       navigate("/home");
     } catch (error) {
       console.error("Signup error:", error);
-      alert(error.message);
+      alert("Signup failed. Please try again.");
     }
   };
 
