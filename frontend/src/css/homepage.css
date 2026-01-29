@@ -1,13 +1,29 @@
 /* ============================= */
-/* General Container */
+/* Global */
+html {
+  overflow-y: scroll;
+  background: radial-gradient(circle at top right, #0e2441, #0f223c 70%);
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background: radial-gradient(circle at top right, #0e2441, #0f223c 70%);
+}
+
+/* ============================= */
+/* Main Container */
 .homepage-container {
   font-family: 'Poppins', sans-serif;
   color: #333;
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  width: 164%;
+  width: 160%;
   min-height: 100vh;
+  background: radial-gradient(circle at top right, #0e2441, #0f223c 70%);
+  overflow-x: hidden;
+  
 }
 
 /* ============================= */
@@ -17,7 +33,8 @@
   align-items: center;
   justify-content: space-between;
   padding: 1rem 2rem;
-  
+  width: 100%;
+  height: 80px;
   box-shadow: 0 2px 5px rgba(0,0,0,0.1);
 }
 
@@ -45,7 +62,6 @@
 .navbar-buttons {
   display: flex;
   gap: 0.5rem;
-  align-items: center;
 }
 
 .nav-btn {
@@ -78,23 +94,42 @@
 }
 
 /* ============================= */
-/* Hero Section */
+/* Hero Section (FIXED HEIGHT) */
 .homepage-hero {
+  flex: 1;
   display: flex;
   gap: 2rem;
   padding: 3rem 2rem;
-  background-color: #f9f9f9;
   align-items: flex-start;
+  min-height: calc(100vh - 80px);
+  
 }
 
-/* Left side: Categories as grid */
+
+/* ============================= */
+/* Left side: Categories */
 .hero-left {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr); /* 2 per row */
-  gap: 1rem;
-  max-width: 500px; /* optional, keeps layout neat */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  max-width: 500px;
+  min-height: 400px;
 }
 
+/* Transparent Categories Container */
+.categories-container {
+  width: 100%;
+  padding: 40px;
+  border-radius: 28px;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(18px);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+}
+
+/* ============================= */
 /* Right side: Hero image */
 .hero-right {
   flex: 1;
@@ -112,12 +147,15 @@
 /* ============================= */
 /* Category Cards */
 .category-card {
-  background-color: #fff;
-  border-radius: 12px;
+  border-radius: 18px;
   padding: 1.5rem;
   text-align: center;
-  box-shadow: 0 5px 15px rgba(0,0,0,0.08);
   transition: transform 0.3s, box-shadow 0.3s;
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(12px);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: white;
 }
 
 .category-card:hover {
@@ -150,20 +188,47 @@
   background-color: #0077ff;
 }
 
-/* No results text */
+/* ============================= */
+/* No Results */
 .no-results {
   font-size: 1rem;
-  color: #888;
+  color: #bfc9d6;
   text-align: center;
+  align-self: center;
+  justify-self: center;
+}
+
+/* ============================= */
+/* Logout Button */
+.logout-button-fixed {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  background: linear-gradient(135deg, #cc101f, #dc122a);
+  color: white;
+  padding: 12px 30px;
+  border: none;
+  border-radius: 25px;
+  font-weight: 600;
+  font-size: 16px;
+  box-shadow: 0 8px 25px rgba(252, 252, 252, 0.4);
+  transition: all 0.3s ease;
+  z-index: 1000;
+  cursor: pointer;
+}
+
+.logout-button-fixed:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 35px rgba(255, 71, 87, 0.6);
+  background: linear-gradient(135deg, #c23a4a, #ff4757);
 }
 
 /* ============================= */
 /* Responsive */
 @media (max-width: 900px) {
-  /* Navbar stacks vertically */
   .homepage-navbar {
     flex-direction: column;
-    align-items: center;
+    height: auto;
     gap: 0.5rem;
   }
 
@@ -172,15 +237,13 @@
     gap: 0.5rem;
   }
 
-  /* Hero stacks vertically */
   .homepage-hero {
     flex-direction: column;
     align-items: center;
   }
 
   .hero-left {
-    grid-template-columns: 1fr; /* single column on small screens */
-    gap: 1rem;
+    grid-template-columns: 1fr;
     justify-items: center;
   }
 

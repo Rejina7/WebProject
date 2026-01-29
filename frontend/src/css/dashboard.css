@@ -167,6 +167,30 @@ body {
   border-top: 1px solid rgba(255,255,255,0.2);
 }
 
+/* Logout Button - Fixed Bottom Right */
+.logout-button-fixed {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  background: linear-gradient(135deg, #ff4757, #c23a4a);
+  color: white;
+  padding: 12px 30px;
+  border-radius: 25px;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 16px;
+  box-shadow: 0 8px 25px rgba(255, 71, 87, 0.4);
+  transition: all 0.3s ease;
+  z-index: 1000;
+  cursor: pointer;
+}
+
+.logout-button-fixed:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 35px rgba(255, 71, 87, 0.6);
+  background: linear-gradient(135deg, #c23a4a, #ff4757);
+}
+
 /* Responsive */
 @media (max-width: 768px) {
   .dashboard-stats {

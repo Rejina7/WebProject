@@ -73,6 +73,11 @@ export default function Homepage() {
       <footer className="dashboard-footer">
         <p>&copy; 2026 Quizzy Bee. Keep learning! 🐝</p>
       </footer>
+
+      {/* Logout Button - Bottom Right */}
+      <Link to="/logout" className="logout-button-fixed">
+        Logout
+      </Link>
     </div>
   );
 }

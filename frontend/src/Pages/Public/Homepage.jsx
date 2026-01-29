@@ -24,7 +24,7 @@ export default function Homepage() {
       <nav className="homepage-navbar">
         <div className="homepage-logo">
           <img src={logo} alt="Quizzy Bee Logo" />
-          Quizzy Bee
+          
         </div>
 
         {/* Right side: Buttons + Search */}
@@ -32,7 +32,6 @@ export default function Homepage() {
           <div className="navbar-buttons">
             <button className="nav-btn">Profile</button>
             <button className="nav-btn">Dashboard</button>
-            <button className="nav-btn">Logout</button>
           </div>
           <div className="navbar-search">
             <input
@@ -49,17 +48,19 @@ export default function Homepage() {
       <section className="homepage-hero">
         {/* Left: Categories */}
         <div className="hero-left">
-          {filteredCategories.length > 0 ? (
-            filteredCategories.map((c) => (
-              <div key={c.id} className="category-card">
-                <div className="category-icon">{c.icon}</div>
-                <h3>{c.title}</h3>
-                <button className="start-button">Start Quiz</button>
-              </div>
-            ))
-          ) : (
-            <p className="no-results">No categories found.</p>
-          )}
+          <div className="categories-container">
+            {filteredCategories.length > 0 ? (
+              filteredCategories.map((c) => (
+                <div key={c.id} className="category-card">
+                  <div className="category-icon">{c.icon}</div>
+                  <h3>{c.title}</h3>
+                  <button className="start-button">Start Quiz</button>
+                </div>
+              ))
+            ) : (
+              <p className="no-results">No categories found.</p>
+            )}
+          </div>
         </div>
 
         {/* Right: Hero Image */}
@@ -69,6 +70,9 @@ export default function Homepage() {
           </div>
         </div>
       </section>
+
+      {/* Logout Button - Bottom Right */}
+      <button className="logout-button-fixed">Logout</button>
     </div>
   );
 }
