@@ -23,7 +23,7 @@
 import { z } from "zod";
 
 export const LoginSchema = z.object({
-  email: z.string().email("Valid email required"),
+  username: z.string().min(3, "Username must be at least 3 characters"),
   password: z.string().min(1, "Password required"),
 });
 

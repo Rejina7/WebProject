@@ -25,10 +25,12 @@ function Login() {
     console.log("Login form data:", loginData);
 
     try {
-      // 🔹 SEND EMAIL + PASSWORD (matches backend)
-      const response = await apiCall("POST", "/api/auth/login", {
-        email: loginData.email,
-        password: loginData.password,
+      // 🔹 SEND USERNAME + PASSWORD (matches backend)
+      const response = await apiCall("POST", "/auth/login", {
+        data: {
+          username: loginData.username,
+          password: loginData.password,
+        },
       });
 
       // 🔹 SAVE USER (backend does NOT return token)
@@ -36,8 +38,8 @@ function Login() {
 
       alert("Login successful!");
 
-      // 🔹 REDIRECT TO HOME
-      navigate("/home");
+      // 🔹 REDIRECT TO DASHBOARD
+      navigate("/dashboard");
     } catch (error) {
       alert(error.message || "Login failed");
     }
@@ -63,17 +65,18 @@ function Login() {
       <div className="login-card">
         <h2 className="auth-title">Log in</h2>
 
-        <form onSubmit={handleSubmit(onLoginClick)}>
-          {/* EMAIL */}
+        <form onSubmit={handleSubmit(onLoginClick)} autoComplete="off">
+          {/* USERNAME */}
           <div className="form-group">
             <input
-              {...register("email")}
-              type="email"
-              placeholder="Email"
-              className={errors.email ? "input-error" : ""}
+              {...register("username")}
+              type="text"
+              autoComplete="off"
+              placeholder="Username"
+              className={errors.username ? "input-error" : ""}
             />
-            {errors.email && (
-              <span className="error">{errors.email.message}</span>
+            {errors.username && (
+              <span className="error">{errors.username.message}</span>
             )}
           </div>
 
@@ -82,6 +85,7 @@ function Login() {
             <input
               {...register("password")}
               type={showPassword ? "text" : "password"}
+              autoComplete="new-password"
               placeholder="Password"
               className={errors.password ? "input-error" : ""}
             />

@@ -33,9 +33,15 @@ function Signup() {
       });
 
       const data = await response.json();
-      console.log("Backend response:", data);  // shows in browser console
-      alert("Backend says: " + data.message);  // popup
-      navigate("/home");
+      console.log("Backend response:", data);
+
+      if (!response.ok) {
+        alert(data.message || "Signup failed. Please try again.");
+        return;
+      }
+
+      alert(data.message || "Signup successful");
+      navigate("/login");
     } catch (error) {
       console.error("Signup error:", error);
       alert("Signup failed. Please try again.");
@@ -71,10 +77,20 @@ function Signup() {
               <input
                 {...register("email")}
                 type="email"
+                autoComplete="email"
+                name="email"
+                list="email-suggestions"
                 placeholder="Email Address"
                 onFocus={(e) => (e.target.placeholder = "")}
                 onBlur={(e) => (e.target.placeholder = "Email Address")}
               />
+              <datalist id="email-suggestions">
+                <option value="@gmail.com" />
+                <option value="@outlook.com" />
+                <option value="@hotmail.com" />
+                <option value="@yahoo.com" />
+                <option value="@icloud.com" />
+              </datalist>
               {errors.email && (
                 <p className="error-text">{errors.email.message}</p>
               )}
