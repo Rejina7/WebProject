@@ -10,13 +10,17 @@ export default function Profile() {
   const getStoredUser = () => {
     try {
       const storedUser = localStorage.getItem("user");
+      const storedProfile = localStorage.getItem("userProfile");
+      
       if (storedUser) {
         const userData = JSON.parse(storedUser);
+        const profileData = storedProfile ? JSON.parse(storedProfile) : {};
+        
         return {
           name: userData.username || "User",
           email: userData.email || "user@example.com",
           joinDate: new Date().toLocaleDateString("en-US", { year: "numeric", month: "long" }),
-          bio: "Quiz enthusiast and knowledge seeker",
+          bio: profileData.bio || "Quiz enthusiast and knowledge seeker",
           avatar: userData.username?.charAt(0).toUpperCase() || "👤",
           id: userData.id,
         };
@@ -43,6 +47,21 @@ export default function Profile() {
   const [userProfile, setUserProfile] = useState(getStoredUser());
   const [editData, setEditData] = useState(userProfile);
 
+  const handleEditChange = (field, value) => {
+    setEditData({ ...editData, [field]: value });
+  };
+
+  const handleSave = () => {
+    setUserProfile(editData);
+    // Save updated profile to localStorage
+    localStorage.setItem("userProfile", JSON.stringify({
+      bio: editData.bio,
+      name: editData.name,
+      email: editData.email,
+    }));
+    setIsEditing(false);
+  };
+
   const userStats = {
     quizzesCompleted: 42,
     averageScore: 85,
@@ -56,15 +75,6 @@ export default function Profile() {
     { id: 3, title: "Streak King", icon: "🔥", description: "Maintain 7-day streak" },
     { id: 4, title: "Brain Power", icon: "🧠", description: "Reach 5000 points" },
   ];
-
-  const handleEditChange = (field, value) => {
-    setEditData({ ...editData, [field]: value });
-  };
-
-  const handleSave = () => {
-    setUserProfile(editData);
-    setIsEditing(false);
-  };
 
   return (
     <div className="profile-container">
