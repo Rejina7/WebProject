@@ -1,10 +1,12 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import "../../css/homepage.css";
 import logo from "../../assets/logo.png";
 import hero from "../../assets/hero.png";
 
 export default function Homepage() {
   const [search, setSearch] = useState("");
+  const navigate = useNavigate();
 
   const categories = [
     { id: 1, title: "Science", icon: "🔬" },
@@ -52,9 +54,9 @@ export default function Homepage() {
         {/* Right side: Buttons + Search */}
         <div className="navbar-right">
           <div className="navbar-buttons">
-            <button className="nav-btn">Profile</button>
-            <button className="nav-btn">Dashboard</button>
-            <button className="logout-button">Logout</button>
+            <button className="nav-btn" onClick={() => navigate("/profile")}>Profile</button>
+            <button className="nav-btn" onClick={() => navigate("/dashboard")}>Dashboard</button>
+            <button className="logout-button" onClick={() => navigate("/")}>Logout</button>
           </div>
           <div className="navbar-search">
             <input
