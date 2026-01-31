@@ -7,6 +7,8 @@ import Signup from "./Pages/Public/Signup.jsx";
 import Homepage from "./Pages/Public/Homepage.jsx";
 import Dashboard from "./Pages/Public/Dashboard.jsx";
 import Profile from "./Pages/Public/Profile.jsx";
+import Quiz from "./Pages/Public/Quiz.jsx";
+import CreateQuiz from "./Pages/Public/CreateQuiz.jsx";
 
 
 function App() {
@@ -31,6 +33,8 @@ function App() {
       <Route path="/dashboard" element={<Dashboard />} />
       <Route path="/home" element={<Homepage />} />
       <Route path="/profile" element={<Profile />} />
+      <Route path="/quiz/:category" element={<Quiz />} />
+      <Route path="/create-quiz" element={<CreateQuiz />} />
      
     </Routes>
   );

@@ -1,16 +1,7 @@
-import { Routes, Route } from "react-router-dom";
-import Login from "../Pages/Public/Login";
-import Signup from "../Pages/Public/Signup";
-import Homepage from "../Pages/Public/Homepage";
+import { Outlet } from "react-router-dom";
 
-
-const PublicRoutes = () => (
-  <Routes>
-    <Route path="/" element={<Login />} />
-    <Route path="/login" element={<Login />} />
-    <Route path="/signup" element={<Signup />} />
-    <Route path="/homepage" element={<Homepage />} />
-  </Routes>
-);
+const PublicRoutes = () => {
+  return <Outlet />;
+};
 
 export default PublicRoutes;
