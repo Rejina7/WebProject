@@ -6,22 +6,22 @@ import {
   createQuiz,
   submitQuizResult,
   getUserQuizResults,
+  getUserDashboardStats,
   getLeaderboard,
 } from "../controllers/quizController.js";
 
 const router = express.Router();
+
+// Quiz results endpoints - MUST come before /:id routes
+router.post("/submit", submitQuizResult);
+router.get("/results/:userId", getUserQuizResults);
+router.get("/dashboard/:userId", getUserDashboardStats);
+router.get("/leaderboard", getLeaderboard);
 
 // Quiz endpoints
 router.get("/", getAllQuizzes);
 router.get("/category/:category", getQuizzesByCategory);
 router.get("/:id", getQuizById);
 router.post("/", createQuiz);
-
-// Quiz results endpoints
-router.post("/submit", submitQuizResult);
-router.get("/results/:userId", getUserQuizResults);
-
-// Leaderboard
-router.get("/leaderboard", getLeaderboard);
 
 export default router;

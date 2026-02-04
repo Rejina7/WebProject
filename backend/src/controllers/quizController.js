@@ -93,38 +93,89 @@ export const createQuiz = async (req, res) => {
 
 // Update quiz result/score
 export const submitQuizResult = async (req, res) => {
-  const { userId, quizId, score, totalQuestions, correctAnswers, timeTaken } = req.body;
+  // Handle both { data: {...} } and direct {...} formats
+  const bodyData = req.body.data || req.body;
+  const { userId, quizId, score, totalQuestions, correctAnswers, timeTaken, isPassed, category, title } = bodyData;
+
+  console.log("Quiz submission received:", req.body);
+  console.log("Extracted data:", bodyData);
+  console.log("userId:", userId, "quizId:", quizId, "score:", score, "category:", category);
 
   try {
-    // Get passing score
-    const [quizData] = await sequelize.query(
-      "SELECT \"passingScore\" FROM quizzes WHERE id = :quizId",
-      { replacements: { quizId } }
-    );
-
-    if (quizData.length === 0) {
-      return res.status(404).json({ message: "Quiz not found" });
+    if (!userId) {
+      console.error("Missing userId");
+      return res.status(400).json({ message: "userId is required" });
     }
 
-    const passingScore = quizData[0].passingScore;
-    const isPassed = score >= passingScore;
+    let quizRecordId = quizId;
+    let passingScore = 60;
+
+    if (quizRecordId) {
+      const [quizData] = await sequelize.query(
+        "SELECT \"passingScore\" FROM quizzes WHERE id = :quizId",
+        { replacements: { quizId: quizRecordId } }
+      );
+
+      if (quizData.length === 0) {
+        console.log("Quiz not found by ID, will create new one");
+        quizRecordId = null;
+      } else {
+        passingScore = quizData[0].passingScore;
+      }
+    }
+
+    // If quiz not found, create a quiz from category/title
+    if (!quizRecordId) {
+      if (!category || !totalQuestions) {
+        return res.status(404).json({ message: "Quiz not found and category/totalQuestions required" });
+      }
+
+      console.log("Creating new quiz for category:", category);
+
+      const [createdQuiz] = await sequelize.query(
+        `INSERT INTO quizzes (title, description, category, difficulty, "timeLimit", "totalQuestions", "passingScore", "isActive", "createdAt", "updatedAt")
+         VALUES (:title, :description, :category, :difficulty, :timeLimit, :totalQuestions, :passingScore, true, NOW(), NOW())
+         RETURNING id, "passingScore"`,
+        {
+          replacements: {
+            title: title || `${category} Quiz`,
+            description: null,
+            category,
+            difficulty: "medium",
+            timeLimit: 300,
+            totalQuestions,
+            passingScore: 60,
+          },
+        }
+      );
+
+      quizRecordId = createdQuiz[0].id;
+      passingScore = createdQuiz[0].passingScore || 60;
+      console.log("Created quiz with ID:", quizRecordId);
+    }
+
+    const passStatus = isPassed !== undefined ? isPassed : score >= passingScore;
+
+    console.log("Inserting quiz result - userId:", userId, "quizId:", quizRecordId, "score:", score);
 
     const [result] = await sequelize.query(
-      `INSERT INTO quiz_results (\"userId\", \"quizId\", score, \"totalQuestions\", \"correctAnswers\", \"timeTaken\", \"isPassed\")
-       VALUES (:userId, :quizId, :score, :totalQuestions, :correctAnswers, :timeTaken, :isPassed)
+      `INSERT INTO quiz_results ("userId", "quizId", score, "totalQuestions", "correctAnswers", "timeTaken", "isPassed", "createdAt")
+       VALUES (:userId, :quizId, :score, :totalQuestions, :correctAnswers, :timeTaken, :isPassed, NOW())
        RETURNING *`,
       {
         replacements: {
           userId,
-          quizId,
+          quizId: quizRecordId,
           score,
           totalQuestions,
           correctAnswers,
           timeTaken,
-          isPassed,
+          isPassed: passStatus,
         },
       }
     );
+
+    console.log("Quiz result inserted:", result[0]);
 
     res.status(201).json({
       message: "Quiz result submitted successfully",
@@ -157,6 +208,102 @@ export const getUserQuizResults = async (req, res) => {
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: "Server error" });
+  }
+};
+
+// Get user dashboard statistics
+export const getUserDashboardStats = async (req, res) => {
+  const { userId } = req.params;
+  
+  console.log("📊 Fetching dashboard stats for userId:", userId);
+
+  try {
+    // Get total quizzes available
+    const [totalQuizzes] = await sequelize.query(
+      "SELECT COUNT(*) as count FROM quizzes WHERE \"isActive\" = true"
+    );
+
+    // Get user's quiz attempts count
+    const [completedQuizzes] = await sequelize.query(
+      'SELECT COUNT(*) as count FROM quiz_results WHERE "userId" = :userId',
+      { replacements: { userId } }
+    );
+
+    // Get total active learners (all users)
+    const [activeLearners] = await sequelize.query(
+      "SELECT COUNT(*) as count FROM users"
+    );
+
+    // Get user's success rate
+    const [successRate] = await sequelize.query(
+      `SELECT 
+        COUNT(CASE WHEN "isPassed" = true THEN 1 END)::float / 
+        NULLIF(COUNT(*)::float, 0) * 100 as rate
+       FROM quiz_results 
+       WHERE "userId" = :userId`,
+      { replacements: { userId } }
+    );
+
+    // Get average score percentage
+    const [avgScore] = await sequelize.query(
+      `SELECT 
+        AVG(CAST(score AS FLOAT)) as average
+       FROM quiz_results 
+       WHERE "userId" = :userId`,
+      { replacements: { userId } }
+    );
+
+    // Get total points
+    const [totalPoints] = await sequelize.query(
+      `SELECT COALESCE(SUM(score), 0) as points
+       FROM quiz_results 
+       WHERE "userId" = :userId`,
+      { replacements: { userId } }
+    );
+
+    // Calculate current streak (simplified - days with quiz attempts)
+    const [streakData] = await sequelize.query(
+      `SELECT COUNT(DISTINCT DATE("createdAt")) as streak
+       FROM quiz_results 
+       WHERE "userId" = :userId 
+       AND "createdAt" >= NOW() - INTERVAL '30 days'`,
+      { replacements: { userId } }
+    );
+
+    // Get recent activities (last 5 quiz attempts)
+    const [recentActivities] = await sequelize.query(
+      `SELECT qr.*, q.title, q.category 
+       FROM quiz_results qr
+       JOIN quizzes q ON qr."quizId" = q.id
+       WHERE qr."userId" = :userId
+       ORDER BY qr."createdAt" DESC
+       LIMIT 5`,
+      { replacements: { userId } }
+    );
+
+    res.json({
+      message: "Dashboard stats retrieved successfully",
+      stats: {
+        totalQuizzes: parseInt(totalQuizzes[0].count) || 0,
+        completedQuizzes: parseInt(completedQuizzes[0].count) || 0,
+        activeLearners: parseInt(activeLearners[0].count) || 0,
+        successRate: parseFloat(successRate[0].rate) || 0,
+        averageScore: parseFloat(avgScore[0].average) || 0,
+        totalPoints: parseInt(totalPoints[0].points) || 0,
+        currentStreak: parseInt(streakData[0].streak) || 0,
+      },
+      recentActivities,
+    });
+    
+    console.log("✅ Stats sent:", {
+      completedQuizzes: parseInt(completedQuizzes[0].count) || 0,
+      averageScore: parseFloat(avgScore[0].average) || 0,
+      totalPoints: parseInt(totalPoints[0].points) || 0,
+      currentStreak: parseInt(streakData[0].streak) || 0,
+    });
+  } catch (err) {
+    console.error("Quiz submission error:", err);
+    res.status(500).json({ message: "Server error", error: err.message });
   }
 };
 

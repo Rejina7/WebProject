@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import apiCall from "../../Utils/api";
 import "../../css/profile.css";
 
 export default function Profile() {
@@ -46,6 +47,44 @@ export default function Profile() {
 
   const [userProfile, setUserProfile] = useState(getStoredUser());
   const [editData, setEditData] = useState(userProfile);
+  const [userStats, setUserStats] = useState({
+    quizzesCompleted: 0,
+    averageScore: 0,
+    totalPoints: 0,
+    streak: 0,
+  });
+  const [loading, setLoading] = useState(true);
+
+  // Fetch user stats from backend
+  useEffect(() => {
+    fetchUserStats();
+  }, []);
+
+  const fetchUserStats = async () => {
+    try {
+      const user = JSON.parse(localStorage.getItem("user"));
+      
+      if (!user || !user.id) {
+        setLoading(false);
+        return;
+      }
+
+      const response = await apiCall("GET", `/quizzes/dashboard/${user.id}`);
+      
+      if (response.stats) {
+        setUserStats({
+          quizzesCompleted: response.stats.completedQuizzes,
+          averageScore: Math.round(response.stats.averageScore),
+          totalPoints: response.stats.totalPoints,
+          streak: response.stats.currentStreak,
+        });
+      }
+      setLoading(false);
+    } catch (error) {
+      console.error("Error fetching user stats:", error);
+      setLoading(false);
+    }
+  };
 
   const handleEditChange = (field, value) => {
     setEditData({ ...editData, [field]: value });
@@ -60,13 +99,6 @@ export default function Profile() {
       email: editData.email,
     }));
     setIsEditing(false);
-  };
-
-  const userStats = {
-    quizzesCompleted: 42,
-    averageScore: 85,
-    totalPoints: 3420,
-    streak: 7,
   };
 
   const achievements = [
@@ -150,33 +182,6 @@ export default function Profile() {
                 </div>
               </div>
             )}
-          </div>
-        </section>
-
-        {/* Stats Section */}
-        <section className="stats-section">
-          <h2 className="section-title">Your Statistics</h2>
-          <div className="stats-grid">
-            <div className="stat-box">
-              <div className="stat-icon">📊</div>
-              <div className="stat-value">{userStats.quizzesCompleted}</div>
-              <div className="stat-label">Quizzes Completed</div>
-            </div>
-            <div className="stat-box">
-              <div className="stat-icon">🎯</div>
-              <div className="stat-value">{userStats.averageScore}%</div>
-              <div className="stat-label">Average Score</div>
-            </div>
-            <div className="stat-box">
-              <div className="stat-icon">⭐</div>
-              <div className="stat-value">{userStats.totalPoints}</div>
-              <div className="stat-label">Total Points</div>
-            </div>
-            <div className="stat-box">
-              <div className="stat-icon">🔥</div>
-              <div className="stat-value">{userStats.streak}</div>
-              <div className="stat-label">Day Streak</div>
-            </div>
           </div>
         </section>
 

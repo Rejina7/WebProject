@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
+import apiCall from "../../Utils/api";
 import "../../css/quiz.css";
 
 const quizData = {
@@ -484,31 +485,54 @@ export default function Quiz() {
     }
   };
 
-  const restartQuiz = () => {
-    // Save quiz results to localStorage
-    const quizResults = JSON.parse(localStorage.getItem('quizResults')) || {
-      totalAttempts: 0,
-      totalScore: 0,
-      totalQuestions: 0,
-      quizHistory: []
-    };
+  const restartQuiz = async () => {
+    try {
+      // Get user from localStorage
+      const user = JSON.parse(localStorage.getItem('user'));
+      
+      console.log("User from localStorage:", user);
+      
+      if (user && user.id) {
+        // Get quiz ID from database (we need to find the quiz by category)
+        const quizzesResponse = await apiCall("GET", "/quizzes");
+        const quiz = quizzesResponse.quizzes?.find(q => q.category === decodedCategory);
+        
+        console.log("Found quiz:", quiz);
+        console.log("Quiz category:", decodedCategory);
+        
+        const percentageScore = Math.round((score / questions.length) * 100);
+        const isPassed = percentageScore >= 60; // Assuming 60% is passing score
+        
+        const submitData = {
+          userId: user.id,
+          quizId: quiz ? quiz.id : null,
+          category: decodedCategory,
+          title: `${decodedCategory} Quiz`,
+          score: score * 10, // Convert to points (assuming each question is worth 10 points)
+          totalQuestions: questions.length,
+          correctAnswers: score,
+          timeTaken: null,
+          isPassed: isPassed
+        };
+        
+        console.log("Submitting quiz result:", submitData);
+        
+        // Submit quiz result to backend
+        const response = await apiCall("POST", "/quizzes/submit", { data: submitData });
+        
+        console.log("Quiz submission response:", response);
+      } else {
+        console.error("No user found in localStorage");
+      }
 
-    const percentageScore = Math.round((score / questions.length) * 100);
-    
-    quizResults.totalAttempts += 1;
-    quizResults.totalScore += score;
-    quizResults.totalQuestions += questions.length;
-    quizResults.quizHistory.push({
-      category: decodedCategory,
-      score: score,
-      total: questions.length,
-      percentage: percentageScore,
-      date: new Date().toISOString()
-    });
-
-    localStorage.setItem('quizResults', JSON.stringify(quizResults));
-    
-    navigate("/home");
+      // Data is stored in backend database only, no localStorage backup needed
+      
+    } catch (error) {
+      console.error("Error submitting quiz result:", error);
+    } finally {
+      // Navigate back - Homepage will fetch fresh data from backend
+      navigate("/home");
+    }
   };
 
   if (quizComplete) {

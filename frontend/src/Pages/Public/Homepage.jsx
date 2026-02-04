@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
+import apiCall from "../../Utils/api";
 import "../../css/homepage.css";
 import logo from "../../assets/logo.png";
 import hero from "../../assets/hero.png";
@@ -7,34 +8,78 @@ import hero from "../../assets/hero.png";
 export default function Homepage() {
   const [search, setSearch] = useState("");
   const navigate = useNavigate();
+  const location = useLocation();
 
-  // Get quiz results from localStorage
-  const getQuizStats = () => {
-    const quizResults = JSON.parse(localStorage.getItem('quizResults')) || {
-      totalAttempts: 0,
-      totalScore: 0,
-      totalQuestions: 0,
-      quizHistory: []
-    };
-
-    const averageScore = quizResults.totalAttempts > 0 
-      ? Math.round((quizResults.totalScore / quizResults.totalQuestions) * 100)
-      : 0;
-
-    return {
-      quizzesCompleted: quizResults.totalAttempts,
-      averageScore: averageScore,
-      totalPoints: quizResults.totalScore * 10,
-      streak: quizResults.totalAttempts > 0 ? Math.min(quizResults.totalAttempts, 7) : 0,
-    };
-  };
-
-  const [userStats, setUserStats] = useState(getQuizStats());
-
-  // Update stats when component mounts or when returning from quiz
+  const [userStats, setUserStats] = useState({
+    quizzesCompleted: 0,
+    averageScore: 0,
+    totalPoints: 0,
+    streak: 0,
+  });
+  
+  // Fetch on mount
   useEffect(() => {
-    setUserStats(getQuizStats());
+    fetchUserStats();
   }, []);
+
+  // Fetch when location changes (navigating back from quiz)
+  useEffect(() => {
+    fetchUserStats();
+  }, [location]);
+  
+  // Fetch user stats on mount and when component receives focus
+  useEffect(() => {
+    // Fetch immediately on mount
+    fetchUserStats();
+    
+    // Also fetch when user returns to the tab
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === 'visible') {
+        console.log("Homepage: Tab became visible - refreshing stats");
+        fetchUserStats();
+      }
+    };
+    
+    // Fetch when route changes (on every navigation back)
+    const handlePageShow = () => {
+      console.log("Homepage: Page shown - refreshing stats");
+      fetchUserStats();
+    };
+    
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    window.addEventListener('pageshow', handlePageShow);
+    
+    return () => {
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+      window.removeEventListener('pageshow', handlePageShow);
+    };
+  }, []);
+
+  const fetchUserStats = async () => {
+    try {
+      const user = JSON.parse(localStorage.getItem("user"));
+      
+      if (!user || !user.id) {
+        return;
+      }
+
+      console.log("Homepage: Fetching fresh stats for user", user.id);
+      const response = await apiCall("GET", `/quizzes/dashboard/${user.id}`);
+      console.log("Homepage: Fresh stats received:", response.stats);
+      
+      if (response.stats) {
+        setUserStats({
+          quizzesCompleted: response.stats.completedQuizzes,
+          averageScore: Math.round(response.stats.averageScore),
+          totalPoints: response.stats.totalPoints,
+          streak: response.stats.currentStreak,
+        });
+        console.log("Homepage: Stats updated successfully");
+      }
+    } catch (error) {
+      console.error("Error fetching user stats:", error);
+    }
+  };
 
   const categories = [
     { id: 1, title: "Science", icon: "🔬" },

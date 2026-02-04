@@ -7,12 +7,12 @@ body {
 
 /* Container */
 .dashboard-container {
-  width: 245%;
+  width: 217%;
   min-height: 100vh;
   padding: 0 40px;
-  background: radial-gradient(circle at top right, #3b5c85, #061a36 70%);
+  background: radial-gradient(circle at top right, #000000, #1a1a1a 70%);
   color: white;
-  font-family: 'Segoe UI', sans-serif;
+  font-family: 'Poppins', sans-serif;
   overflow-x: hidden;
 }
 
@@ -51,16 +51,17 @@ body {
 .dashboard-links a {
   text-decoration: none;
   font-weight: 500;
-  color: #000000;
+  color: #ffffff;
   padding: 8px 16px;
   border-radius: 20px;
   transition: all 0.3s ease;
-  font-style: calc();
+  border: 1px solid rgba(255, 215, 0, 0.2);
 }
 
 .dashboard-links a:hover {
-  background: #000000;
-  color: white;
+  background: #FFD700;
+  color: #000000;
+  border-color: #FFD700;
 }
 
 .menu-toggle {
@@ -76,7 +77,7 @@ body {
 .dashboard-hero h1 {
   font-size: 48px;
   margin-bottom: 15px;
-  color: #b118a7;
+  color: #FFD700;
 }
 
 .dashboard-hero p {
@@ -94,19 +95,21 @@ body {
 }
 
 .stat-card {
-  background: linear-gradient(135deg, #ffffff, #5c6bd2);
-  color: white;
+  background: linear-gradient(135deg, #FFD700, #FFC700);
+  color: #000000;
   padding: 40px 20px;
   border-radius: 15px;
   text-align: center;
-  box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+  box-shadow: 0 8px 25px rgba(255, 215, 0, 0.3);
   transition: all 0.3s ease;
   cursor: pointer;
+  border: 2px solid #FFD700;
 }
 
 .stat-card:hover {
   transform: translateY(-5px);
-  box-shadow: 0 15px 40px rgba(0,0,0,0.25);
+  box-shadow: 0 15px 40px rgba(255, 215, 0, 0.5);
+  background: linear-gradient(135deg, #FFC700, #FFD700);
 }
 
 .stat-icon {
@@ -142,30 +145,28 @@ body {
 }
 
 .activity-card {
-  background: linear-gradient(135deg, #16294c, #382b9e);
+  background: linear-gradient(135deg, #1a1a1a, #0c0c0c);
   padding: 20px;
   border-radius: 15px;
   color: white;
   font-weight: 500;
-  text-align: center;
-  box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+  border: 1px solid rgba(255, 215, 0, 0.2);
   transition: all 0.3s ease;
-  cursor: pointer;
 }
 
 .activity-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 15px 40px rgba(0,0,0,0.25);
+  border-color: #FFD700;
+  box-shadow: 0 5px 15px rgba(255, 215, 0, 0.2);
 }
 
 /* Footer */
 .dashboard-footer {
   text-align: center;
   padding: 40px 0;
-  background: #382b9e;
+  background: rgba(0, 0, 0, 0.5);
   color: white;
   font-size: 14px;
-  border-top: 1px solid rgba(255,255,255,0.2);
+  border-top: 1px solid rgba(255, 215, 0, 0.2);
 }
 
 /* Logout Button - Fixed Bottom Right */
@@ -173,23 +174,24 @@ body {
   position: fixed;
   bottom: 30px;
   right: 30px;
-  background: linear-gradient(135deg, #ff4757, #c23a4a);
-  color: white;
+  background: #FFD700;
+  color: #000000;
   padding: 12px 30px;
   border-radius: 25px;
   text-decoration: none;
   font-weight: 600;
   font-size: 16px;
-  box-shadow: 0 8px 25px rgba(255, 71, 87, 0.4);
+  box-shadow: 0 8px 25px rgba(255, 215, 0, 0.4);
   transition: all 0.3s ease;
   z-index: 1000;
   cursor: pointer;
+  border: none;
 }
 
 .logout-button-fixed:hover {
   transform: translateY(-3px);
-  box-shadow: 0 12px 35px rgba(255, 71, 87, 0.6);
-  background: linear-gradient(135deg, #c23a4a, #ff4757);
+  box-shadow: 0 12px 35px rgba(255, 215, 0, 0.6);
+  background: #FFC700;
 }
 
 /* Responsive */
