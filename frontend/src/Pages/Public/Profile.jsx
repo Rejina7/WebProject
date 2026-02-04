@@ -54,6 +54,13 @@ export default function Profile() {
     streak: 0,
   });
   const [loading, setLoading] = useState(true);
+  
+  // Settings state
+  const [settings, setSettings] = useState({
+    notifications: localStorage.getItem("notificationsEnabled") !== "false",
+    darkMode: localStorage.getItem("darkModeEnabled") === "true",
+    publicProfile: localStorage.getItem("publicProfileEnabled") !== "false",
+  });
 
   // Fetch user stats from backend
   useEffect(() => {
@@ -101,6 +108,13 @@ export default function Profile() {
     setIsEditing(false);
   };
 
+  const handleSettingChange = (setting) => {
+    const newSettings = { ...settings, [setting]: !settings[setting] };
+    setSettings(newSettings);
+    
+    // Save to localStorage
+    localStorage.setItem(`${setting}Enabled`, newSettings[setting]);
+  };
   const achievements = [
     { id: 1, title: "Quiz Master", icon: "🏆", description: "Complete 50 quizzes" },
     { id: 2, title: "Perfect Score", icon: "💯", description: "Score 100% on a quiz" },
@@ -109,7 +123,7 @@ export default function Profile() {
   ];
 
   return (
-    <div className="profile-container">
+    <div className={`profile-container ${settings.darkMode ? 'dark-mode' : ''}`}>
       {/* Navbar */}
       <nav className="profile-navbar">
         <div className="navbar-logo">
@@ -185,19 +199,7 @@ export default function Profile() {
           </div>
         </section>
 
-        {/* Achievements Section */}
-        <section className="achievements-section">
-          <h2 className="section-title">Achievements</h2>
-          <div className="achievements-grid">
-            {achievements.map((achievement) => (
-              <div key={achievement.id} className="achievement-card">
-                <div className="achievement-icon">{achievement.icon}</div>
-                <h3>{achievement.title}</h3>
-                <p>{achievement.description}</p>
-              </div>
-            ))}
-          </div>
-        </section>
+        {/* Achievements Section - REMOVED */}
 
         {/* Settings Section */}
         <section className="settings-section">
@@ -208,21 +210,33 @@ export default function Profile() {
                 <h3>Notifications</h3>
                 <p>Manage notification preferences</p>
               </div>
-              <input type="checkbox" defaultChecked />
+              <input 
+                type="checkbox" 
+                checked={settings.notifications}
+                onChange={() => handleSettingChange("notifications")}
+              />
             </div>
             <div className="setting-item">
               <div className="setting-info">
                 <h3>Dark Mode</h3>
                 <p>Enable dark mode theme</p>
               </div>
-              <input type="checkbox" />
+              <input 
+                type="checkbox" 
+                checked={settings.darkMode}
+                onChange={() => handleSettingChange("darkMode")}
+              />
             </div>
             <div className="setting-item">
               <div className="setting-info">
                 <h3>Public Profile</h3>
                 <p>Make your profile visible to others</p>
               </div>
-              <input type="checkbox" defaultChecked />
+              <input 
+                type="checkbox" 
+                checked={settings.publicProfile}
+                onChange={() => handleSettingChange("publicProfile")}
+              />
             </div>
           </div>
         </section>
