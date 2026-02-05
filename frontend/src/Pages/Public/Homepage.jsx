@@ -16,27 +16,21 @@ export default function Homepage() {
     totalPoints: 0,
     streak: 0,
   });
-  
-  // Fetch on mount
-  useEffect(() => {
-    fetchUserStats();
-  }, []);
 
-  // Fetch when location changes (navigating back from quiz)
-  useEffect(() => {
-    fetchUserStats();
-  }, [location]);
+  const [quizzes, setQuizzes] = useState([]);
+  const [loading, setLoading] = useState(true);
   
-  // Fetch user stats on mount and when component receives focus
+  // Fetch user stats and quizzes on mount
   useEffect(() => {
-    // Fetch immediately on mount
     fetchUserStats();
+    fetchQuizzes();
     
     // Also fetch when user returns to the tab
     const handleVisibilityChange = () => {
       if (document.visibilityState === 'visible') {
         console.log("Homepage: Tab became visible - refreshing stats");
         fetchUserStats();
+        fetchQuizzes();
       }
     };
     
@@ -44,6 +38,7 @@ export default function Homepage() {
     const handlePageShow = () => {
       console.log("Homepage: Page shown - refreshing stats");
       fetchUserStats();
+      fetchQuizzes();
     };
     
     document.addEventListener('visibilitychange', handleVisibilityChange);
@@ -54,6 +49,51 @@ export default function Homepage() {
       window.removeEventListener('pageshow', handlePageShow);
     };
   }, []);
+
+  const fetchQuizzes = async () => {
+    try {
+      setLoading(true);
+      const response = await apiCall("GET", "/quizzes");
+      console.log("Homepage: Quizzes fetched:", response.quizzes);
+      
+      if (response.quizzes) {
+        // Transform quizzes to match category card format
+        const quizCategories = response.quizzes.map(quiz => ({
+          id: quiz.id,
+          title: quiz.category,
+          icon: getCategoryIcon(quiz.category),
+          quizData: quiz
+        }));
+        setQuizzes(quizCategories);
+      }
+      setLoading(false);
+    } catch (error) {
+      console.error("Error fetching quizzes:", error);
+      setLoading(false);
+    }
+  };
+
+  const getCategoryIcon = (category) => {
+    const iconMap = {
+      "Science": "🔬",
+      "IT": "💻",
+      "Geography": "🌍",
+      "General Knowledge": "❓",
+      "Entertainment": "🎬",
+      "Stranger Things": "👽",
+      "History": "📜",
+      "Math": "🔢",
+      "Sports": "⚽",
+      "Music": "🎵",
+      "Art": "🎨",
+      "Literature": "📚",
+      "Technology": "🖥️",
+      "Nature": "🌿",
+      "Space": "🚀",
+      "Food": "🍔"
+    };
+    return iconMap[category] || "📝";
+  };
 
   const fetchUserStats = async () => {
     try {
@@ -81,14 +121,6 @@ export default function Homepage() {
     }
   };
 
-  const categories = [
-    { id: 1, title: "Science", icon: "🔬" },
-    { id: 2, title: "IT", icon: "💻" },
-    { id: 3, title: "Geography", icon: "🌍" },
-    { id: 4, title: "General Knowledge", icon: "❓" },
-    { id: 5, title: "Entertainment", icon: "🎬" },
-  ];
-
   // Get recent quizzes from localStorage
   const getRecentQuizzes = () => {
     const quizResults = JSON.parse(localStorage.getItem('quizResults')) || { quizHistory: [] };
@@ -109,8 +141,8 @@ export default function Homepage() {
     { rank: 3, name: "Mike", points: 4720 },
   ];
 
-  const filteredCategories = categories.filter((c) =>
-    c.title.toLowerCase().includes(search.toLowerCase())
+  const filteredQuizzes = quizzes.filter((q) =>
+    q.title.toLowerCase().includes(search.toLowerCase())
   );
 
   return (
@@ -145,16 +177,18 @@ export default function Homepage() {
         {/* Left: Categories */}
         <div className="hero-left">
           <div className="categories-container">
-            {filteredCategories.length > 0 ? (
-              filteredCategories.map((c) => (
-                <div key={c.id} className="category-card">
-                  <div className="category-icon">{c.icon}</div>
-                  <h3>{c.title}</h3>
-                  <button className="start-button" onClick={() => navigate(`/quiz/${encodeURIComponent(c.title)}`)}>Start Quiz</button>
+            {loading ? (
+              <p className="loading-message">Loading quizzes...</p>
+            ) : filteredQuizzes.length > 0 ? (
+              filteredQuizzes.map((q) => (
+                <div key={q.id} className="category-card">
+                  <div className="category-icon">{q.icon}</div>
+                  <h3>{q.title}</h3>
+                  <button className="start-button" onClick={() => navigate(`/quiz/${encodeURIComponent(q.title)}`)}>Start Quiz</button>
                 </div>
               ))
             ) : (
-              <p className="no-results">No categories found.</p>
+              <p className="no-results">No quizzes available.</p>
             )}
           </div>
         </div>

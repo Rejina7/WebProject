@@ -9,6 +9,9 @@ import Dashboard from "./Pages/Public/Dashboard.jsx";
 import Profile from "./Pages/Public/Profile.jsx";
 import Quiz from "./Pages/Public/Quiz.jsx";
 import CreateQuiz from "./Pages/Public/CreateQuiz.jsx";
+import AdminHome from "./Pages/Private/AdminHome.jsx";
+import AdminDashboard from "./Pages/Private/AdminDashboard.jsx";
+import PrivateRoute from "./Routes/PrivateRoute.jsx";
 
 
 function App() {
@@ -35,7 +38,10 @@ function App() {
       <Route path="/profile" element={<Profile />} />
       <Route path="/quiz/:category" element={<Quiz />} />
       <Route path="/create-quiz" element={<CreateQuiz />} />
-     
+      
+      {/* Admin Private Routes */}
+      <Route path="/admin/home" element={<PrivateRoute requiredRole="admin"><AdminHome /></PrivateRoute>} />
+      <Route path="/admin/dashboard" element={<PrivateRoute requiredRole="admin"><AdminDashboard /></PrivateRoute>} />
     </Routes>
   );
 }

@@ -313,25 +313,31 @@ export const getLeaderboard = async (req, res) => {
 
   try {
     let query = `
-      SELECT u.id, u.username, u.email, 
-             AVG(qr.score) as avgScore, 
-             COUNT(qr.id) as quizzesAttempted,
-             SUM(CASE WHEN qr."isPassed" = true THEN 1 ELSE 0 END) as quizzesPassed,
-             MAX(qr.score) as highestScore
+      SELECT 
+        u.id, 
+        u.username, 
+        u.email,
+        COUNT(qr.id) as "totalQuizzes",
+        ROUND(AVG(qr.score), 1) as "averageScore",
+        SUM(qr.score) as "totalPoints",
+        SUM(CASE WHEN qr."isPassed" = true THEN 1 ELSE 0 END) as "quizzesPassed",
+        MAX(qr.score) as "highestScore"
       FROM users u
       LEFT JOIN quiz_results qr ON u.id = qr."userId"
+      WHERE u.role != 'admin'
     `;
 
     let replacements = {};
 
     if (quizId) {
-      query += ` WHERE qr."quizId" = :quizId`;
+      query += ` AND qr."quizId" = :quizId`;
       replacements.quizId = quizId;
     }
 
     query += `
       GROUP BY u.id, u.username, u.email
-      ORDER BY avgScore DESC, quizzesAttempted DESC
+      HAVING COUNT(qr.id) > 0
+      ORDER BY "totalPoints" DESC, "averageScore" DESC
       LIMIT 100
     `;
 
@@ -340,6 +346,248 @@ export const getLeaderboard = async (req, res) => {
     res.json({
       message: "Leaderboard retrieved successfully",
       leaderboard,
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
+// ADMIN FEATURES
+
+// Delete quiz (admin only)
+export const deleteQuiz = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    // Check if quiz exists
+    const [quizExists] = await sequelize.query(
+      "SELECT id FROM quizzes WHERE id = :id",
+      { replacements: { id } }
+    );
+
+    if (quizExists.length === 0) {
+      return res.status(404).json({ message: "Quiz not found" });
+    }
+
+    // Delete quiz
+    await sequelize.query(
+      "DELETE FROM quizzes WHERE id = :id",
+      { replacements: { id } }
+    );
+
+    res.json({
+      message: "Quiz deleted successfully",
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
+// Update quiz (admin only)
+export const updateQuiz = async (req, res) => {
+  const { id } = req.params;
+  const { title, description, category, difficulty, timeLimit, totalQuestions, passingScore, isActive } = req.body;
+
+  try {
+    // Check if quiz exists
+    const [quizExists] = await sequelize.query(
+      "SELECT id FROM quizzes WHERE id = :id",
+      { replacements: { id } }
+    );
+
+    if (quizExists.length === 0) {
+      return res.status(404).json({ message: "Quiz not found" });
+    }
+
+    // Build update query dynamically
+    const updates = [];
+    const replacements = { id };
+
+    if (title !== undefined) {
+      updates.push('title = :title');
+      replacements.title = title;
+    }
+    if (description !== undefined) {
+      updates.push('description = :description');
+      replacements.description = description;
+    }
+    if (category !== undefined) {
+      updates.push('category = :category');
+      replacements.category = category;
+    }
+    if (difficulty !== undefined) {
+      updates.push('difficulty = :difficulty');
+      replacements.difficulty = difficulty;
+    }
+    if (timeLimit !== undefined) {
+      updates.push('"timeLimit" = :timeLimit');
+      replacements.timeLimit = timeLimit;
+    }
+    if (totalQuestions !== undefined) {
+      updates.push('"totalQuestions" = :totalQuestions');
+      replacements.totalQuestions = totalQuestions;
+    }
+    if (passingScore !== undefined) {
+      updates.push('"passingScore" = :passingScore');
+      replacements.passingScore = passingScore;
+    }
+    if (isActive !== undefined) {
+      updates.push('"isActive" = :isActive');
+      replacements.isActive = isActive;
+    }
+
+    if (updates.length === 0) {
+      return res.status(400).json({ message: "No fields to update" });
+    }
+
+    updates.push('"updatedAt" = NOW()');
+
+    const [result] = await sequelize.query(
+      `UPDATE quizzes SET ${updates.join(', ')} WHERE id = :id RETURNING *`,
+      { replacements }
+    );
+
+    res.json({
+      message: "Quiz updated successfully",
+      quiz: result[0],
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
+// Get all quizzes (admin - includes inactive)
+export const getAllQuizzesAdmin = async (req, res) => {
+  try {
+    const [quizzes] = await sequelize.query(
+      "SELECT * FROM quizzes ORDER BY \"createdAt\" DESC"
+    );
+    res.json({
+      message: "All quizzes retrieved successfully",
+      quizzes,
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
+// Get quiz statistics (completion count, average scores)
+export const getQuizStatistics = async (req, res) => {
+  const { quizId } = req.params;
+
+  try {
+    if (quizId) {
+      // Statistics for a specific quiz
+      const [stats] = await sequelize.query(
+        `SELECT 
+           q.id, q.title, q.category, q.difficulty,
+           COUNT(DISTINCT qr.id) as totalAttempts,
+           COUNT(DISTINCT qr."userId") as uniqueUsers,
+           AVG(qr.score) as averageScore,
+           MAX(qr.score) as highestScore,
+           MIN(qr.score) as lowestScore,
+           SUM(CASE WHEN qr."isPassed" = true THEN 1 ELSE 0 END) as passedCount,
+           ROUND(100.0 * SUM(CASE WHEN qr."isPassed" = true THEN 1 ELSE 0 END) / COUNT(qr.id), 2) as passPercentage
+         FROM quizzes q
+         LEFT JOIN quiz_results qr ON q.id = qr."quizId"
+         WHERE q.id = :quizId
+         GROUP BY q.id, q.title, q.category, q.difficulty`,
+        { replacements: { quizId } }
+      );
+
+      if (stats.length === 0) {
+        return res.status(404).json({ message: "Quiz not found" });
+      }
+
+      return res.json({
+        message: "Quiz statistics retrieved",
+        statistics: stats[0],
+      });
+    } else {
+      // Statistics for all quizzes
+      const [allStats] = await sequelize.query(
+        `SELECT 
+           q.id, q.title, q.category, q.difficulty, q."isActive",
+           COUNT(DISTINCT qr.id) as totalAttempts,
+           COUNT(DISTINCT qr."userId") as uniqueUsers,
+           AVG(qr.score) as averageScore,
+           MAX(qr.score) as highestScore,
+           MIN(qr.score) as lowestScore,
+           SUM(CASE WHEN qr."isPassed" = true THEN 1 ELSE 0 END) as passedCount,
+           ROUND(100.0 * SUM(CASE WHEN qr."isPassed" = true THEN 1 ELSE 0 END) / NULLIF(COUNT(qr.id), 0), 2) as passPercentage
+         FROM quizzes q
+         LEFT JOIN quiz_results qr ON q.id = qr."quizId"
+         GROUP BY q.id, q.title, q.category, q.difficulty, q."isActive"
+         ORDER BY totalAttempts DESC`
+      );
+
+      return res.json({
+        message: "All quiz statistics retrieved",
+        statistics: allStats,
+      });
+    }
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
+// Get user quiz completion statistics
+export const getUserQuizStats = async (req, res) => {
+  try {
+    const [userStats] = await sequelize.query(
+      `SELECT 
+         u.id, u.username, u.email,
+         COUNT(DISTINCT qr.id) as totalAttempts,
+         COUNT(DISTINCT CASE WHEN qr."isPassed" = true THEN qr.id END) as totalPassed,
+         COUNT(DISTINCT CASE WHEN qr."isPassed" = false THEN qr.id END) as totalFailed,
+         AVG(qr.score) as averageScore,
+         MAX(qr.score) as highestScore,
+         MIN(qr.score) as lowestScore
+       FROM users u
+       LEFT JOIN quiz_results qr ON u.id = qr."userId"
+       WHERE u.role = 'user'
+       GROUP BY u.id, u.username, u.email
+       ORDER BY totalAttempts DESC`
+    );
+
+    res.json({
+      message: "User quiz statistics retrieved",
+      userStatistics: userStats,
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+// Get recent quiz attempts for admin
+export const getRecentAttempts = async (req, res) => {
+  try {
+    const [attempts] = await sequelize.query(
+      `SELECT 
+         qr.id,
+         qr.score,
+         qr."isPassed",
+         qr."createdAt",
+         u.username,
+         u.email,
+         q.title as "quizTitle",
+         q.category
+       FROM quiz_results qr
+       INNER JOIN users u ON qr."userId" = u.id
+       INNER JOIN quizzes q ON qr."quizId" = q.id
+       WHERE u.role = 'user'
+       ORDER BY qr."createdAt" DESC
+       LIMIT 20`
+    );
+
+    res.json({
+      message: "Recent attempts retrieved successfully",
+      attempts,
     });
   } catch (err) {
     console.error(err);

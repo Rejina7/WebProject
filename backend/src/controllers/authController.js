@@ -13,14 +13,15 @@ export const signup = async (req, res) => {
     const hashedPassword = await bcrypt.hash(password, 10);
 
     const [result] = await sequelize.query(
-      `INSERT INTO users (username, email, password)
-       VALUES (:username, :email, :password)
-       RETURNING id, username, email, "createdAt"`,
+      `INSERT INTO users (username, email, password, role)
+       VALUES (:username, :email, :password, :role)
+       RETURNING id, username, email, role, "createdAt"`,
       {
         replacements: {
           username,
           email,
           password: hashedPassword,
+          role: req.body.role || 'user',
         },
       }
     );
@@ -83,13 +84,17 @@ export const login = async (req, res) => {
     }
 
     console.log("✅ Login successful for:", user.username);
+    console.log("👤 User role:", user.role);
 
     // Display all registered users
     const [allUsers] = await sequelize.query(
-      "SELECT id, username, email, \"createdAt\" FROM users ORDER BY \"createdAt\" DESC"
+      "SELECT id, username, email, role, \"createdAt\" FROM users ORDER BY \"createdAt\" DESC"
     );
     console.log("\n📋 ALL REGISTERED USERS:");
     console.table(allUsers);
+
+    // Determine redirect path based on role
+    const redirectPath = user.role === 'admin' ? '/admin/dashboard' : '/home';
 
     res.json({
       message: "Login successful",
@@ -97,8 +102,10 @@ export const login = async (req, res) => {
         id: user.id,
         username: user.username,
         email: user.email,
+        role: user.role,
         createdAt: user.createdAt,
       },
+      redirectPath: redirectPath,
     });
   } catch (err) {
     console.error(err);
@@ -111,7 +118,7 @@ export const getUserProfile = async (req, res) => {
 
   try {
     const [result] = await sequelize.query(
-      "SELECT id, username, email, \"createdAt\" FROM users WHERE id = :id",
+      "SELECT id, username, email, role, \"createdAt\" FROM users WHERE id = :id",
       { replacements: { id } }
     );
 
@@ -149,7 +156,7 @@ export const updateUserProfile = async (req, res) => {
       `UPDATE users 
        SET username = :username, email = :email, "updatedAt" = NOW()
        WHERE id = :id
-       RETURNING id, username, email, "createdAt", "updatedAt"`,
+       RETURNING id, username, email, role, "createdAt", "updatedAt"`,
       {
         replacements: { id, username, email },
       }
@@ -172,6 +179,21 @@ export const updateUserProfile = async (req, res) => {
       }
     }
 
+    res.status(500).json({ message: "Server error" });
+  }
+};
+export const getAllUsers = async (req, res) => {
+  try {
+    const [users] = await sequelize.query(
+      "SELECT id, username, email, role, \"createdAt\" FROM users ORDER BY \"createdAt\" DESC"
+    );
+
+    res.json({
+      message: "Users retrieved successfully",
+      users,
+    });
+  } catch (err) {
+    console.error(err);
     res.status(500).json({ message: "Server error" });
   }
 };

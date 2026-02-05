@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useMemo } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import apiCall from "../../Utils/api";
 import "../../css/quiz.css";
@@ -280,6 +280,190 @@ const quizData = {
       correct: 3,
     },
   ],
+  "Stranger Things": [
+    {
+      id: 1,
+      question: "In which year does the first season of Stranger Things take place?",
+      options: ["1982", "1983", "1984", "1985"],
+      correct: 1,
+    },
+    {
+      id: 2,
+      question: "What is the name of the alternate dimension in Stranger Things?",
+      options: ["The Void", "The Upside Down", "The Shadow Realm", "The Dark World"],
+      correct: 1,
+    },
+    {
+      id: 3,
+      question: "Who is the main protagonist of Stranger Things?",
+      options: ["Mike Wheeler", "Eleven", "Dustin Henderson", "Lucas Sinclair"],
+      correct: 1,
+    },
+    {
+      id: 4,
+      question: "What does Eleven use her powers for primarily?",
+      options: ["Teleportation", "Telekinesis", "Mind reading", "Super strength"],
+      correct: 1,
+    },
+    {
+      id: 5,
+      question: "In what town does Stranger Things take place?",
+      options: ["Hawkins", "Roanoke", "Derry", "Castle Rock"],
+      correct: 0,
+    },
+    {
+      id: 6,
+      question: "What is the name of the monster in the first season?",
+      options: ["The Demogorgon", "The Demodog", "The Shadow", "The Creature"],
+      correct: 0,
+    },
+    {
+      id: 7,
+      question: "Which character has telekinetic powers and can speak through lights?",
+      options: ["Max Mayfield", "Eleven", "Mike Wheeler", "Dustin Henderson"],
+      correct: 1,
+    },
+    {
+      id: 8,
+      question: "What is Joyce Byers' job in the series?",
+      options: ["Waitress", "Nurse", "Teacher", "Manager at a diner"],
+      correct: 0,
+    },
+    {
+      id: 9,
+      question: "What does the Demogorgon feed on?",
+      options: ["Animals", "Humans", "Energy", "Both animals and humans"],
+      correct: 3,
+    },
+    {
+      id: 10,
+      question: "Who is Eleven's adoptive sister introduced in Season 2?",
+      options: ["Max Mayfield", "Robin Buckley", "Kali", "Heather Holloway"],
+      correct: 2,
+    },
+    {
+      id: 11,
+      question: "What is the name of the high school in Hawkins?",
+      options: ["Hawkins High School", "Hawkins Central High", "Roane High School", "Riverdale High"],
+      correct: 0,
+    },
+    {
+      id: 12,
+      question: "In Season 3, where do the kids work during summer?",
+      options: ["Movie theater", "Ice cream shop", "Arcade", "Amusement park"],
+      correct: 1,
+    },
+    {
+      id: 13,
+      question: "What is the Russian project called in Season 3?",
+      options: ["Project Mind", "Mind Flayer", "Hawkins Lab", "Project Intrusion"],
+      correct: 3,
+    },
+    {
+      id: 14,
+      question: "Who is Max's older brother?",
+      options: ["Billy Hargrove", "Jason Carver", "Tommy H.", "Tyler"],
+      correct: 0,
+    },
+    {
+      id: 15,
+      question: "What year does Season 4 take place in?",
+      options: ["1985", "1986", "1987", "1988"],
+      correct: 2,
+    },
+  ],
+  Entertainment: [
+    {
+      id: 1,
+      question: "Which movie features the line 'You can't handle the truth!'?",
+      options: ["A Few Good Men", "Top Gun", "Jerry Maguire", "Scream"],
+      correct: 0,
+    },
+    {
+      id: 2,
+      question: "What is Forrest Gump's favorite snack?",
+      options: ["Chocolates", "Pizza", "Popcorn", "Ice cream"],
+      correct: 0,
+    },
+    {
+      id: 3,
+      question: "In The Office, what is Jim's favorite prank?",
+      options: ["Calling him 'Dwight'", "Putting his stapler in Jello", "Copying his outfit", "Stapler in aspic"],
+      correct: 1,
+    },
+    {
+      id: 4,
+      question: "What is the name of the cafe in Friends?",
+      options: ["The Coffee House", "Central Perk", "Java Junction", "Friends Cafe"],
+      correct: 1,
+    },
+    {
+      id: 5,
+      question: "How many Infinity Stones are there in the MCU?",
+      options: ["4", "5", "6", "7"],
+      correct: 2,
+    },
+    {
+      id: 6,
+      question: "What superhero wears red and blue?",
+      options: ["Superman", "Spider-Man", "Flash", "Captain America"],
+      correct: 1,
+    },
+    {
+      id: 7,
+      question: "In which movie does Ryan Gosling not speak for 16 minutes?",
+      options: ["La La Land", "Drive", "Crazy, Stupid, Love", "The Notebook"],
+      correct: 1,
+    },
+    {
+      id: 8,
+      question: "What is the most watched TV show of all time?",
+      options: ["Game of Thrones", "The Office", "Friends", "Breaking Bad"],
+      correct: 2,
+    },
+    {
+      id: 9,
+      question: "Which actor played Iron Man?",
+      options: ["Chris Evans", "Robert Downey Jr.", "Tom Hardy", "Mark Ruffalo"],
+      correct: 1,
+    },
+    {
+      id: 10,
+      question: "What is Deadpool known for?",
+      options: ["Being serious", "Sarcasm and jokes", "Long monologues", "Silence"],
+      correct: 1,
+    },
+    {
+      id: 11,
+      question: "In Harry Potter, what is Dumbledore's weakness?",
+      options: ["Magic", "Wizards", "Candy", "Youth"],
+      correct: 2,
+    },
+    {
+      id: 12,
+      question: "What did Chandler do for a living in Friends?",
+      options: ["Architect", "Statistical analysis", "Chef", "Furniture sales"],
+      correct: 1,
+    },
+    {
+      id: 13,
+      question: "Which movie has the catchphrase 'Why so serious'?",
+      options: ["Batman Begins", "The Dark Knight", "The Dark Knight Rises", "Batman v Superman"],
+      correct: 1,
+    },
+    {
+      id: 14,
+      question: "What is the most expensive movie ever made?",
+      options: ["Avatar 2", "Pirates of the Caribbean 3", "Avengers Endgame", "Star Wars Episode VII"],
+      correct: 0,
+    },
+    {
+      id: 15,
+      question: "In The Big Bang Theory, what is Sheldon's favorite number?",
+      options: ["7", "42", "73", "12"],
+      correct: 2,
+    },
+  ],
 };
 
 export default function Quiz() {
@@ -288,7 +472,43 @@ export default function Quiz() {
   
   // Decode category name and find matching quiz data
   const decodedCategory = decodeURIComponent(category);
-  const questions = quizData[decodedCategory] || quizData.Science;
+  
+  // Function to shuffle array
+  const shuffleArray = (array) => {
+    const shuffled = [...array];
+    for (let i = shuffled.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+    }
+    return shuffled;
+  };
+
+  // Function to shuffle questions and their options
+  const prepareQuestions = () => {
+    const originalQuestions = quizData[decodedCategory] || quizData.Science;
+    // Shuffle the questions array
+    const shuffledQuestions = shuffleArray(originalQuestions);
+    
+    // For each question, shuffle the options but track correct answer
+    return shuffledQuestions.map(q => {
+      const optionsWithIndex = q.options.map((opt, idx) => ({
+        text: opt,
+        originalIndex: idx
+      }));
+      const shuffledOptions = shuffleArray(optionsWithIndex);
+      
+      // Find new index of correct answer
+      const correctAnswerNewIndex = shuffledOptions.findIndex(opt => opt.originalIndex === q.correct);
+      
+      return {
+        ...q,
+        options: shuffledOptions.map(opt => opt.text),
+        correctAnswer: correctAnswerNewIndex
+      };
+    });
+  };
+  
+  const questions = useMemo(() => prepareQuestions(), [decodedCategory]);
 
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [score, setScore] = useState(0);
@@ -303,11 +523,118 @@ export default function Quiz() {
 
   const question = questions[currentQuestion];
 
+  // Function to stop music immediately
+  const stopMusic = () => {
+    console.log('stopMusic called - stopping all audio');
+    
+    // Stop all audio elements on the page
+    const audioElements = document.querySelectorAll('audio');
+    audioElements.forEach(audio => {
+      try {
+        audio.pause();
+        audio.currentTime = 0;
+        audio.src = '';
+        audio.remove();
+        console.log('Removed audio element');
+      } catch (e) {
+        console.log('Error removing audio:', e.message);
+      }
+    });
+    
+    // Specifically stop Stranger Things audio by ID
+    const strangerThingsAudio = document.getElementById('stranger-things-audio');
+    if (strangerThingsAudio) {
+      try {
+        strangerThingsAudio.pause();
+        strangerThingsAudio.currentTime = 0;
+        strangerThingsAudio.src = '';
+        strangerThingsAudio.remove();
+        console.log('Explicitly stopped Stranger Things audio');
+      } catch (e) {
+        console.log('Error stopping Stranger Things audio:', e);
+      }
+    }
+    
+    // Stop bgMusicRef audio
+    if (bgMusicRef.current) {
+      try {
+        // Stop audio element (Stranger Things)
+        if (bgMusicRef.current.audioElement) {
+          const audio = bgMusicRef.current.audioElement;
+          audio.pause();
+          audio.currentTime = 0;
+          audio.src = '';
+          audio.remove();
+          console.log('Stopped and removed bgMusicRef audio element');
+        }
+        
+        // Stop oscillators (fallback for Stranger Things or other quizzes)
+        const { oscillator, oscillator1, oscillator2, oscillator3, oscillator4, gainNode, audioContext } = bgMusicRef.current;
+        
+        if (gainNode && audioContext) {
+          try {
+            // Immediately set gain to 0
+            gainNode.gain.setValueAtTime(0, audioContext.currentTime);
+            
+            // Stop all oscillators immediately
+            try {
+              if (oscillator) oscillator.stop();
+              if (oscillator1) oscillator1.stop();
+              if (oscillator2) oscillator2.stop();
+              if (oscillator3) oscillator3.stop();
+              if (oscillator4) oscillator4.stop();
+              console.log('Oscillators stopped');
+            } catch (e) {
+              console.log('Oscillators already stopped');
+            }
+            
+            // Close audio context
+            if (audioContext.state !== 'closed') {
+              audioContext.close();
+              console.log('AudioContext closed');
+            }
+          } catch (e) {
+            console.log('Error with audioContext:', e);
+          }
+        }
+        
+        bgMusicRef.current = null;
+        console.log('All music stopped successfully');
+      } catch (e) {
+        console.error('Error in stopMusic:', e);
+      }
+    }
+    
+    // Clear global audio context
+    if (window.audioContextInstance && window.audioContextInstance.state !== 'closed') {
+      try {
+        window.audioContextInstance.close();
+        console.log('Global AudioContext closed');
+      } catch (e) {
+        console.log('Error closing global AudioContext:', e);
+      }
+    }
+    window.audioContextInstance = null;
+  };
+
   // Background music - starts when quiz begins
   useEffect(() => {
     const startBackgroundMusic = () => {
+      // Check if this is Stranger Things quiz
+      if (decodedCategory === "Stranger Things") {
+        // Use Web Audio API synth instead of HTML5 audio for better control
+        // This ensures it stops properly like other quizzes
+        playStrangerThingsTheme();
+        console.log('Started Stranger Things theme (Web Audio API)');
+        return;
+      }
+
+      // Default ambient music for other categories
       const audioContext = new (window.AudioContext || window.webkitAudioContext)();
       audioContext.resume();
+      
+      // Store in window for Homepage to access
+      window.audioContextInstance = audioContext;
 
       const oscillator1 = audioContext.createOscillator();
       const oscillator2 = audioContext.createOscillator();
@@ -343,30 +670,76 @@ export default function Quiz() {
       bgMusicRef.current = { oscillator1, oscillator2, oscillator3, oscillator4, gainNode, audioContext };
     };
 
+    const playStrangerThingsTheme = () => {
+      // Stranger Things theme-inspired synth
+      const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+      audioContext.resume();
+      
+      // Store in window for Homepage to access
+      window.audioContextInstance = audioContext;
+
+      const oscillator = audioContext.createOscillator();
+      const gainNode = audioContext.createGain();
+
+      oscillator.connect(gainNode);
+      gainNode.connect(audioContext.destination);
+
+      oscillator.type = 'sine';
+      oscillator.frequency.setValueAtTime(220, audioContext.currentTime); // A3
+      gainNode.gain.setValueAtTime(0.1, audioContext.currentTime);
+
+      oscillator.start();
+
+      bgMusicRef.current = { oscillator, gainNode, audioContext };
+    };
+
     startBackgroundMusic();
 
     return () => {
       if (bgMusicRef.current) {
         try {
-          const { oscillator1, oscillator2, oscillator3, oscillator4, gainNode, audioContext } = bgMusicRef.current;
-          
-          // Fade out the volume
-          gainNode.gain.setValueAtTime(gainNode.gain.value, audioContext.currentTime);
-          gainNode.gain.exponentialRampToValueAtTime(0.001, audioContext.currentTime + 0.2);
-          
-          // Stop oscillators
-          setTimeout(() => {
-            oscillator1.stop();
-            oscillator2.stop();
-            oscillator3.stop();
-            oscillator4.stop();
-          }, 200);
+          // Check if it's an audio element (Stranger Things)
+          if (bgMusicRef.current.audioElement) {
+            bgMusicRef.current.audioElement.pause();
+            bgMusicRef.current.audioElement.currentTime = 0;
+            bgMusicRef.current.audioElement.src = '';
+            bgMusicRef.current.audioElement = null;
+          } else {
+            // Otherwise it's Web Audio API oscillators
+            const { oscillator1, oscillator2, oscillator3, oscillator4, gainNode, audioContext } = bgMusicRef.current;
+            
+            if (gainNode && audioContext) {
+              // Fade out the volume
+              gainNode.gain.setValueAtTime(gainNode.gain.value, audioContext.currentTime);
+              gainNode.gain.exponentialRampToValueAtTime(0.001, audioContext.currentTime + 0.2);
+              
+              // Stop oscillators
+              setTimeout(() => {
+                try {
+                  oscillator1 && oscillator1.stop();
+                  oscillator2 && oscillator2.stop();
+                  oscillator3 && oscillator3.stop();
+                  oscillator4 && oscillator4.stop();
+                } catch (e) {
+                  console.log('Oscillator already stopped');
+                }
+              }, 200);
+            }
+          }
           
           bgMusicRef.current = null;
         } catch (e) {
           console.log('Music cleanup:', e);
         }
       }
+    };
+  }, [decodedCategory]);
+
+  // Stop music when component unmounts or when navigating away
+  useEffect(() => {
+    return () => {
+      console.log('Component unmounting, stopping music...');
+      stopMusic();
     };
   }, []);
 
@@ -530,8 +903,12 @@ export default function Quiz() {
     } catch (error) {
       console.error("Error submitting quiz result:", error);
     } finally {
-      // Navigate back - Homepage will fetch fresh data from backend
-      navigate("/home");
+      // Stop music and navigate back - Homepage will fetch fresh data from backend
+      stopMusic();
+      // Small delay to ensure music stops before navigating
+      setTimeout(() => {
+        navigate("/home");
+      }, 200);
     }
   };
 
@@ -590,6 +967,7 @@ export default function Quiz() {
                 console.log('Stop music:', e);
               }
             }
+            stopMusic();
             navigate("/home");
           }} 
           style={{ cursor: 'pointer' }}

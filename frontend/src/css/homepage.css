@@ -297,6 +297,15 @@ body {
   justify-self: center;
 }
 
+.loading-message {
+  font-size: 1rem;
+  color: #FFD700;
+  text-align: center;
+  align-self: center;
+  justify-self: center;
+  font-weight: 500;
+}
+
 /* ============================= */
 /* Logout Button */
 .logout-button {

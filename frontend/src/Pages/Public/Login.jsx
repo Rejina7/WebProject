@@ -34,12 +34,22 @@ function Login() {
       });
 
       // 🔹 SAVE USER (backend does NOT return token)
+      console.log("🔐 Login Response:", response);
+      console.log("👤 User data:", response.user);
       localStorage.setItem("user", JSON.stringify(response.user));
+      console.log("💾 Stored user in localStorage:", JSON.parse(localStorage.getItem("user")));
 
       alert("Login successful!");
 
-      // 🔹 REDIRECT TO DASHBOARD
-      navigate("/dashboard");
+      // 🔹 REDIRECT BASED ON ROLE (admin or user)
+      console.log("🔍 Checking role:", response.user.role);
+      if (response.user.role === "admin") {
+        console.log("✅ Admin detected! Navigating to /admin/home");
+        navigate("/admin/home");
+      } else {
+        console.log("👤 Regular user detected! Navigating to /dashboard");
+        navigate("/dashboard");
+      }
     } catch (error) {
       alert(error.message || "Login failed");
     }

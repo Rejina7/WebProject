@@ -4,10 +4,16 @@ import {
   getQuizzesByCategory,
   getQuizById,
   createQuiz,
+  deleteQuiz,
+  updateQuiz,
+  getAllQuizzesAdmin,
   submitQuizResult,
   getUserQuizResults,
   getUserDashboardStats,
   getLeaderboard,
+  getQuizStatistics,
+  getUserQuizStats,
+  getRecentAttempts,
 } from "../controllers/quizController.js";
 
 const router = express.Router();
@@ -17,6 +23,15 @@ router.post("/submit", submitQuizResult);
 router.get("/results/:userId", getUserQuizResults);
 router.get("/dashboard/:userId", getUserDashboardStats);
 router.get("/leaderboard", getLeaderboard);
+
+// Admin endpoints
+router.get("/admin/all", getAllQuizzesAdmin);
+router.get("/admin/recent-attempts", getRecentAttempts);
+router.get("/admin/stats", getUserQuizStats);
+router.get("/admin/statistics/:quizId", getQuizStatistics);
+router.get("/admin/statistics", getQuizStatistics);
+router.put("/admin/:id", updateQuiz);
+router.delete("/admin/:id", deleteQuiz);
 
 // Quiz endpoints
 router.get("/", getAllQuizzes);
