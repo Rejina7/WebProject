@@ -1,7 +1,7 @@
 .splash-container {
   width: 100vw;
   height: 100vh;
-  background: radial-gradient(circle at top right, #3b5c85, #061a36 70%);
+  background: radial-gradient(circle at top right, #1a1a1a, #000000 70%);
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -20,7 +20,7 @@
 
 .splash-logo:hover {
   transform: scale(1.1) rotate(3deg);
-  filter: drop-shadow(0 0 15px rgba(255, 255, 255, 0.6));
+  filter: drop-shadow(0 0 25px #FFD700) drop-shadow(0 0 50px rgba(255, 215, 0, 0.5));
 }
 
 /* Animations */

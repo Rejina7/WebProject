@@ -1,10 +1,16 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "../../css/auth.css";
 import { LoginSchema } from "./Schema/Login.schema";
 import { apiCall } from "../../Utils/api";
+import {
+  clearRememberedCredentials,
+  getRememberedCredentials,
+  setRememberedCredentials,
+  setStoredUser,
+} from "../../Utils/authStorage";
 import logo from "../../assets/logo.png";
 import loginCharacter from "../../assets/loginCharacter.png";
 
@@ -16,10 +22,45 @@ function Login() {
   const {
     register,
     handleSubmit,
+    setValue,
+    watch,
     formState: { errors },
   } = useForm({
     resolver: zodResolver(LoginSchema),
   });
+
+  const usernameValue = watch("username") || "";
+
+  useEffect(() => {
+    // Check if we're coming from a remembered login - don't pre-fill on page load
+    // Users must type first to trigger autofill
+  }, []);
+
+  useEffect(() => {
+    if (usernameValue.length === 0) return;
+
+    // Try to get saved credentials for the username being typed
+    const allCredsStr = localStorage.getItem("rememberedCredentials") || "{}";
+    let allCreds = {};
+    try {
+      allCreds = JSON.parse(allCredsStr);
+    } catch {
+      return;
+    }
+
+    // Find a saved username that starts with what user typed
+    for (const savedUsername in allCreds) {
+      if (savedUsername.toLowerCase().startsWith(usernameValue.toLowerCase())) {
+        const savedCreds = allCreds[savedUsername];
+        if (savedCreds?.password) {
+          setValue("username", savedUsername, { shouldValidate: true });
+          setValue("password", savedCreds.password, { shouldValidate: true });
+          setRememberMe(true);
+          break;
+        }
+      }
+    }
+  }, [usernameValue, setValue]);
 
   const onLoginClick = async (loginData) => {
     console.log("Login form data:", loginData);
@@ -36,8 +77,12 @@ function Login() {
       // 🔹 SAVE USER (backend does NOT return token)
       console.log("🔐 Login Response:", response);
       console.log("👤 User data:", response.user);
-      localStorage.setItem("user", JSON.stringify(response.user));
-      console.log("💾 Stored user in localStorage:", JSON.parse(localStorage.getItem("user")));
+      setStoredUser(response.user, rememberMe);
+      if (rememberMe) {
+        setRememberedCredentials(loginData.username, loginData.password);
+      } else {
+        clearRememberedCredentials(loginData.username);
+      }
 
       alert("Login successful!");
 

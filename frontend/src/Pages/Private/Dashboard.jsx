@@ -1,8 +1,10 @@
 import { useState, useEffect } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import "../../css/dashboard.css";
 import logo from "../../assets/logo.png";
 import apiCall from "../../Utils/api";
+import { getStoredUser } from "../../Utils/authStorage";
+import { clearStoredUser } from "../../Utils/authStorage";
 
 export default function Homepage() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -16,6 +18,7 @@ export default function Homepage() {
   const [loading, setLoading] = useState(true);
   const [userName, setUserName] = useState("User");
   const location = useLocation();
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetchDashboardData();
@@ -34,7 +37,7 @@ export default function Homepage() {
   const fetchDashboardData = async () => {
     try {
       // Get user from localStorage
-      const user = JSON.parse(localStorage.getItem("user"));
+      const user = getStoredUser();
       
       if (!user || !user.id) {
         console.error("No user found in localStorage");
@@ -113,6 +116,11 @@ export default function Homepage() {
     }
   };
 
+  const handleLogout = () => {
+    clearStoredUser();
+    navigate("/");
+  };
+
   return (
     <div className="dashboard-container">
       {/* Navbar */}
@@ -124,7 +132,7 @@ export default function Homepage() {
         <div className={`dashboard-links ${isMenuOpen ? "active" : ""}`}>
           <Link to="/home">Home</Link>
           <Link to="/profile">Profile</Link>
-          <Link to="/logout">Logout</Link>
+          <Link to="/" onClick={handleLogout}>Logout</Link>
         </div>
         <button
           className="menu-toggle"

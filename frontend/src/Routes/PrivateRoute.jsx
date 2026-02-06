@@ -1,9 +1,9 @@
 import { Navigate } from "react-router-dom";
+import { getStoredUser } from "../Utils/authStorage";
 
 const isAuthenticated = () => {
   try {
-    const user = localStorage.getItem("user");
-    return Boolean(user);
+    return Boolean(getStoredUser());
   } catch {
     return false;
   }
@@ -18,8 +18,7 @@ const PrivateRoute = ({ children, requiredRole = null }) => {
   // Check role if required
   if (requiredRole) {
     try {
-      const userStr = localStorage.getItem("user");
-      const user = userStr ? JSON.parse(userStr) : null;
+      const user = getStoredUser();
       console.log("🔍 PrivateRoute: Checking role. Required:", requiredRole, "User role:", user?.role, "User data:", user);
       if (!user || user.role !== requiredRole) {
         console.log("❌ PrivateRoute: Role check failed. Redirecting to /dashboard");

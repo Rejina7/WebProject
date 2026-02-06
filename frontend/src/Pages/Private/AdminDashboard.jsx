@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import AdminSidebar from "./AdminSidebar.jsx";
 import "../../css/admin-dashboard-dark.css";
+import { getStoredUser } from "../../Utils/authStorage";
 
 function AdminDashboard() {
   const [quizzes, setQuizzes] = useState([]);
@@ -24,13 +25,12 @@ function AdminDashboard() {
 
   // Load all data
   useEffect(() => {
-    const user = localStorage.getItem("user");
-    if (!user) {
+    const userData = getStoredUser();
+    if (!userData) {
       navigate("/login");
       return;
     }
 
-    const userData = JSON.parse(user);
     if (userData.role !== "admin") {
       navigate("/home");
       return;
@@ -157,11 +157,6 @@ function AdminDashboard() {
     }
   };
 
-  const handleLogout = () => {
-    localStorage.removeItem("user");
-    navigate("/login");
-  };
-
   if (loading) return <div className="admin-container">Loading...</div>;
 
   return (
@@ -170,9 +165,6 @@ function AdminDashboard() {
       <div className="admin-main-content">
         <header className="admin-header">
         <h1>Admin Dashboard</h1>
-        <button onClick={handleLogout} className="logout-btn">
-          Logout
-        </button>
       </header>
 
       <nav className="admin-tabs">

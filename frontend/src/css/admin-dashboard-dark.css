@@ -33,23 +33,6 @@
   color: #FFD700;
 }
 
-.logout-btn {
-  background: linear-gradient(135deg, #ff6b6b 0%, #ff5252 100%);
-  color: white;
-  border: none;
-  padding: 12px 24px;
-  border-radius: 8px;
-  cursor: pointer;
-  font-weight: 600;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 8px rgba(255, 107, 107, 0.3);
-}
-
-.logout-btn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 12px rgba(255, 107, 107, 0.4);
-}
-
 .admin-tabs {
   display: flex;
   background: rgba(255, 215, 0, 0.05);
@@ -460,10 +443,6 @@
     font-size: 22px;
   }
 
-  .logout-btn {
-    width: 100%;
-  }
-
   .admin-tabs {
     flex-wrap: wrap;
   }
@@ -581,10 +560,5 @@
   .stats-table td {
     padding: 8px 6px;
     font-size: 11px;
-  }
-
-  .logout-btn {
-    padding: 10px 16px;
-    font-size: 13px;
   }
 }

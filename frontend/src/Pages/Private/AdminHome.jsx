@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import AdminSidebar from "./AdminSidebar.jsx";
 import "../../css/admin-home-dark.css";
+import { getStoredUser } from "../../Utils/authStorage";
 
 function AdminHome() {
   const [quizzes, setQuizzes] = useState([]);
@@ -37,13 +38,12 @@ function AdminHome() {
 
   // Check admin role
   useEffect(() => {
-    const user = localStorage.getItem("user");
-    if (!user) {
+    const userData = getStoredUser();
+    if (!userData) {
       navigate("/login");
       return;
     }
 
-    const userData = JSON.parse(user);
     if (userData.role !== "admin") {
       navigate("/home");
       return;

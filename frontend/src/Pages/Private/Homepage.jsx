@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import apiCall from "../../Utils/api";
+import { clearStoredUser, getStoredUser } from "../../Utils/authStorage";
 import "../../css/homepage.css";
 import logo from "../../assets/logo.png";
 import hero from "../../assets/hero.png";
@@ -97,7 +98,7 @@ export default function Homepage() {
 
   const fetchUserStats = async () => {
     try {
-      const user = JSON.parse(localStorage.getItem("user"));
+      const user = getStoredUser();
       
       if (!user || !user.id) {
         return;
@@ -134,6 +135,11 @@ export default function Homepage() {
 
   const recentQuizzes = getRecentQuizzes();
 
+  const handleLogout = () => {
+    clearStoredUser();
+    navigate("/");
+  };
+
   // Leaderboard
   const leaderboard = [
     { rank: 1, name: "Alex", points: 5280 },
@@ -167,7 +173,7 @@ export default function Homepage() {
           <div className="navbar-buttons">
             <button className="nav-btn" onClick={() => navigate("/profile")}>Profile</button>
             <button className="nav-btn" onClick={() => navigate("/dashboard")}>Dashboard</button>
-            <button className="logout-button" onClick={() => navigate("/")}>Logout</button>
+            <button className="logout-button" onClick={handleLogout}>Logout</button>
           </div>
         </div>
       </nav>

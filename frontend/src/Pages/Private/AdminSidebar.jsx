@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import "../../css/admin-sidebar-dark.css";
+import { clearStoredUser } from "../../Utils/authStorage";
 
 function AdminSidebar() {
   const [isOpen, setIsOpen] = useState(true);
@@ -21,24 +22,6 @@ function AdminSidebar() {
       path: "/admin/dashboard",
     },
     {
-      id: "quizzes",
-      label: "Manage Quizzes",
-      icon: "📝",
-      path: "/admin/quizzes",
-    },
-    {
-      id: "statistics",
-      label: "Quiz Statistics",
-      icon: "📈",
-      path: "/admin/statistics",
-    },
-    {
-      id: "users",
-      label: "User Performance",
-      icon: "👥",
-      path: "/admin/users",
-    },
-    {
       id: "reports",
       label: "Reports",
       icon: "📋",
@@ -47,7 +30,7 @@ function AdminSidebar() {
   ];
 
   const handleLogout = () => {
-    localStorage.removeItem("user");
+    clearStoredUser();
     navigate("/login");
   };
 
