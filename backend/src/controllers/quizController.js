@@ -175,7 +175,22 @@ export const submitQuizResult = async (req, res) => {
       }
     );
 
-    console.log("Quiz result inserted:", result[0]);
+    console.log("✅ Quiz result inserted successfully:", result[0]);
+    console.log("🔍 Verifying - userId:", result[0].userId, "quizId:", result[0].quizId);
+    
+    // Verify the user exists and check their role
+    const [userCheck] = await sequelize.query(
+      `SELECT id, username, role FROM users WHERE id = :userId`,
+      { replacements: { userId } }
+    );
+    console.log("👤 User verification:", userCheck[0]);
+    
+    // Verify the quiz exists
+    const [quizCheck] = await sequelize.query(
+      `SELECT id, title, category FROM quizzes WHERE id = :quizId`,
+      { replacements: { quizId: quizRecordId } }
+    );
+    console.log("📝 Quiz verification:", quizCheck[0]);
 
     res.status(201).json({
       message: "Quiz result submitted successfully",
@@ -567,30 +582,72 @@ export const getUserQuizStats = async (req, res) => {
 // Get recent quiz attempts for admin
 export const getRecentAttempts = async (req, res) => {
   try {
+    console.log("\n===========================================");
+    console.log("🔍 FETCHING RECENT QUIZ ATTEMPTS");
+    console.log("===========================================\n");
+    
+    // First, let's check what's in quiz_results - RAW DATA
+    const [allResults] = await sequelize.query(
+      `SELECT * FROM quiz_results ORDER BY "createdAt" DESC LIMIT 20`
+    );
+    console.log("📋 RAW QUIZ RESULTS FROM DATABASE:");
+    console.table(allResults);
+    console.log("Total results in DB:", allResults.length);
+    
+    // Check if users exist for these results
+    if (allResults.length > 0) {
+      const userIds = [...new Set(allResults.map(r => r.userId))];
+      const [users] = await sequelize.query(
+        `SELECT id, username, role FROM users WHERE id IN (:userIds)`,
+        { replacements: { userIds } }
+      );
+      console.log("\n👥 USERS INVOLVED:");
+      console.table(users);
+      
+      // Check if quizzes exist for these results
+      const quizIds = [...new Set(allResults.map(r => r.quizId))];
+      const [quizzes] = await sequelize.query(
+        `SELECT id, title, category FROM quizzes WHERE id IN (:quizIds)`,
+        { replacements: { quizIds } }
+      );
+      console.log("\n📝 QUIZZES INVOLVED:");
+      console.table(quizzes);
+    }
+    
+    console.log("\n🔄 Running JOIN query for admin dashboard...\n");
+    
     const [attempts] = await sequelize.query(
       `SELECT 
          qr.id,
          qr.score,
          qr."isPassed",
          qr."createdAt",
-         u.username,
+         qr."userId",
+         qr."quizId",
+         COALESCE(u.username, 'Unknown User') as username,
          u.email,
-         q.title as "quizTitle",
-         q.category
+         u.role as "userRole",
+         COALESCE(q.title, 'Unknown Quiz') as "quizTitle",
+         COALESCE(q.category, 'Unknown') as category
        FROM quiz_results qr
-       INNER JOIN users u ON qr."userId" = u.id
-       INNER JOIN quizzes q ON qr."quizId" = q.id
-       WHERE u.role = 'user'
+       LEFT JOIN users u ON qr."userId" = u.id
+       LEFT JOIN quizzes q ON qr."quizId" = q.id
+       WHERE COALESCE(u.role, 'user') != 'admin'
        ORDER BY qr."createdAt" DESC
        LIMIT 20`
     );
+    
+    console.log("✅ ATTEMPTS AFTER JOIN (what admin will see):");
+    console.table(attempts);
+    console.log("Total attempts returned:", attempts.length);
+    console.log("\n===========================================\n");
 
     res.json({
       message: "Recent attempts retrieved successfully",
       attempts,
     });
   } catch (err) {
-    console.error(err);
+    console.error("❌ Error in getRecentAttempts:", err);
     res.status(500).json({ message: "Server error" });
   }
 };

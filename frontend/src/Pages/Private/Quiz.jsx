@@ -464,6 +464,1110 @@ const quizData = {
       correct: 2,
     },
   ],
+  History: [
+    {
+      id: 1,
+      question: "Who was the first President of the United States?",
+      options: ["Thomas Jefferson", "George Washington", "John Adams", "Benjamin Franklin"],
+      correct: 1,
+    },
+    {
+      id: 2,
+      question: "In which year did World War II end?",
+      options: ["1943", "1944", "1945", "1946"],
+      correct: 2,
+    },
+    {
+      id: 3,
+      question: "Who was the first woman to win a Nobel Prize?",
+      options: ["Marie Curie", "Mother Teresa", "Jane Addams", "Dorothy Hodgkin"],
+      correct: 0,
+    },
+    {
+      id: 4,
+      question: "What ancient wonder was located in Alexandria?",
+      options: ["Hanging Gardens", "Colossus of Rhodes", "Lighthouse", "Statue of Zeus"],
+      correct: 2,
+    },
+    {
+      id: 5,
+      question: "Who painted the Mona Lisa?",
+      options: ["Michelangelo", "Leonardo da Vinci", "Raphael", "Donatello"],
+      correct: 1,
+    },
+    {
+      id: 6,
+      question: "In which year did the Berlin Wall fall?",
+      options: ["1987", "1988", "1989", "1990"],
+      correct: 2,
+    },
+    {
+      id: 7,
+      question: "Who was the first emperor of Rome?",
+      options: ["Julius Caesar", "Augustus", "Nero", "Caligula"],
+      correct: 1,
+    },
+    {
+      id: 8,
+      question: "What year did Christopher Columbus reach the Americas?",
+      options: ["1492", "1493", "1491", "1490"],
+      correct: 0,
+    },
+    {
+      id: 9,
+      question: "Who wrote the Declaration of Independence?",
+      options: ["George Washington", "Benjamin Franklin", "Thomas Jefferson", "John Adams"],
+      correct: 2,
+    },
+    {
+      id: 10,
+      question: "Which empire built Machu Picchu?",
+      options: ["Aztec", "Maya", "Inca", "Olmec"],
+      correct: 2,
+    },
+    {
+      id: 11,
+      question: "Who was the British Prime Minister during most of WWII?",
+      options: ["Neville Chamberlain", "Winston Churchill", "Clement Attlee", "Anthony Eden"],
+      correct: 1,
+    },
+    {
+      id: 12,
+      question: "In what year did the Titanic sink?",
+      options: ["1910", "1911", "1912", "1913"],
+      correct: 2,
+    },
+    {
+      id: 13,
+      question: "Who was the longest-reigning British monarch before Elizabeth II?",
+      options: ["Victoria", "George III", "Edward VII", "George V"],
+      correct: 0,
+    },
+    {
+      id: 14,
+      question: "What was the capital of the Byzantine Empire?",
+      options: ["Rome", "Athens", "Constantinople", "Alexandria"],
+      correct: 2,
+    },
+    {
+      id: 15,
+      question: "Who was assassinated in 1865 at Ford's Theatre?",
+      options: ["Abraham Lincoln", "James Garfield", "William McKinley", "John F. Kennedy"],
+      correct: 0,
+    },
+  ],
+  Space: [
+    {
+      id: 1,
+      question: "What is the largest planet in our solar system?",
+      options: ["Saturn", "Jupiter", "Neptune", "Uranus"],
+      correct: 1,
+    },
+    {
+      id: 2,
+      question: "How many moons does Mars have?",
+      options: ["1", "2", "3", "4"],
+      correct: 1,
+    },
+    {
+      id: 3,
+      question: "What is the name of our galaxy?",
+      options: ["Andromeda", "Milky Way", "Whirlpool", "Sombrero"],
+      correct: 1,
+    },
+    {
+      id: 4,
+      question: "Who was the first human to walk on the Moon?",
+      options: ["Buzz Aldrin", "Neil Armstrong", "Yuri Gagarin", "Alan Shepard"],
+      correct: 1,
+    },
+    {
+      id: 5,
+      question: "What is the closest star to Earth?",
+      options: ["Alpha Centauri", "Proxima Centauri", "The Sun", "Sirius"],
+      correct: 2,
+    },
+    {
+      id: 6,
+      question: "How long does it take light from the Sun to reach Earth?",
+      options: ["8 minutes", "8 seconds", "8 hours", "8 days"],
+      correct: 0,
+    },
+    {
+      id: 7,
+      question: "What planet is known for its rings?",
+      options: ["Jupiter", "Uranus", "Saturn", "Neptune"],
+      correct: 2,
+    },
+    {
+      id: 8,
+      question: "What is a group of stars called?",
+      options: ["Cluster", "Constellation", "Galaxy", "Nebula"],
+      correct: 1,
+    },
+    {
+      id: 9,
+      question: "Which planet is the hottest in our solar system?",
+      options: ["Mercury", "Venus", "Mars", "Jupiter"],
+      correct: 1,
+    },
+    {
+      id: 10,
+      question: "What year did humans first land on the Moon?",
+      options: ["1967", "1968", "1969", "1970"],
+      correct: 2,
+    },
+    {
+      id: 11,
+      question: "What is the Great Red Spot on Jupiter?",
+      options: ["A volcano", "A storm", "A crater", "An ocean"],
+      correct: 1,
+    },
+    {
+      id: 12,
+      question: "How many planets are in our solar system?",
+      options: ["7", "8", "9", "10"],
+      correct: 1,
+    },
+    {
+      id: 13,
+      question: "What is the name of Mars' largest moon?",
+      options: ["Phobos", "Deimos", "Titan", "Europa"],
+      correct: 0,
+    },
+    {
+      id: 14,
+      question: "What is the coldest planet in our solar system?",
+      options: ["Neptune", "Uranus", "Pluto", "Saturn"],
+      correct: 1,
+    },
+    {
+      id: 15,
+      question: "What is the International Space Station?",
+      options: ["A satellite", "A space station", "A telescope", "A rocket"],
+      correct: 1,
+    },
+  ],
+  "General Knowledge": [
+    {
+      id: 1,
+      question: "What is the capital of Australia?",
+      options: ["Sydney", "Melbourne", "Canberra", "Brisbane"],
+      correct: 2,
+    },
+    {
+      id: 2,
+      question: "How many continents are there?",
+      options: ["5", "6", "7", "8"],
+      correct: 2,
+    },
+    {
+      id: 3,
+      question: "What is the smallest country in the world?",
+      options: ["Monaco", "Vatican City", "San Marino", "Liechtenstein"],
+      correct: 1,
+    },
+    {
+      id: 4,
+      question: "What year did the internet become available to the public?",
+      options: ["1989", "1991", "1993", "1995"],
+      correct: 1,
+    },
+    {
+      id: 5,
+      question: "What is the longest river in the world?",
+      options: ["Amazon", "Nile", "Yangtze", "Mississippi"],
+      correct: 1,
+    },
+    {
+      id: 6,
+      question: "How many sides does a hexagon have?",
+      options: ["5", "6", "7", "8"],
+      correct: 1,
+    },
+    {
+      id: 7,
+      question: "What is the currency of Japan?",
+      options: ["Yuan", "Won", "Yen", "Ringgit"],
+      correct: 2,
+    },
+    {
+      id: 8,
+      question: "Who invented the telephone?",
+      options: ["Thomas Edison", "Nikola Tesla", "Alexander Graham Bell", "Benjamin Franklin"],
+      correct: 2,
+    },
+    {
+      id: 9,
+      question: "What is the largest ocean on Earth?",
+      options: ["Atlantic", "Indian", "Arctic", "Pacific"],
+      correct: 3,
+    },
+    {
+      id: 10,
+      question: "How many colors are in a rainbow?",
+      options: ["5", "6", "7", "8"],
+      correct: 2,
+    },
+    {
+      id: 11,
+      question: "What is the tallest mountain in the world?",
+      options: ["K2", "Mount Everest", "Kangchenjunga", "Kilimanjaro"],
+      correct: 1,
+    },
+    {
+      id: 12,
+      question: "What language is spoken in Brazil?",
+      options: ["Spanish", "Portuguese", "French", "Italian"],
+      correct: 1,
+    },
+    {
+      id: 13,
+      question: "How many teeth does an adult human have?",
+      options: ["28", "30", "32", "34"],
+      correct: 2,
+    },
+    {
+      id: 14,
+      question: "What is the smallest prime number?",
+      options: ["0", "1", "2", "3"],
+      correct: 2,
+    },
+    {
+      id: 15,
+      question: "What is the largest desert in the world?",
+      options: ["Sahara", "Arabian", "Gobi", "Antarctic"],
+      correct: 3,
+    },
+  ],
+  "Stranger Things": [
+    {
+      id: 1,
+      question: "What is Eleven's real name?",
+      options: ["Jane", "Joyce", "Jennifer", "Jessica"],
+      correct: 0,
+    },
+    {
+      id: 2,
+      question: "What is the name of the alternate dimension?",
+      options: ["The Shadow Realm", "The Upside Down", "The Dark Place", "The Void"],
+      correct: 1,
+    },
+    {
+      id: 3,
+      question: "What game do the kids play in Mike's basement?",
+      options: ["Chess", "Monopoly", "Dungeons & Dragons", "Risk"],
+      correct: 2,
+    },
+    {
+      id: 4,
+      question: "What is Will's favorite song?",
+      options: ["Should I Stay or Should I Go", "Every Breath You Take", "Africa", "Take On Me"],
+      correct: 0,
+    },
+    {
+      id: 5,
+      question: "Where does the show take place?",
+      options: ["Hawkins, Indiana", "Hawkins, Illinois", "Riverside, Indiana", "Greendale, Indiana"],
+      correct: 0,
+    },
+    {
+      id: 6,
+      question: "What is the name of Steve's workplace in Season 3?",
+      options: ["Starcourt Mall", "Scoops Ahoy", "Family Video", "The Arcade"],
+      correct: 1,
+    },
+    {
+      id: 7,
+      question: "Who is Eleven's 'Papa'?",
+      options: ["Dr. Brenner", "Jim Hopper", "Dr. Owens", "Lonnie Byers"],
+      correct: 0,
+    },
+    {
+      id: 8,
+      question: "What year does Season 1 take place?",
+      options: ["1982", "1983", "1984", "1985"],
+      correct: 1,
+    },
+    {
+      id: 9,
+      question: "What is the name of Dustin's girlfriend?",
+      options: ["Sally", "Suzie", "Sarah", "Stacy"],
+      correct: 1,
+    },
+    {
+      id: 10,
+      question: "What company does Joyce work for in Season 1?",
+      options: ["Melvald's", "RadioShack", "Hawkins Lab", "Bradley's"],
+      correct: 0,
+    },
+    {
+      id: 11,
+      question: "What are Eleven's favorite foods?",
+      options: ["Pizza and Ice Cream", "Burgers and Fries", "Eggos and Candy", "Donuts and Coffee"],
+      correct: 2,
+    },
+    {
+      id: 12,
+      question: "What is Max's last name?",
+      options: ["Miller", "Mayfield", "Martin", "Morrison"],
+      correct: 1,
+    },
+    {
+      id: 13,
+      question: "What creature attacks Barb at Steve's pool?",
+      options: ["The Mind Flayer", "The Demogorgon", "A Demodog", "The Shadow Monster"],
+      correct: 1,
+    },
+    {
+      id: 14,
+      question: "What is Bob Newby's nickname?",
+      options: ["Bob the Builder", "Brave Bob", "Bob the Brain", "Bob the Superhero"],
+      correct: 2,
+    },
+    {
+      id: 15,
+      question: "What mall does Season 3 revolve around?",
+      options: ["Riverside Mall", "Starcourt Mall", "Hawkins Plaza", "The Marketplace"],
+      correct: 1,
+    },
+  ],
+  Math: [
+    {
+      id: 1,
+      question: "What is 12 x 12?",
+      options: ["124", "144", "154", "164"],
+      correct: 1,
+    },
+    {
+      id: 2,
+      question: "What is the value of Pi (approximately)?",
+      options: ["3.14", "3.41", "2.14", "4.13"],
+      correct: 0,
+    },
+    {
+      id: 3,
+      question: "What is the square root of 64?",
+      options: ["6", "7", "8", "9"],
+      correct: 2,
+    },
+    {
+      id: 4,
+      question: "What is 15% of 200?",
+      options: ["20", "25", "30", "35"],
+      correct: 2,
+    },
+    {
+      id: 5,
+      question: "What is the sum of angles in a triangle?",
+      options: ["90°", "180°", "270°", "360°"],
+      correct: 1,
+    },
+    {
+      id: 6,
+      question: "What is 7^2?",
+      options: ["14", "21", "49", "56"],
+      correct: 2,
+    },
+    {
+      id: 7,
+      question: "What is the next prime number after 7?",
+      options: ["8", "9", "10", "11"],
+      correct: 3,
+    },
+    {
+      id: 8,
+      question: "What is 1/4 as a decimal?",
+      options: ["0.25", "0.5", "0.75", "1.0"],
+      correct: 0,
+    },
+    {
+      id: 9,
+      question: "How many edges does a cube have?",
+      options: ["6", "8", "10", "12"],
+      correct: 3,
+    },
+    {
+      id: 10,
+      question: "What is 9 x 8?",
+      options: ["63", "72", "81", "90"],
+      correct: 1,
+    },
+    {
+      id: 11,
+      question: "What is the area of a square with side length 5?",
+      options: ["10", "20", "25", "50"],
+      correct: 2,
+    },
+    {
+      id: 12,
+      question: "What is 100 ÷ 4?",
+      options: ["20", "25", "30", "35"],
+      correct: 1,
+    },
+    {
+      id: 13,
+      question: "What is the perimeter of a rectangle with length 8 and width 3?",
+      options: ["11", "16", "22", "24"],
+      correct: 2,
+    },
+    {
+      id: 14,
+      question: "What is 2^5?",
+      options: ["10", "16", "32", "64"],
+      correct: 2,
+    },
+    {
+      id: 15,
+      question: "What is the least common multiple of 4 and 6?",
+      options: ["8", "10", "12", "24"],
+      correct: 2,
+    },
+  ],
+  Sports: [
+    {
+      id: 1,
+      question: "How many players are on a soccer team?",
+      options: ["9", "10", "11", "12"],
+      correct: 2,
+    },
+    {
+      id: 2,
+      question: "What sport is known as 'The Beautiful Game'?",
+      options: ["Basketball", "Soccer", "Tennis", "Baseball"],
+      correct: 1,
+    },
+    {
+      id: 3,
+      question: "How many points is a touchdown worth in American football?",
+      options: ["3", "6", "7", "8"],
+      correct: 1,
+    },
+    {
+      id: 4,
+      question: "Which country won the FIFA World Cup in 2018?",
+      options: ["Brazil", "Germany", "France", "Argentina"],
+      correct: 2,
+    },
+    {
+      id: 5,
+      question: "How many rings on the Olympic flag?",
+      options: ["4", "5", "6", "7"],
+      correct: 1,
+    },
+    {
+      id: 6,
+      question: "What is the national sport of Canada?",
+      options: ["Ice Hockey", "Lacrosse", "Baseball", "Basketball"],
+      correct: 1,
+    },
+    {
+      id: 7,
+      question: "In tennis, what is a score of zero called?",
+      options: ["Nil", "Love", "Zero", "Duck"],
+      correct: 1,
+    },
+    {
+      id: 8,
+      question: "How long is a marathon?",
+      options: ["26.2 miles", "24.2 miles", "28.2 miles", "30 miles"],
+      correct: 0,
+    },
+    {
+      id: 9,
+      question: "What sport does Serena Williams play?",
+      options: ["Golf", "Tennis", "Badminton", "Volleyball"],
+      correct: 1,
+    },
+    {
+      id: 10,
+      question: "Which NBA team has won the most championships?",
+      options: ["Lakers", "Bulls", "Celtics", "Warriors"],
+      correct: 2,
+    },
+    {
+      id: 11,
+      question: "What is the diameter of a basketball hoop in inches?",
+      options: ["16", "18", "20", "22"],
+      correct: 1,
+    },
+    {
+      id: 12,
+      question: "Which country hosted the 2016 Summer Olympics?",
+      options: ["China", "UK", "Brazil", "Russia"],
+      correct: 2,
+    },
+    {
+      id: 13,
+      question: "In golf, what is one stroke under par called?",
+      options: ["Eagle", "Birdie", "Bogey", "Albatross"],
+      correct: 1,
+    },
+    {
+      id: 14,
+      question: "How many players are on a basketball team on the court?",
+      options: ["4", "5", "6", "7"],
+      correct: 1,
+    },
+    {
+      id: 15,
+      question: "Who is known as 'The Greatest' in boxing?",
+      options: ["Mike Tyson", "Floyd Mayweather", "Muhammad Ali", "Joe Frazier"],
+      correct: 2,
+    },
+  ],
+  Music: [
+    {
+      id: 1,
+      question: "Who is known as the 'King of Pop'?",
+      options: ["Elvis Presley", "Michael Jackson", "Prince", "Freddie Mercury"],
+      correct: 1,
+    },
+    {
+      id: 2,
+      question: "What instrument has 88 keys?",
+      options: ["Guitar", "Violin", "Piano", "Organ"],
+      correct: 2,
+    },
+    {
+      id: 3,
+      question: "Which band wrote 'Bohemian Rhapsody'?",
+      options: ["The Beatles", "Led Zeppelin", "Queen", "Pink Floyd"],
+      correct: 2,
+    },
+    {
+      id: 4,
+      question: "How many strings does a standard guitar have?",
+      options: ["4", "5", "6", "7"],
+      correct: 2,
+    },
+    {
+      id: 5,
+      question: "Who sang 'Purple Rain'?",
+      options: ["David Bowie", "Prince", "George Michael", "Elton John"],
+      correct: 1,
+    },
+    {
+      id: 6,
+      question: "What is the highest female singing voice?",
+      options: ["Alto", "Mezzo-soprano", "Soprano", "Contralto"],
+      correct: 2,
+    },
+    {
+      id: 7,
+      question: "Which classical composer was deaf?",
+      options: ["Mozart", "Bach", "Beethoven", "Chopin"],
+      correct: 2,
+    },
+    {
+      id: 8,
+      question: "What year did The Beatles break up?",
+      options: ["1968", "1969", "1970", "1971"],
+      correct: 2,
+    },
+    {
+      id: 9,
+      question: "Who is the lead singer of U2?",
+      options: ["Bono", "The Edge", "Sting", "John Lennon"],
+      correct: 0,
+    },
+    {
+      id: 10,
+      question: "What is the term for a group of four musicians?",
+      options: ["Trio", "Quartet", "Quintet", "Ensemble"],
+      correct: 1,
+    },
+    {
+      id: 11,
+      question: "Which instrument is Yo-Yo Ma famous for playing?",
+      options: ["Violin", "Piano", "Cello", "Flute"],
+      correct: 2,
+    },
+    {
+      id: 12,
+      question: "What does 'forte' mean in music?",
+      options: ["Soft", "Loud", "Fast", "Slow"],
+      correct: 1,
+    },
+    {
+      id: 13,
+      question: "Who wrote the Four Seasons?",
+      options: ["Mozart", "Vivaldi", "Bach", "Handel"],
+      correct: 1,
+    },
+    {
+      id: 14,
+      question: "What is the lowest male singing voice?",
+      options: ["Tenor", "Baritone", "Bass", "Alto"],
+      correct: 2,
+    },
+    {
+      id: 15,
+      question: "Which music streaming service was launched first?",
+      options: ["Apple Music", "Spotify", "Tidal", "Pandora"],
+      correct: 3,
+    },
+  ],
+  Art: [
+    {
+      id: 1,
+      question: "Who painted the Sistine Chapel ceiling?",
+      options: ["Leonardo da Vinci", "Michelangelo", "Raphael", "Donatello"],
+      correct: 1,
+    },
+    {
+      id: 2,
+      question: "What art movement is Salvador Dalí associated with?",
+      options: ["Cubism", "Impressionism", "Surrealism", "Abstract"],
+      correct: 2,
+    },
+    {
+      id: 3,
+      question: "In which museum is the Mona Lisa displayed?",
+      options: ["The Met", "The Louvre", "Uffizi Gallery", "Prado"],
+      correct: 1,
+    },
+    {
+      id: 4,
+      question: "Who painted 'The Starry Night'?",
+      options: ["Claude Monet", "Vincent van Gogh", "Pablo Picasso", "Edvard Munch"],
+      correct: 1,
+    },
+    {
+      id: 5,
+      question: "What is the primary color that is NOT red or blue?",
+      options: ["Green", "Yellow", "Orange", "Purple"],
+      correct: 1,
+    },
+    {
+      id: 6,
+      question: "Who sculpted 'The Thinker'?",
+      options: ["Michelangelo", "Rodin", "Bernini", "Donatello"],
+      correct: 1,
+    },
+    {
+      id: 7,
+      question: "What famous painting was stolen from the Louvre in 1911?",
+      options: ["The Scream", "Girl with a Pearl Earring", "Mona Lisa", "The Birth of Venus"],
+      correct: 2,
+    },
+    {
+      id: 8,
+      question: "Who painted 'Guernica'?",
+      options: ["Salvador Dalí", "Pablo Picasso", "Joan Miró", "Henri Matisse"],
+      correct: 1,
+    },
+    {
+      id: 9,
+      question: "What technique involves small dots of color?",
+      options: ["Impressionism", "Pointillism", "Cubism", "Fauvism"],
+      correct: 1,
+    },
+    {
+      id: 10,
+      question: "Who painted 'The Birth of Venus'?",
+      options: ["Raphael", "Botticelli", "Titian", "Caravaggio"],
+      correct: 1,
+    },
+    {
+      id: 11,
+      question: "What is the art of beautiful handwriting called?",
+      options: ["Typography", "Calligraphy", "Penmanship", "Lettering"],
+      correct: 1,
+    },
+    {
+      id: 12,
+      question: "Who painted 'The Girl with a Pearl Earring'?",
+      options: ["Rembrandt", "Vermeer", "Rubens", "Van Dyck"],
+      correct: 1,
+    },
+    {
+      id: 13,
+      question: "What color do you get when you mix red and yellow?",
+      options: ["Purple", "Green", "Orange", "Brown"],
+      correct: 2,
+    },
+    {
+      id: 14,
+      question: "What is a painting done on wet plaster called?",
+      options: ["Fresco", "Mural", "Canvas", "Tempera"],
+      correct: 0,
+    },
+    {
+      id: 15,
+      question: "Who painted 'The Scream'?",
+      options: ["Vincent van Gogh", "Edvard Munch", "Gustav Klimt", "Egon Schiele"],
+      correct: 1,
+    },
+  ],
+  Literature: [
+    {
+      id: 1,
+      question: "Who wrote 'Romeo and Juliet'?",
+      options: ["Charles Dickens", "William Shakespeare", "Jane Austen", "Mark Twain"],
+      correct: 1,
+    },
+    {
+      id: 2,
+      question: "What is the first book in the Harry Potter series?",
+      options: ["Chamber of Secrets", "Prisoner of Azkaban", "Philosopher's Stone", "Goblet of Fire"],
+      correct: 2,
+    },
+    {
+      id: 3,
+      question: "Who wrote '1984'?",
+      options: ["Aldous Huxley", "George Orwell", "Ray Bradbury", "H.G. Wells"],
+      correct: 1,
+    },
+    {
+      id: 4,
+      question: "What is the name of Sherlock Holmes' assistant?",
+      options: ["Dr. Watson", "Inspector Lestrade", "Mycroft", "Moriarty"],
+      correct: 0,
+    },
+    {
+      id: 5,
+      question: "Who wrote 'Pride and Prejudice'?",
+      options: ["Emily Brontë", "Charlotte Brontë", "Jane Austen", "George Eliot"],
+      correct: 2,
+    },
+    {
+      id: 6,
+      question: "In which book would you find the character Atticus Finch?",
+      options: ["The Great Gatsby", "To Kill a Mockingbird", "Of Mice and Men", "The Catcher in the Rye"],
+      correct: 1,
+    },
+    {
+      id: 7,
+      question: "Who wrote 'The Great Gatsby'?",
+      options: ["Ernest Hemingway", "F. Scott Fitzgerald", "John Steinbeck", "William Faulkner"],
+      correct: 1,
+    },
+    {
+      id: 8,
+      question: "What is the name of the hobbit in 'The Lord of the Rings'?",
+      options: ["Bilbo", "Frodo", "Sam", "Merry"],
+      correct: 1,
+    },
+    {
+      id: 9,
+      question: "Who wrote 'Moby Dick'?",
+      options: ["Mark Twain", "Herman Melville", "Nathaniel Hawthorne", "Edgar Allan Poe"],
+      correct: 1,
+    },
+    {
+      id: 10,
+      question: "What dystopian novel features 'Big Brother'?",
+      options: ["Brave New World", "Fahrenheit 451", "1984", "The Handmaid's Tale"],
+      correct: 2,
+    },
+    {
+      id: 11,
+      question: "Who wrote 'The Catcher in the Rye'?",
+      options: ["J.D. Salinger", "Jack Kerouac", "Allen Ginsberg", "William S. Burroughs"],
+      correct: 0,
+    },
+    {
+      id: 12,
+      question: "What is Dr. Seuss's real name?",
+      options: ["Theodore Geisel", "Theodor Seuss", "Ted Seuss", "Thomas Geisel"],
+      correct: 0,
+    },
+    {
+      id: 13,
+      question: "Who wrote 'Frankenstein'?",
+      options: ["Bram Stoker", "Mary Shelley", "Edgar Allan Poe", "H.P. Lovecraft"],
+      correct: 1,
+    },
+    {
+      id: 14,
+      question: "In which book series would you find Katniss Everdeen?",
+      options: ["Divergent", "The Maze Runner", "The Hunger Games", "Twilight"],
+      correct: 2,
+    },
+    {
+      id: 15,
+      question: "Who wrote 'The Chronicles of Narnia'?",
+      options: ["J.R.R. Tolkien", "C.S. Lewis", "Philip Pullman", "Roald Dahl"],
+      correct: 1,
+    },
+  ],
+  Technology: [
+    {
+      id: 1,
+      question: "Who is the founder of Microsoft?",
+      options: ["Steve Jobs", "Bill Gates", "Mark Zuckerberg", "Elon Musk"],
+      correct: 1,
+    },
+    {
+      id: 2,
+      question: "What does 'HTTP' stand for?",
+      options: ["HyperText Transfer Protocol", "High Transfer Text Protocol", "HyperText Tech Protocol", "Home Text Transfer Protocol"],
+      correct: 0,
+    },
+    {
+      id: 3,
+      question: "Which company created the iPhone?",
+      options: ["Samsung", "Google", "Apple", "Nokia"],
+      correct: 2,
+    },
+    {
+      id: 4,
+      question: "What year was Facebook founded?",
+      options: ["2003", "2004", "2005", "2006"],
+      correct: 1,
+    },
+    {
+      id: 5,
+      question: "What does 'AI' stand for?",
+      options: ["Automated Intelligence", "Artificial Intelligence", "Advanced Intelligence", "Active Intelligence"],
+      correct: 1,
+    },
+    {
+      id: 6,
+      question: "Who founded Tesla Motors?",
+      options: ["Elon Musk", "Jeff Bezos", "Steve Jobs", "Bill Gates"],
+      correct: 0,
+    },
+    {
+      id: 7,
+      question: "What does 'VR' stand for?",
+      options: ["Video Reality", "Virtual Reality", "Visual Reality", "Verified Reality"],
+      correct: 1,
+    },
+    {
+      id: 8,
+      question: "Which programming language is known for web development?",
+      options: ["Python", "JavaScript", "C++", "Swift"],
+      correct: 1,
+    },
+    {
+      id: 9,
+      question: "What is the name of Amazon's virtual assistant?",
+      options: ["Cortana", "Siri", "Alexa", "Google Assistant"],
+      correct: 2,
+    },
+    {
+      id: 10,
+      question: "What does 'USB' stand for?",
+      options: ["Universal Serial Bus", "Uniform System Bus", "United Serial Bus", "Universal System Bus"],
+      correct: 0,
+    },
+    {
+      id: 11,
+      question: "Which company developed Android?",
+      options: ["Apple", "Microsoft", "Google", "Samsung"],
+      correct: 2,
+    },
+    {
+      id: 12,
+      question: "What is the main circuit board of a computer called?",
+      options: ["CPU", "Motherboard", "GPU", "Hard Drive"],
+      correct: 1,
+    },
+    {
+      id: 13,
+      question: "What does 'GPU' stand for?",
+      options: ["General Processing Unit", "Graphics Processing Unit", "Gaming Processing Unit", "Global Processing Unit"],
+      correct: 1,
+    },
+    {
+      id: 14,
+      question: "Which social media platform limits posts to 280 characters?",
+      options: ["Facebook", "Instagram", "Twitter/X", "LinkedIn"],
+      correct: 2,
+    },
+    {
+      id: 15,
+      question: "What is the name of Apple's operating system for Mac?",
+      options: ["iOS", "Windows", "macOS", "Linux"],
+      correct: 2,
+    },
+  ],
+  Nature: [
+    {
+      id: 1,
+      question: "What is the largest land animal?",
+      options: ["Giraffe", "Elephant", "Rhino", "Hippo"],
+      correct: 1,
+    },
+    {
+      id: 2,
+      question: "How many legs does a spider have?",
+      options: ["6", "8", "10", "12"],
+      correct: 1,
+    },
+    {
+      id: 3,
+      question: "What is the fastest land animal?",
+      options: ["Lion", "Cheetah", "Leopard", "Gazelle"],
+      correct: 1,
+    },
+    {
+      id: 4,
+      question: "What is the largest type of whale?",
+      options: ["Humpback Whale", "Orca", "Blue Whale", "Sperm Whale"],
+      correct: 2,
+    },
+    {
+      id: 5,
+      question: "What do pandas primarily eat?",
+      options: ["Fish", "Bamboo", "Meat", "Fruits"],
+      correct: 1,
+    },
+    {
+      id: 6,
+      question: "How many hearts does an octopus have?",
+      options: ["1", "2", "3", "4"],
+      correct: 2,
+    },
+    {
+      id: 7,
+      question: "What is a baby kangaroo called?",
+      options: ["Cub", "Joey", "Kit", "Pup"],
+      correct: 1,
+    },
+    {
+      id: 8,
+      question: "Which bird is known for its ability to mimic human speech?",
+      options: ["Eagle", "Parrot", "Owl", "Crow"],
+      correct: 1,
+    },
+    {
+      id: 9,
+      question: "What is the tallest tree species?",
+      options: ["Oak", "Pine", "Redwood", "Sequoia"],
+      correct: 3,
+    },
+    {
+      id: 10,
+      question: "How long can a snail sleep?",
+      options: ["1 week", "1 month", "3 months", "3 years"],
+      correct: 3,
+    },
+    {
+      id: 11,
+      question: "What is the only mammal capable of true flight?",
+      options: ["Flying Squirrel", "Bat", "Sugar Glider", "Flying Lemur"],
+      correct: 1,
+    },
+    {
+      id: 12,
+      question: "What is the largest species of bear?",
+      options: ["Grizzly Bear", "Black Bear", "Polar Bear", "Kodiak Bear"],
+      correct: 2,
+    },
+    {
+      id: 13,
+      question: "How many chambers does a human heart have?",
+      options: ["2", "3", "4", "5"],
+      correct: 2,
+    },
+    {
+      id: 14,
+      question: "What is the world's largest flower?",
+      options: ["Sunflower", "Rafflesia", "Lotus", "Rose"],
+      correct: 1,
+    },
+    {
+      id: 15,
+      question: "What type of animal is a Komodo dragon?",
+      options: ["Snake", "Lizard", "Crocodile", "Dinosaur"],
+      correct: 1,
+    },
+  ],
+  Food: [
+    {
+      id: 1,
+      question: "What is sushi traditionally wrapped in?",
+      options: ["Lettuce", "Seaweed", "Rice Paper", "Banana Leaf"],
+      correct: 1,
+    },
+    {
+      id: 2,
+      question: "What is the main ingredient in guacamole?",
+      options: ["Tomato", "Avocado", "Lime", "Onion"],
+      correct: 1,
+    },
+    {
+      id: 3,
+      question: "Which country is the origin of pizza?",
+      options: ["France", "Greece", "Italy", "Spain"],
+      correct: 2,
+    },
+    {
+      id: 4,
+      question: "What is the most expensive spice by weight?",
+      options: ["Vanilla", "Saffron", "Cardamom", "Cinnamon"],
+      correct: 1,
+    },
+    {
+      id: 5,
+      question: "What type of pasta is shaped like little ears?",
+      options: ["Penne", "Fusilli", "Orecchiette", "Farfalle"],
+      correct: 2,
+    },
+    {
+      id: 6,
+      question: "What is the main ingredient in hummus?",
+      options: ["Lentils", "Black Beans", "Chickpeas", "Peas"],
+      correct: 2,
+    },
+    {
+      id: 7,
+      question: "Which fruit has seeds on the outside?",
+      options: ["Raspberry", "Strawberry", "Blackberry", "Blueberry"],
+      correct: 1,
+    },
+    {
+      id: 8,
+      question: "What is the hottest part of a chili pepper?",
+      options: ["Skin", "Seeds", "Flesh", "Stem"],
+      correct: 1,
+    },
+    {
+      id: 9,
+      question: "What is tofu made from?",
+      options: ["Rice", "Wheat", "Soy", "Corn"],
+      correct: 2,
+    },
+    {
+      id: 10,
+      question: "Which nut is used to make marzipan?",
+      options: ["Walnut", "Cashew", "Almond", "Peanut"],
+      correct: 2,
+    },
+    {
+      id: 11,
+      question: "What is the main ingredient in traditional Japanese miso soup?",
+      options: ["Seaweed", "Fish", "Soybean Paste", "Rice"],
+      correct: 2,
+    },
+    {
+      id: 12,
+      question: "Which country invented ice cream?",
+      options: ["Italy", "France", "China", "USA"],
+      correct: 2,
+    },
+    {
+      id: 13,
+      question: "What type of food is a 'Granny Smith'?",
+      options: ["Potato", "Tomato", "Apple", "Pear"],
+      correct: 2,
+    },
+    {
+      id: 14,
+      question: "What is the main ingredient in a traditional Greek moussaka?",
+      options: ["Potato", "Eggplant", "Zucchini", "Tomato"],
+      correct: 1,
+    },
+    {
+      id: 15,
+      question: "What does 'al dente' mean when cooking pasta?",
+      options: ["Very soft", "Firm to the bite", "Overcooked", "Raw"],
+      correct: 1,
+    },
+  ],
 };
 
 export default function Quiz() {
@@ -821,7 +1925,7 @@ export default function Quiz() {
     setSelectedOption(index);
     setAnswered(true);
 
-    if (index === question.correct) {
+    if (index === question.correctAnswer) {
       setScore(score + 1);
       setShowCelebration(true);
       playSound('correct');
@@ -893,9 +1997,11 @@ export default function Quiz() {
         // Submit quiz result to backend
         const response = await apiCall("POST", "/quizzes/submit", { data: submitData });
         
-        console.log("Quiz submission response:", response);
+        console.log("✅ Quiz submission response:", response);
+        console.log("🎯 Quiz result saved successfully!");
+        console.log("📊 Result ID:", response.result?.id);
       } else {
-        console.error("No user found in localStorage");
+        console.error("❌ No user found in localStorage");
       }
 
       // Data is stored in backend database only, no localStorage backup needed
@@ -999,11 +2105,11 @@ export default function Quiz() {
               key={index}
               className={`option-btn ${
                 selectedOption === index
-                  ? index === question.correct
+                  ? index === question.correctAnswer
                     ? "correct"
                     : "incorrect"
                   : ""
-              } ${answered && index === question.correct ? "show-correct" : ""}`}
+              } ${answered && index === question.correctAnswer ? "show-correct" : ""}`}
               onClick={() => handleAnswer(index)}
               disabled={answered}
             >

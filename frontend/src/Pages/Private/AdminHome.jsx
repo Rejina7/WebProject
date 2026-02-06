@@ -54,6 +54,30 @@ function AdminHome() {
     fetchTopUsers();
   }, [navigate]);
 
+  // Auto-refresh recent attempts every 5 seconds
+  useEffect(() => {
+    console.log("🔧 Setting up auto-refresh for recent attempts...");
+    const intervalId = setInterval(() => {
+      console.log("🔄 Auto-refreshing recent attempts and leaderboard...");
+      fetchRecentAttempts();
+      fetchTopUsers();
+    }, 5000); // Refresh every 5 seconds for faster updates
+
+    console.log("✅ Auto-refresh interval started");
+    return () => {
+      console.log("🛑 Cleaning up auto-refresh interval");
+      clearInterval(intervalId);
+    };
+  }, []);
+
+  // Manual refresh function
+  const handleManualRefresh = () => {
+    console.log("🔄 Manual refresh triggered");
+    loadQuizzes();
+    fetchRecentAttempts();
+    fetchTopUsers();
+  };
+
   // Load all quizzes
   const loadQuizzes = async () => {
     try {
@@ -117,13 +141,39 @@ function AdminHome() {
   // Fetch recent quiz attempts
   const fetchRecentAttempts = async () => {
     try {
-      const response = await fetch("http://localhost:5000/api/quizzes/admin/recent-attempts");
+      console.log("🔄 Fetching recent quiz attempts from admin/recent-attempts endpoint...");
+      console.log("📍 API URL: http://localhost:5000/api/quizzes/admin/recent-attempts");
+      console.log("⏰ Time:", new Date().toLocaleTimeString());
+      
+      const response = await fetch("http://localhost:5000/api/quizzes/admin/recent-attempts", {
+        cache: 'no-cache', // Disable caching
+        headers: {
+          'Cache-Control': 'no-cache',
+          'Pragma': 'no-cache'
+        }
+      });
+      console.log("📡 Response status:", response.status, response.statusText);
+      
       if (response.ok) {
         const data = await response.json();
+        console.log("📊 Recent attempts data received:", data);
+        console.log("📋 Number of attempts:", data.attempts?.length || 0);
+        console.log("🔍 Attempts details:", data.attempts);
+        
+        if (data.attempts && data.attempts.length > 0) {
+          console.log("✅ Setting recent attempts state with", data.attempts.length, "items");
+        } else {
+          console.log("⚠️ No attempts found in response");
+        }
+        
         setRecentAttempts(data.attempts || []);
+      } else {
+        console.error("❌ Failed to fetch recent attempts:", response.status, response.statusText);
+        const errorText = await response.text();
+        console.error("Error response:", errorText);
       }
     } catch (error) {
-      console.error("Error fetching recent attempts:", error);
+      console.error("❌ Error fetching recent attempts:", error);
     }
   };
 
@@ -473,7 +523,16 @@ function AdminHome() {
         <div className="dashboard-sections">
           {/* Recent Quiz Attempts */}
           <div className="dashboard-card">
-            <h2>📊 Recent Quiz Attempts</h2>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
+              <h2>📊 Recent Quiz Attempts</h2>
+              <button 
+                className="btn btn-primary" 
+                onClick={handleManualRefresh}
+                style={{ padding: '0.5rem 1rem', fontSize: '0.9rem' }}
+              >
+                🔄 Refresh
+              </button>
+            </div>
             <div className="recent-attempts-list">
               {recentAttempts.length > 0 ? (
                 recentAttempts.slice(0, 10).map((attempt, index) => (
