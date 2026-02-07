@@ -11,6 +11,7 @@ import "./models/Quiz.js";
 import "./models/QuizResult.js";
 import "./models/Product.js";
 import "./models/Feedback.js";
+import "./models/QuizQuestion.js";
 
 const app = express();
 

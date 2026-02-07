@@ -1,0 +1,75 @@
+/* Feedback page refinements */
+.feedback-page .statistics-section {
+  background: linear-gradient(135deg, #151515, #2a2a2a);
+  border: 1px solid rgba(255, 215, 0, 0.16);
+  box-shadow: 0 14px 32px rgba(0, 0, 0, 0.45);
+}
+
+.feedback-page .statistics-section h2 {
+  letter-spacing: 0.3px;
+}
+
+.feedback-page .stats-table table {
+  table-layout: fixed;
+}
+
+.feedback-page .stats-table th:nth-child(1),
+.feedback-page .stats-table td:nth-child(1) {
+  width: 12%;
+}
+
+.feedback-page .stats-table th:nth-child(2),
+.feedback-page .stats-table td:nth-child(2) {
+  width: 18%;
+}
+
+.feedback-page .stats-table th:nth-child(3),
+.feedback-page .stats-table td:nth-child(3) {
+  width: 16%;
+}
+
+.feedback-page .stats-table th:nth-child(4),
+.feedback-page .stats-table td:nth-child(4) {
+  width: 16%;
+}
+
+.feedback-page .stats-table th:nth-child(5),
+.feedback-page .stats-table td:nth-child(5) {
+  width: 22%;
+  word-break: break-word;
+}
+
+.feedback-page .stats-table th:nth-child(6),
+.feedback-page .stats-table td:nth-child(6) {
+  width: 16%;
+}
+
+.feedback-page .stats-table td {
+  line-height: 1.4;
+}
+
+.feedback-page .stats-table tbody tr:nth-child(even) {
+  background: rgba(255, 215, 0, 0.04);
+}
+
+.feedback-page .stats-table tbody tr:hover {
+  background: rgba(76, 175, 80, 0.08);
+}
+
+.feedback-page .add-btn {
+  border-radius: 999px;
+  padding: 10px 22px;
+}
+
+@media (max-width: 900px) {
+  .feedback-page .stats-table table {
+    font-size: 13px;
+  }
+
+  .feedback-page .stats-table th:nth-child(2),
+  .feedback-page .stats-table td:nth-child(2),
+  .feedback-page .stats-table th:nth-child(6),
+  .feedback-page .stats-table td:nth-child(6) {
+    width: 20%;
+  }
+}

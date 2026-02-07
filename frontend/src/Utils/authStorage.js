@@ -23,6 +23,23 @@ export const clearStoredUser = () => {
   sessionStorage.removeItem("user");
 };
 
+export const updateStoredUser = (partialUser) => {
+  const localUser = localStorage.getItem("user");
+  const sessionUser = sessionStorage.getItem("user");
+  const storage = localUser ? localStorage : sessionUser ? sessionStorage : null;
+
+  if (!storage) return null;
+
+  try {
+    const current = JSON.parse(storage.getItem("user") || "{}");
+    const next = { ...current, ...partialUser };
+    storage.setItem("user", JSON.stringify(next));
+    return next;
+  } catch {
+    return null;
+  }
+};
+
 export const getRememberedCredentials = (username) => {
   try {
     const allCreds = localStorage.getItem("rememberedCredentials");

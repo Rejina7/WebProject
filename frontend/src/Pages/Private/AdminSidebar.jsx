@@ -22,6 +22,12 @@ function AdminSidebar() {
       path: "/admin/dashboard",
     },
     {
+      id: "feedback",
+      label: "Feedback",
+      icon: "💬",
+      path: "/admin/feedback",
+    },
+    {
       id: "reports",
       label: "Reports",
       icon: "📋",

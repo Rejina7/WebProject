@@ -4,10 +4,13 @@ import { sequelize } from "../db.js";
 export const getAllFeedback = async (req, res) => {
   try {
     const [feedback] = await sequelize.query(
-      `SELECT f.*, u.username, u.email, p.name as productName
+      `SELECT f.*, u.username, u.email, p.name as productName,
+              COALESCE(q.title, f."quizTitle") as "quizTitle",
+              COALESCE(q.category, f."quizCategory") as "quizCategory"
        FROM feedbacks f
        JOIN users u ON f."userId" = u.id
        LEFT JOIN products p ON f."productId" = p.id
+       LEFT JOIN quizzes q ON f."quizId" = q.id
        ORDER BY f."createdAt" DESC`
     );
     res.json({
@@ -26,9 +29,12 @@ export const getFeedbackByProduct = async (req, res) => {
 
   try {
     const [feedback] = await sequelize.query(
-      `SELECT f.*, u.username, u.email
+      `SELECT f.*, u.username, u.email,
+              COALESCE(q.title, f."quizTitle") as "quizTitle",
+              COALESCE(q.category, f."quizCategory") as "quizCategory"
        FROM feedbacks f
        JOIN users u ON f."userId" = u.id
+       LEFT JOIN quizzes q ON f."quizId" = q.id
        WHERE f."productId" = :productId
        ORDER BY f."createdAt" DESC`,
       { replacements: { productId } }
@@ -49,9 +55,12 @@ export const getFeedbackByUser = async (req, res) => {
 
   try {
     const [feedback] = await sequelize.query(
-      `SELECT f.*, p.name as productName
+      `SELECT f.*, p.name as productName,
+              COALESCE(q.title, f."quizTitle") as "quizTitle",
+              COALESCE(q.category, f."quizCategory") as "quizCategory"
        FROM feedbacks f
        LEFT JOIN products p ON f."productId" = p.id
+       LEFT JOIN quizzes q ON f."quizId" = q.id
        WHERE f."userId" = :userId
        ORDER BY f."createdAt" DESC`,
       { replacements: { userId } }
@@ -68,31 +77,65 @@ export const getFeedbackByUser = async (req, res) => {
 
 // Create feedback
 export const createFeedback = async (req, res) => {
-  const { userId, productId, rating, comment } = req.body;
+  const { userId, productId, quizId, rating, comment, category, title, totalQuestions } = req.body;
 
-  if (!userId || !rating) {
+  if (!userId || !comment || !String(comment).trim()) {
     return res.status(400).json({
-      message: "userId and rating are required",
+      message: "userId and comment are required",
     });
   }
 
-  if (rating < 1 || rating > 5) {
+  if (rating !== undefined && rating !== null && (rating < 1 || rating > 5)) {
     return res.status(400).json({
       message: "Rating must be between 1 and 5",
     });
   }
 
   try {
+    let quizRecordId = quizId || null;
+
+    if (!quizRecordId && category) {
+      const [quizData] = await sequelize.query(
+        "SELECT id FROM quizzes WHERE category = :category ORDER BY \"createdAt\" DESC LIMIT 1",
+        { replacements: { category } }
+      );
+
+      if (quizData.length > 0) {
+        quizRecordId = quizData[0].id;
+      } else if (totalQuestions) {
+        const [createdQuiz] = await sequelize.query(
+          `INSERT INTO quizzes (title, description, category, difficulty, "timeLimit", "totalQuestions", "passingScore", "isActive", "createdAt", "updatedAt")
+           VALUES (:title, :description, :category, :difficulty, :timeLimit, :totalQuestions, :passingScore, true, NOW(), NOW())
+           RETURNING id`,
+          {
+            replacements: {
+              title: title || `${category} Quiz`,
+              description: null,
+              category,
+              difficulty: "medium",
+              timeLimit: 300,
+              totalQuestions,
+              passingScore: 60,
+            },
+          }
+        );
+        quizRecordId = createdQuiz[0]?.id || null;
+      }
+    }
+
     const [result] = await sequelize.query(
-      `INSERT INTO feedbacks ("userId", "productId", rating, comment)
-       VALUES (:userId, :productId, :rating, :comment)
+      `INSERT INTO feedbacks ("userId", "productId", "quizId", "quizCategory", "quizTitle", rating, comment, "createdAt", "updatedAt")
+       VALUES (:userId, :productId, :quizId, :quizCategory, :quizTitle, :rating, :comment, NOW(), NOW())
        RETURNING *`,
       {
         replacements: {
           userId,
           productId: productId || null,
-          rating,
-          comment: comment || null,
+          quizId: quizRecordId,
+          quizCategory: category || null,
+          quizTitle: title || null,
+          rating: rating ?? null,
+          comment: String(comment).trim(),
         },
       }
     );
@@ -182,7 +225,7 @@ export const getProductAverageRating = async (req, res) => {
     const [result] = await sequelize.query(
       `SELECT AVG(rating) as averageRating, COUNT(id) as totalReviews
        FROM feedbacks
-       WHERE "productId" = :productId`,
+       WHERE "productId" = :productId AND rating IS NOT NULL`,
       { replacements: { productId } }
     );
 

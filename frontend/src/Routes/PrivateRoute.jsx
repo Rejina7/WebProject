@@ -21,8 +21,8 @@ const PrivateRoute = ({ children, requiredRole = null }) => {
       const user = getStoredUser();
       console.log("🔍 PrivateRoute: Checking role. Required:", requiredRole, "User role:", user?.role, "User data:", user);
       if (!user || user.role !== requiredRole) {
-        console.log("❌ PrivateRoute: Role check failed. Redirecting to /dashboard");
-        return <Navigate to="/dashboard" replace />;
+        console.log("❌ PrivateRoute: Role check failed. Redirecting to /home");
+        return <Navigate to="/home" replace />;
       }
     } catch (e) {
       console.error("❌ PrivateRoute: Error parsing user:", e);

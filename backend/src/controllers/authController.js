@@ -1,6 +1,12 @@
 import { sequelize } from "../db.js";
 import bcrypt from "bcrypt";
 
+const normalizeUserDates = (user) => {
+  if (!user) return user;
+  const createdAt = user.createdAt || user.created_at || user.createdat;
+  return { ...user, createdAt };
+};
+
 export const signup = async (req, res) => {
   const { username, email, password } = req.body;
 
@@ -13,8 +19,8 @@ export const signup = async (req, res) => {
     const hashedPassword = await bcrypt.hash(password, 10);
 
     const [result] = await sequelize.query(
-      `INSERT INTO users (username, email, password, role)
-       VALUES (:username, :email, :password, :role)
+      `INSERT INTO users (username, email, password, role, "createdAt", "updatedAt")
+       VALUES (:username, :email, :password, :role, NOW(), NOW())
        RETURNING id, username, email, role, "createdAt"`,
       {
         replacements: {
@@ -37,7 +43,7 @@ export const signup = async (req, res) => {
 
     res.status(201).json({
       message: "Signup successful",
-      user: result[0],
+      user: normalizeUserDates(result[0]),
     });
   } catch (err) {
     console.error(err);
@@ -61,22 +67,23 @@ export const signup = async (req, res) => {
 
 export const login = async (req, res) => {
   const { username, password } = req.body;
+  const normalizedUsername = String(username || "").trim();
 
   console.log("\n🔐 LOGIN REQUEST:");
-  console.log("Username:", username);
+  console.log("Username:", normalizedUsername);
   console.log("Password:", password);
 
   try {
     const [result] = await sequelize.query(
       "SELECT * FROM users WHERE username = :username",
-      { replacements: { username } }
+      { replacements: { username: normalizedUsername } }
     );
 
     if (result.length === 0) {
       return res.status(401).json({ message: "User not found" });
     }
 
-    const user = result[0];
+    const user = normalizeUserDates(result[0]);
     const match = await bcrypt.compare(password, user.password);
 
     if (!match) {
@@ -128,7 +135,7 @@ export const getUserProfile = async (req, res) => {
 
     res.json({
       message: "User profile retrieved",
-      user: result[0],
+      user: normalizeUserDates(result[0]),
     });
   } catch (err) {
     console.error(err);
@@ -164,7 +171,7 @@ export const updateUserProfile = async (req, res) => {
 
     res.json({
       message: "Profile updated successfully",
-      user: result[0],
+      user: normalizeUserDates(result[0]),
     });
   } catch (err) {
     console.error(err);

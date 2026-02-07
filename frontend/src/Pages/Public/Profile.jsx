@@ -8,29 +8,39 @@ export default function Profile() {
   const navigate = useNavigate();
   const [isEditing, setIsEditing] = useState(false);
 
-  // Get user data from localStorage
-  const getStoredUser = () => {
+  const formatJoinDate = (createdAt) => {
+    if (!createdAt) return "";
+    const parsed = new Date(createdAt);
+    if (Number.isNaN(parsed.getTime())) return String(createdAt);
+    return parsed.toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    });
+  };
+
+  const buildInitialProfile = () => {
     try {
       const storedUser = getStoredUser();
       const storedProfile = localStorage.getItem("userProfile");
-      
+      const profileData = storedProfile ? JSON.parse(storedProfile) : {};
+      const createdAt = storedUser?.createdAt || storedUser?.created_at;
+
       if (storedUser) {
-        const userData = storedUser;
-        const profileData = storedProfile ? JSON.parse(storedProfile) : {};
-        
         return {
-          name: userData.username || "User",
-          email: userData.email || "user@example.com",
-          joinDate: new Date().toLocaleDateString("en-US", { year: "numeric", month: "long" }),
+          name: storedUser.username || "User",
+          email: storedUser.email || "user@example.com",
+          joinDate: formatJoinDate(createdAt),
           bio: profileData.bio || "Quiz enthusiast and knowledge seeker",
-          avatar: userData.username?.charAt(0).toUpperCase() || "👤",
-          id: userData.id,
+          avatar: storedUser.username?.charAt(0).toUpperCase() || "👤",
+          id: storedUser.id,
         };
       }
+
       return {
         name: "Guest User",
         email: "guest@example.com",
-        joinDate: "January 2024",
+        joinDate: "",
         bio: "Quiz enthusiast and knowledge seeker",
         avatar: "👤",
       };
@@ -39,14 +49,14 @@ export default function Profile() {
       return {
         name: "Guest User",
         email: "guest@example.com",
-        joinDate: "January 2024",
+        joinDate: "",
         bio: "Quiz enthusiast and knowledge seeker",
         avatar: "👤",
       };
     }
   };
 
-  const [userProfile, setUserProfile] = useState(getStoredUser());
+  const [userProfile, setUserProfile] = useState(buildInitialProfile);
   const [editData, setEditData] = useState(userProfile);
   const [userStats, setUserStats] = useState({
     quizzesCompleted: 0,
@@ -63,10 +73,44 @@ export default function Profile() {
     publicProfile: localStorage.getItem("publicProfileEnabled") !== "false",
   });
 
-  // Fetch user stats from backend
+  // Fetch user profile + stats from backend
   useEffect(() => {
+    fetchUserProfile();
     fetchUserStats();
   }, []);
+
+  const fetchUserProfile = async () => {
+    try {
+      const storedUser = getStoredUser();
+      if (!storedUser || !storedUser.id) {
+        return;
+      }
+
+      const response = await apiCall("GET", `/auth/profile/${storedUser.id}`);
+      const profile = response.user;
+
+      if (profile) {
+        const createdAt = profile.createdAt || profile.created_at || storedUser.createdAt || storedUser.created_at;
+        const joinDate = formatJoinDate(createdAt) || userProfile.joinDate;
+
+        setUserProfile((prev) => ({
+          ...prev,
+          id: profile.id,
+          name: profile.username || prev.name,
+          email: profile.email || prev.email,
+          joinDate,
+          avatar: (profile.username || prev.name || "U").charAt(0).toUpperCase(),
+        }));
+        setEditData((prev) => ({
+          ...prev,
+          name: profile.username || prev.name,
+          email: profile.email || prev.email,
+        }));
+      }
+    } catch (error) {
+      console.error("Error fetching user profile:", error);
+    }
+  };
 
   const fetchUserStats = async () => {
     try {
@@ -153,7 +197,9 @@ export default function Profile() {
                 <h1>{userProfile.name}</h1>
                 <p className="email">{userProfile.email}</p>
                 <p className="bio">{userProfile.bio}</p>
-                <p className="join-date">Member since {userProfile.joinDate}</p>
+                <p className="join-date">
+                  Member since {userProfile.joinDate || "Unknown"}
+                </p>
                 <button
                   className="edit-btn"
                   onClick={() => {

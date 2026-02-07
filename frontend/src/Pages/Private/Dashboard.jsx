@@ -82,7 +82,7 @@ export default function Homepage() {
         ]);
       }
 
-      // Show user's recent quiz attempts if they have any, otherwise show available quizzes
+      // Show user's recent quiz attempts only
       if (dashboardResponse.recentActivities && dashboardResponse.recentActivities.length > 0) {
         const activities = dashboardResponse.recentActivities.map((activity, index) => {
           const status = activity.isPassed ? "✅ Passed" : "❌ Failed";
@@ -93,19 +93,8 @@ export default function Homepage() {
           };
         });
         setRecentActivities(activities);
-      } else if (quizzesResponse.quizzes && quizzesResponse.quizzes.length > 0) {
-        // Show available quizzes from homepage if no attempts yet
-        const activities = quizzesResponse.quizzes.slice(0, 3).map((quiz, index) => {
-          return {
-            id: index + 1,
-            activity: `Available: "${quiz.title}" - ${quiz.category}`,
-          };
-        });
-        setRecentActivities(activities);
       } else {
-        setRecentActivities([
-          { id: 1, activity: "No quizzes available at the moment" }
-        ]);
+        setRecentActivities([]);
       }
 
       setLoading(false);
@@ -130,7 +119,7 @@ export default function Homepage() {
           
         </div>
         <div className={`dashboard-links ${isMenuOpen ? "active" : ""}`}>
-          <Link to="/home">Home</Link>
+          <Link to="/dashboard">Dashboard</Link>
           <Link to="/profile">Profile</Link>
           <Link to="/" onClick={handleLogout}>Logout</Link>
         </div>
@@ -145,7 +134,7 @@ export default function Homepage() {
       {/* Hero Section */}
       <section className="dashboard-hero">
         <h1>Welcome Back{userName !== "User" ? `, ${userName}` : ""}!</h1>
-        <p>Track your progress and recent activities with Quizzy Bee Dashboard.</p>
+        <p>Track your progress and recent activities with Quizzy Bee Homepage.</p>
       </section>
 
       {/* Stats Cards */}
@@ -176,7 +165,7 @@ export default function Homepage() {
               </div>
             ))
           ) : (
-            <div className="activity-card">No recent activities</div>
+            <div className="activity-card">No recent quiz attempts yet</div>
           )}
         </div>
       </section>

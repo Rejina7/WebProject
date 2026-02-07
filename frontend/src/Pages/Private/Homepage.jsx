@@ -6,10 +6,11 @@ import "../../css/homepage.css";
 import logo from "../../assets/logo.png";
 import hero from "../../assets/hero.png";
 
-export default function Homepage() {
+export default function Dashboard() {
   const [search, setSearch] = useState("");
   const navigate = useNavigate();
   const location = useLocation();
+  const [userName, setUserName] = useState("User");
 
   const [userStats, setUserStats] = useState({
     quizzesCompleted: 0,
@@ -20,16 +21,21 @@ export default function Homepage() {
 
   const [quizzes, setQuizzes] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [recentQuizzes, setRecentQuizzes] = useState([]);
   
   // Fetch user stats and quizzes on mount
   useEffect(() => {
     fetchUserStats();
     fetchQuizzes();
+    const user = getStoredUser();
+    if (user) {
+      setUserName(user.username || user.email?.split("@")[0] || "User");
+    }
     
     // Also fetch when user returns to the tab
     const handleVisibilityChange = () => {
       if (document.visibilityState === 'visible') {
-        console.log("Homepage: Tab became visible - refreshing stats");
+        console.log("Dashboard: Tab became visible - refreshing stats");
         fetchUserStats();
         fetchQuizzes();
       }
@@ -37,7 +43,7 @@ export default function Homepage() {
     
     // Fetch when route changes (on every navigation back)
     const handlePageShow = () => {
-      console.log("Homepage: Page shown - refreshing stats");
+      console.log("Dashboard: Page shown - refreshing stats");
       fetchUserStats();
       fetchQuizzes();
     };
@@ -55,7 +61,7 @@ export default function Homepage() {
     try {
       setLoading(true);
       const response = await apiCall("GET", "/quizzes");
-      console.log("Homepage: Quizzes fetched:", response.quizzes);
+      console.log("Dashboard: Quizzes fetched:", response.quizzes);
       
       if (response.quizzes) {
         // Transform quizzes to match category card format
@@ -104,9 +110,9 @@ export default function Homepage() {
         return;
       }
 
-      console.log("Homepage: Fetching fresh stats for user", user.id);
+      console.log("Dashboard: Fetching fresh stats for user", user.id);
       const response = await apiCall("GET", `/quizzes/dashboard/${user.id}`);
-      console.log("Homepage: Fresh stats received:", response.stats);
+      console.log("Dashboard: Fresh stats received:", response.stats);
       
       if (response.stats) {
         setUserStats({
@@ -115,25 +121,31 @@ export default function Homepage() {
           totalPoints: response.stats.totalPoints,
           streak: response.stats.currentStreak,
         });
-        console.log("Homepage: Stats updated successfully");
+        console.log("Dashboard: Stats updated successfully");
+      }
+
+      if (response.recentActivities) {
+        setRecentQuizzes(buildRecentQuizzes(response.recentActivities));
+      } else {
+        setRecentQuizzes([]);
       }
     } catch (error) {
       console.error("Error fetching user stats:", error);
     }
   };
 
-  // Get recent quizzes from localStorage
-  const getRecentQuizzes = () => {
-    const quizResults = JSON.parse(localStorage.getItem('quizResults')) || { quizHistory: [] };
-    return quizResults.quizHistory.slice(-3).reverse().map((quiz, index) => ({
-      id: index + 1,
-      title: quiz.category,
-      score: quiz.percentage,
-      date: new Date(quiz.date).toLocaleDateString()
-    }));
+  const buildRecentQuizzes = (activities = []) => {
+    return activities.slice(0, 3).map((activity, index) => {
+      const totalPoints = activity.totalQuestions * 10;
+      const percentage = totalPoints ? Math.round((activity.score / totalPoints) * 100) : 0;
+      return {
+        id: index + 1,
+        title: activity.category || activity.title || "Quiz",
+        score: percentage,
+        date: activity.createdAt ? new Date(activity.createdAt).toLocaleDateString() : "",
+      };
+    });
   };
-
-  const recentQuizzes = getRecentQuizzes();
 
   const handleLogout = () => {
     clearStoredUser();
@@ -171,8 +183,8 @@ export default function Homepage() {
             />
           </div>
           <div className="navbar-buttons">
+            <button className="nav-btn" onClick={() => navigate("/home")}>Home</button>
             <button className="nav-btn" onClick={() => navigate("/profile")}>Profile</button>
-            <button className="nav-btn" onClick={() => navigate("/dashboard")}>Dashboard</button>
             <button className="logout-button" onClick={handleLogout}>Logout</button>
           </div>
         </div>
@@ -203,9 +215,7 @@ export default function Homepage() {
         <div className="hero-right">
           <div className="hero-image">
             <img src={hero} alt="Quiz Hero" />
-            <button className="hero-create-button" onClick={() => navigate("/create-quiz")}>
-              Create Your Own Quiz
-            </button>
+            <div className="hero-greeting">Hello, {userName}</div>
           </div>
         </div>
       </section>

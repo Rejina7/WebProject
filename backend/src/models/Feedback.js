@@ -22,9 +22,22 @@ export const Feedback = sequelize.define("Feedback", {
       key: "id",
     },
   },
+  quizId: {
+    type: DataTypes.INTEGER,
+    references: {
+      model: "quizzes",
+      key: "id",
+    },
+  },
+  quizCategory: {
+    type: DataTypes.STRING,
+  },
+  quizTitle: {
+    type: DataTypes.STRING,
+  },
   rating: {
     type: DataTypes.INTEGER,
-    allowNull: false,
+    allowNull: true,
     validate: {
       min: 1,
       max: 5,

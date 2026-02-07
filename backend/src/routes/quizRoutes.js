@@ -3,6 +3,9 @@ import {
   getAllQuizzes,
   getQuizzesByCategory,
   getQuizById,
+  getQuizQuestionsById,
+  getQuizQuestionsByCategory,
+  addQuestionsToQuiz,
   createQuiz,
   deleteQuiz,
   updateQuiz,
@@ -35,7 +38,10 @@ router.delete("/admin/:id", deleteQuiz);
 
 // Quiz endpoints
 router.get("/", getAllQuizzes);
+router.get("/category/:category/questions", getQuizQuestionsByCategory);
 router.get("/category/:category", getQuizzesByCategory);
+router.get("/:id/questions", getQuizQuestionsById);
+router.post("/:id/questions", addQuestionsToQuiz);
 router.get("/:id", getQuizById);
 router.post("/", createQuiz);
 

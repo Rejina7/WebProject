@@ -219,6 +219,87 @@
   color: #ffd700;
 }
 
+/* Feedback Card */
+.feedback-card {
+  margin-top: 2rem;
+  padding: 1.5rem;
+  background: rgba(0, 0, 0, 0.6);
+  border: 1px solid rgba(255, 215, 0, 0.25);
+  border-radius: 14px;
+  width: 95%;
+  height: 50%;
+  text-align: center;
+}
+
+.feedback-card h3 {
+  margin: 0 0 0.8rem;
+  color: #ffd700;
+  font-size: 20px;
+  text-align: center;
+}
+
+.feedback-input {
+  width: 90%;
+  height: 40%;
+  border-radius: 10px;
+  padding: 0.9rem 1rem;
+  border: 1px solid rgba(255, 215, 0, 0.35);
+  background: rgba(255, 215, 0, 0.06);
+  color: #fff;
+  resize: vertical;
+  font-family: inherit;
+}
+
+.feedback-input:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.feedback-status {
+  margin: 0.75rem 0 0;
+  font-size: 0.95rem;
+}
+
+.feedback-status.success {
+  color: #8bff9d;
+}
+
+.feedback-status.error {
+  color: #ff9b9b;
+}
+
+.feedback-submit-btn {
+  margin-top: 0.9rem;
+  background: linear-gradient(135deg, #000000, #000000);
+  color: #ffffff;
+  border: 2px solid yellow;
+  padding: 0.75rem 1.5rem;
+  border-radius: 30px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  width: 30%;
+  height: 10%;
+  font-size: small;
+}
+
+.feedback-submit-btn:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+.feedback-submit-btn:not(:disabled):hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 20px rgba(76, 175, 80, 0.35);
+}
+
+.feedback-submit-btn:focus,
+.feedback-submit-btn:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.4);
+}
+
 /* Confetti Animation */
 .confetti {
   position: fixed;
@@ -468,15 +549,19 @@
 }
 
 .restart-btn {
+  margin-top: 1.5rem;
   padding: 1rem 2rem;
   background: linear-gradient(135deg, #ffd700, #ffed4e);
   color: #000;
   border: none;
-  border-radius: 10px;
+  border-radius: 50px;
   font-weight: 700;
   font-size: 1.1rem;
   cursor: pointer;
   transition: all 0.3s ease;
+  width: 20%;
+  height: 10%;
+  text-align: center;
 }
 
 .restart-btn:hover {

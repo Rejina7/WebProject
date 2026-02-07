@@ -1589,7 +1589,8 @@ export default function Quiz() {
 
   // Function to shuffle questions and their options
   const prepareQuestions = () => {
-    const originalQuestions = quizData[decodedCategory] || quizData.Science;
+    const fallbackQuestions = quizData[decodedCategory] || quizData.Science;
+    const originalQuestions = dbQuestions.length > 0 ? dbQuestions : fallbackQuestions;
     // Shuffle the questions array
     const shuffledQuestions = shuffleArray(originalQuestions);
     
@@ -1612,8 +1613,6 @@ export default function Quiz() {
     });
   };
   
-  const questions = useMemo(() => prepareQuestions(), [decodedCategory]);
-
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [score, setScore] = useState(0);
   const [timeLeft, setTimeLeft] = useState(15);
@@ -1622,10 +1621,40 @@ export default function Quiz() {
   const [showCelebration, setShowCelebration] = useState(false);
   const [showWrong, setShowWrong] = useState(false);
   const [quizComplete, setQuizComplete] = useState(false);
+  const [dbQuestions, setDbQuestions] = useState([]);
+  const [feedbackComment, setFeedbackComment] = useState("");
+  const [feedbackStatus, setFeedbackStatus] = useState(null);
+  const [feedbackSubmitting, setFeedbackSubmitting] = useState(false);
+  const [feedbackSubmitted, setFeedbackSubmitted] = useState(false);
+  const [quizId, setQuizId] = useState(null);
   const bgMusicRef = useRef(null);
   const [emojiReaction, setEmojiReaction] = useState(null);
 
+  const questions = useMemo(() => prepareQuestions(), [decodedCategory, dbQuestions]);
+
   const question = questions[currentQuestion];
+
+  useEffect(() => {
+    let isMounted = true;
+
+    const loadQuizId = async () => {
+      try {
+        const quizzesResponse = await apiCall("GET", "/quizzes");
+        const quiz = quizzesResponse.quizzes?.find((q) => q.category === decodedCategory);
+        if (isMounted) {
+          setQuizId(quiz?.id || null);
+        }
+      } catch (error) {
+        console.error("Error loading quiz info:", error);
+      }
+    };
+
+    loadQuizId();
+
+    return () => {
+      isMounted = false;
+    };
+  }, [decodedCategory]);
 
   // Function to stop music immediately
   const stopMusic = () => {
@@ -1737,7 +1766,7 @@ export default function Quiz() {
       const audioContext = new (window.AudioContext || window.webkitAudioContext)();
       audioContext.resume();
       
-      // Store in window for Homepage to access
+      // Store in window for Dashboard to access
       window.audioContextInstance = audioContext;
 
       const oscillator1 = audioContext.createOscillator();
@@ -1779,7 +1808,7 @@ export default function Quiz() {
       const audioContext = new (window.AudioContext || window.webkitAudioContext)();
       audioContext.resume();
       
-      // Store in window for Homepage to access
+      // Store in window for Dashboard to access
       window.audioContextInstance = audioContext;
 
       const oscillator = audioContext.createOscillator();
@@ -2009,12 +2038,51 @@ export default function Quiz() {
     } catch (error) {
       console.error("Error submitting quiz result:", error);
     } finally {
-      // Stop music and navigate back - Homepage will fetch fresh data from backend
+      // Stop music and navigate back - Dashboard will fetch fresh data from backend
       stopMusic();
       // Small delay to ensure music stops before navigating
       setTimeout(() => {
-        navigate("/home");
+        navigate("/dashboard");
       }, 200);
+    }
+  };
+
+  const handleSubmitFeedback = async () => {
+    if (feedbackSubmitting || feedbackSubmitted) return;
+
+    const trimmedComment = feedbackComment.trim();
+    if (!trimmedComment) {
+      setFeedbackStatus({ type: "error", message: "Please write your feedback first." });
+      return;
+    }
+
+    const user = JSON.parse(localStorage.getItem("user"));
+    if (!user?.id) {
+      setFeedbackStatus({ type: "error", message: "Please log in to submit feedback." });
+      return;
+    }
+
+    try {
+      setFeedbackSubmitting(true);
+      setFeedbackStatus(null);
+
+      await apiCall("POST", "/feedback", {
+        data: {
+          userId: user.id,
+          quizId,
+          category: decodedCategory,
+          title: `${decodedCategory} Quiz`,
+          totalQuestions: questions.length,
+          comment: trimmedComment,
+        },
+      });
+
+      setFeedbackSubmitted(true);
+      setFeedbackStatus({ type: "success", message: "Thanks for your feedback!" });
+    } catch (error) {
+      setFeedbackStatus({ type: "error", message: error.message || "Failed to submit feedback." });
+    } finally {
+      setFeedbackSubmitting(false);
     }
   };
 
@@ -2028,8 +2096,32 @@ export default function Quiz() {
             <div className="score-display">{score}/{questions.length}</div>
             <p className="percentage">{Math.round((score / questions.length) * 100)}%</p>
           </div>
+          <div className="feedback-card">
+            <h3>Share your feedback</h3>
+            <textarea
+              className="feedback-input"
+              placeholder="What did you think about this quiz?"
+              value={feedbackComment}
+              onChange={(e) => setFeedbackComment(e.target.value)}
+              disabled={feedbackSubmitted}
+              rows={4}
+            />
+            {feedbackStatus && (
+              <p className={`feedback-status ${feedbackStatus.type}`}>
+                {feedbackStatus.message}
+              </p>
+            )}
+            <button
+              className="feedback-submit-btn"
+              onClick={handleSubmitFeedback}
+              disabled={feedbackSubmitting || feedbackSubmitted}
+            >
+              {feedbackSubmitted ? "Feedback Submitted" : feedbackSubmitting ? "Submitting..." : "Submit"}
+            </button>
+          </div>
           <button className="restart-btn" onClick={restartQuiz}>
-            Back to Home
+            Exit 
+  
           </button>
         </div>
       </div>
@@ -2074,7 +2166,7 @@ export default function Quiz() {
               }
             }
             stopMusic();
-            navigate("/home");
+            navigate("/dashboard");
           }} 
           style={{ cursor: 'pointer' }}
         >

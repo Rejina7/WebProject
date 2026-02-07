@@ -5,6 +5,8 @@
   background: radial-gradient(circle at top right, #1a1a1a, #000000 70%);
   font-family: 'Poppins', sans-serif;
   display: flex;
+  width: 100%;
+  overflow-x: hidden;
 }
 
 .admin-main-content {
@@ -12,6 +14,7 @@
   margin-left: 250px;
   transition: margin-left 0.3s ease;
   overflow-y: auto;
+  width: calc(100% - 250px);
 }
 
 .admin-header {
@@ -40,6 +43,7 @@
   margin: 0;
   border-bottom: 3px solid rgba(255, 215, 0, 0.2);
   overflow-x: auto;
+  width: 100%;
 }
 
 .admin-tabs .tab {
@@ -54,7 +58,7 @@
   transition: all 0.3s ease;
   text-align: center;
   white-space: nowrap;
-  min-width: 150px;
+  min-width: 100px;
 }
 
 .admin-tabs .tab:hover {
@@ -71,8 +75,8 @@
 
 .admin-content {
   padding: 40px;
-  max-width: 1400px;
-  margin: 0 auto;
+  width: 100%;
+  max-width: none;
 }
 
 /* Quizzes Section */
@@ -83,6 +87,7 @@
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
   animation: slideUp 0.4s ease;
   border: 1px solid rgba(255, 215, 0, 0.1);
+  width: 100%;
 }
 
 .section-header {
@@ -154,6 +159,23 @@
   box-shadow: 0 4px 8px rgba(255, 107, 107, 0.3);
 }
 
+.add-questions-btn {
+  background: linear-gradient(135deg, #51cf66 0%, #40c057 100%);
+  color: #0b0b0b;
+  font-size: 12px;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.add-questions-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(81, 207, 102, 0.35);
+}
+
 .submit-btn {
   background: linear-gradient(135deg, #FFD700, #FFC700);
   color: #000000;
@@ -194,6 +216,14 @@
   font-weight: 700;
 }
 
+.form-label {
+  display: block;
+  margin: 6px 0 8px;
+  color: rgba(255, 215, 0, 0.85);
+  font-size: 13px;
+  font-weight: 600;
+}
+
 .quiz-form input,
 .quiz-form textarea,
 .quiz-form select {
@@ -218,6 +248,12 @@
   background: #1a1a1a;
 }
 
+.field-hint {
+  margin: -8px 0 12px;
+  color: rgba(255, 215, 0, 0.7);
+  font-size: 12px;
+}
+
 .quiz-form textarea {
   resize: vertical;
   min-height: 120px;
@@ -230,6 +266,47 @@
 
 .form-actions button {
   flex: 1;
+}
+
+.question-builder {
+  margin-top: 20px;
+  padding-top: 10px;
+  border-top: 1px solid rgba(255, 215, 0, 0.15);
+}
+
+.question-builder h4 {
+  margin: 0 0 12px;
+  color: #FFD700;
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.question-item {
+  border: 1px solid rgba(255, 215, 0, 0.15);
+  border-radius: 10px;
+  padding: 14px;
+  margin-bottom: 16px;
+  background: rgba(0, 0, 0, 0.35);
+}
+
+.question-item-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: #FFD700;
+  margin-bottom: 10px;
+  font-weight: 600;
+}
+
+.question-options {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 10px;
+}
+
+.question-item .delete-btn {
+  padding: 6px 12px;
+  font-size: 12px;
 }
 
 /* Quizzes Grid */
@@ -322,6 +399,7 @@
 
 /* Statistics Section */
 .statistics-section,
+
 .users-section {
   background: linear-gradient(135deg, #1a1a1a, #262626);
   border-radius: 12px;
@@ -329,6 +407,7 @@
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
   animation: slideUp 0.4s ease;
   border: 1px solid rgba(255, 215, 0, 0.1);
+  width: 100%;
 }
 
 .statistics-section h2,

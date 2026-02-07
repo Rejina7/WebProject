@@ -27,7 +27,7 @@ body {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  width: 180%;
+  width: 140%;
   min-height: 100vh;
   background: radial-gradient(circle at top right, #1a1a1a, #000000 70%);
   overflow-x: hidden;
@@ -212,32 +212,27 @@ body {
   filter: drop-shadow(0 15px 30px rgba(255, 215, 0, 0.5));
 }
 
-.hero-create-button {
+.hero-greeting {
   position: absolute;
   bottom: 70%;
-  right: -60%;
-  padding: 1.2rem 2.5rem;
-  background: linear-gradient(135deg, #ffd700, #ffed4e);
-  color: #000;
+  right: -52%;
+  padding: 1rem 2rem;
+  background: rgba(0, 0, 0, 0.6);
+  color: #ffd700;
   font-weight: 700;
-  font-size: 1.15rem;
-  border: 2px solid rgba(255, 215, 0, 0.8);
+  font-size: 1.2rem;
+  border: 2px solid rgba(255, 215, 0, 0.6);
   border-radius: 40px;
-  cursor: pointer;
-  box-shadow: 0 10px 30px rgba(255, 215, 0, 0.5);
+  box-shadow: 0 10px 30px rgba(255, 215, 0, 0.4);
   transition: all 0.3s ease;
   z-index: 10;
   white-space: nowrap;
 }
 
-.hero-create-button:hover {
-  transform: translateY(-8px) scale(1.08);
-  box-shadow: 0 15px 40px rgba(255, 215, 0, 0.7);
-  background: linear-gradient(135deg, #ffed4e, #ffd700);
-}
-
-.hero-create-button:active {
-  transform: translateY(-4px) scale(1.05);
+.hero-greeting:hover {
+  transform: translateY(-6px) scale(1.05);
+  box-shadow: 0 15px 40px rgba(255, 215, 0, 0.6);
+  background: rgba(0, 0, 0, 0.75);
 }
 
 /* ============================= */
@@ -367,9 +362,9 @@ body {
 
 .stats-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(4, minmax(300px, 1fr));
   gap: 2.5rem;
-  max-width: 1200px;
+  max-width: 1600px;
   margin: 0 auto;
   transition: all 0.3s ease;
 }
@@ -377,7 +372,7 @@ body {
 .stat-card {
   background: linear-gradient(135deg, #1a1a1a, #000000);
   border-radius: 18px;
-  padding: 2rem;
+  padding: 2.25rem 2rem;
   text-align: center;
   border: 2px solid rgba(255, 215, 0, 0.4);
   transition: all 0.3s ease;
@@ -387,6 +382,9 @@ body {
   justify-content: center;
   cursor: pointer;
   animation: soft-fire 1.5s ease-in-out infinite;
+  min-width: 260px;
+  min-height: 180px;
+  box-sizing: border-box;
 }
 
 .stat-card:hover {

@@ -1,4 +1,5 @@
 import { sequelize } from "../db.js";
+import { QuizQuestion } from "../models/QuizQuestion.js";
 
 // Get all quizzes
 export const getAllQuizzes = async (req, res) => {
@@ -61,7 +62,11 @@ export const getQuizById = async (req, res) => {
 
 // Create quiz (admin only)
 export const createQuiz = async (req, res) => {
-  const { title, description, category, difficulty, timeLimit, totalQuestions, passingScore } = req.body;
+  const { title, description, category, difficulty, timeLimit, totalQuestions, passingScore, questions } = req.body;
+  const normalizedQuestions = Array.isArray(questions)
+    ? questions.filter((q) => Array.isArray(q.options) && q.options.length >= 2 && q.question)
+    : [];
+  const finalTotalQuestions = normalizedQuestions.length > 0 ? normalizedQuestions.length : totalQuestions;
 
   try {
     const [result] = await sequelize.query(
@@ -75,15 +80,128 @@ export const createQuiz = async (req, res) => {
           category,
           difficulty: difficulty || "medium",
           timeLimit: timeLimit || 300,
-          totalQuestions,
+          totalQuestions: finalTotalQuestions,
           passingScore: passingScore || 60,
         },
       }
     );
 
+    if (normalizedQuestions.length > 0) {
+      const questionRows = normalizedQuestions.map((q) => ({
+        quizId: result[0].id,
+        question: q.question,
+        options: q.options,
+        correctIndex: q.correctIndex ?? 0,
+      }));
+      await QuizQuestion.bulkCreate(questionRows);
+    }
+
     res.status(201).json({
       message: "Quiz created successfully",
       quiz: result[0],
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
+export const getQuizQuestionsById = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const [quiz] = await sequelize.query(
+      "SELECT * FROM quizzes WHERE id = :id",
+      { replacements: { id } }
+    );
+
+    if (quiz.length === 0) {
+      return res.status(404).json({ message: "Quiz not found" });
+    }
+
+    const questions = await QuizQuestion.findAll({
+      where: { quizId: id },
+      order: [["id", "ASC"]],
+    });
+
+    res.json({
+      message: "Quiz questions retrieved successfully",
+      quiz: quiz[0],
+      questions,
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
+export const addQuestionsToQuiz = async (req, res) => {
+  const { id } = req.params;
+  const { questions } = req.body;
+  const normalizedQuestions = Array.isArray(questions)
+    ? questions.filter((q) => Array.isArray(q.options) && q.options.length >= 2 && q.question)
+    : [];
+
+  if (normalizedQuestions.length === 0) {
+    return res.status(400).json({ message: "No valid questions provided" });
+  }
+
+  try {
+    const [quiz] = await sequelize.query(
+      "SELECT id FROM quizzes WHERE id = :id",
+      { replacements: { id } }
+    );
+
+    if (quiz.length === 0) {
+      return res.status(404).json({ message: "Quiz not found" });
+    }
+
+    const questionRows = normalizedQuestions.map((q) => ({
+      quizId: id,
+      question: q.question,
+      options: q.options,
+      correctIndex: q.correctIndex ?? 0,
+    }));
+    await QuizQuestion.bulkCreate(questionRows);
+
+    const totalQuestions = await QuizQuestion.count({ where: { quizId: id } });
+    await sequelize.query(
+      "UPDATE quizzes SET \"totalQuestions\" = :totalQuestions, \"updatedAt\" = NOW() WHERE id = :id",
+      { replacements: { id, totalQuestions } }
+    );
+
+    res.json({
+      message: "Questions added successfully",
+      totalQuestions,
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
+export const getQuizQuestionsByCategory = async (req, res) => {
+  const { category } = req.params;
+
+  try {
+    const [quiz] = await sequelize.query(
+      "SELECT * FROM quizzes WHERE category = :category AND \"isActive\" = true ORDER BY \"createdAt\" DESC LIMIT 1",
+      { replacements: { category } }
+    );
+
+    if (quiz.length === 0) {
+      return res.status(404).json({ message: "Quiz not found" });
+    }
+
+    const questions = await QuizQuestion.findAll({
+      where: { quizId: quiz[0].id },
+      order: [["id", "ASC"]],
+    });
+
+    res.json({
+      message: "Quiz questions retrieved successfully",
+      quiz: quiz[0],
+      questions,
     });
   } catch (err) {
     console.error(err);

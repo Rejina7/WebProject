@@ -21,6 +21,9 @@ function AdminHome() {
   });
   const [allUsers, setAllUsers] = useState([]);
   const [showUsersModal, setShowUsersModal] = useState(false);
+  const [showQuizzesModal, setShowQuizzesModal] = useState(false);
+  const [showActiveQuizzesModal, setShowActiveQuizzesModal] = useState(false);
+  const [showCategoriesModal, setShowCategoriesModal] = useState(false);
   const [recentAttempts, setRecentAttempts] = useState([]);
   const [topUsers, setTopUsers] = useState([]);
   const navigate = useNavigate();
@@ -336,17 +339,17 @@ function AdminHome() {
               <div className="stat-number">{stats.totalUsers}</div>
               <div className="stat-label">Total Users</div>
             </div>
-            <div className="stat-card">
+            <div className="stat-card clickable" onClick={() => setShowQuizzesModal(true)}>
               <div className="stat-icon">📚</div>
               <div className="stat-number">{stats.totalQuizzes}</div>
               <div className="stat-label">Total Quizzes</div>
             </div>
-            <div className="stat-card">
+            <div className="stat-card clickable" onClick={() => setShowActiveQuizzesModal(true)}>
               <div className="stat-icon">✅</div>
               <div className="stat-number">{stats.activeQuizzes}</div>
               <div className="stat-label">Active Quizzes</div>
             </div>
-            <div className="stat-card">
+            <div className="stat-card clickable" onClick={() => setShowCategoriesModal(true)}>
               <div className="stat-icon">🏷️</div>
               <div className="stat-number">{stats.totalCategories}</div>
               <div className="stat-label">Categories</div>
@@ -384,17 +387,99 @@ function AdminHome() {
           </div>
         )}
 
+        {/* Total Quizzes Modal */}
+        {showQuizzesModal && (
+          <div className="modal-overlay" onClick={() => setShowQuizzesModal(false)}>
+            <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+              <div className="modal-header">
+                <h2>📚 All Quizzes ({quizzes.length})</h2>
+                <button className="modal-close" onClick={() => setShowQuizzesModal(false)}>×</button>
+              </div>
+              <div className="modal-body">
+                {quizzes.length > 0 ? (
+                  <div className="stats-list">
+                    {quizzes.map((quiz, index) => (
+                      <div key={quiz.id || index} className="stats-item">
+                        <div className="stats-title">{quiz.title}</div>
+                        <div className="stats-meta">
+                          {quiz.category} • {quiz.difficulty}
+                        </div>
+                        <div className={`stats-badge ${quiz.isActive ? "active" : "inactive"}`}>
+                          {quiz.isActive ? "Active" : "Inactive"}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <p className="no-data">No quizzes found</p>
+                )}
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Active Quizzes Modal */}
+        {showActiveQuizzesModal && (
+          <div className="modal-overlay" onClick={() => setShowActiveQuizzesModal(false)}>
+            <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+              <div className="modal-header">
+                <h2>✅ Active Quizzes ({quizzes.filter((quiz) => quiz.isActive).length})</h2>
+                <button className="modal-close" onClick={() => setShowActiveQuizzesModal(false)}>×</button>
+              </div>
+              <div className="modal-body">
+                {quizzes.filter((quiz) => quiz.isActive).length > 0 ? (
+                  <div className="stats-list">
+                    {quizzes.filter((quiz) => quiz.isActive).map((quiz, index) => (
+                      <div key={quiz.id || index} className="stats-item">
+                        <div className="stats-title">{quiz.title}</div>
+                        <div className="stats-meta">
+                          {quiz.category} • {quiz.difficulty}
+                        </div>
+                        <div className="stats-badge active">Active</div>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <p className="no-data">No active quizzes found</p>
+                )}
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Categories Modal */}
+        {showCategoriesModal && (
+          <div className="modal-overlay" onClick={() => setShowCategoriesModal(false)}>
+            <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+              <div className="modal-header">
+                <h2>🏷️ Categories ({categories.length})</h2>
+                <button className="modal-close" onClick={() => setShowCategoriesModal(false)}>×</button>
+              </div>
+              <div className="modal-body">
+                {categories.length > 0 ? (
+                  <div className="stats-list">
+                    {categories.map((category, index) => (
+                      <div key={`${category}-${index}`} className="stats-item">
+                        <div className="stats-title">{category}</div>
+                        <div className="stats-meta">Category</div>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <p className="no-data">No categories found</p>
+                )}
+              </div>
+            </div>
+          </div>
+        )}
+
         {/* Controls */}
         <div className="admin-controls">
           <button
             className="btn btn-primary"
-            onClick={() => {
-              setShowAddForm(!showAddForm);
-              setShowEditForm(false);
-              if (!showAddForm) resetForm();
-            }}
+            onClick={() => navigate("/admin/create-quiz")}
           >
-            {showAddForm ? "Cancel" : "+ Add New Quiz"}
+            + Add New Quiz
           </button>
         </div>
 
@@ -526,7 +611,7 @@ function AdminHome() {
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
               <h2>📊 Recent Quiz Attempts</h2>
               <button 
-                className="btn btn-primary" 
+                className="btn btn-primary recent-refresh-btn" 
                 onClick={handleManualRefresh}
                 style={{ padding: '0.5rem 1rem', fontSize: '0.9rem' }}
               >

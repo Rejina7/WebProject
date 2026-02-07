@@ -22,7 +22,8 @@ body {
   background: radial-gradient(circle at top right, #1a1a1a, #000000 70%);
   font-family: 'Poppins', sans-serif;
   color: white;
-  width: 140%;
+  width: 100%;
+  overflow-x: hidden;
 }
 
 .admin-home-content {
@@ -31,7 +32,7 @@ body {
   padding: 30px;
   overflow-y: auto;
   transition: margin-left 0.3s ease;
-  width: 80%;
+  width: calc(100% - 250px);
 }
 
 /* Loading State */
@@ -47,18 +48,17 @@ body {
 
 /* Header */
 .admin-home-header {
-  background: linear-gradient(135deg, #1a1a1a, #0c0c0c);
+  background: transparent;
   padding: 30px;
   border-radius: 12px;
   margin-bottom: 30px;
-  box-shadow: 0 8px 25px rgba(255, 215, 0, 0.2);
+  box-shadow: none;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 30px;
-  border: 2px solid rgba(255, 215, 0, 0.2);
-  width: 70%;
-  height: 40%;
+  gap: 10px;
+  border: none;
+  width: 100%;
 }
 
 .admin-home-header h1 {
@@ -66,6 +66,7 @@ body {
   color: #FFD700;
   font-size: 32px;
   font-weight: 700;
+
 }
 
 .admin-home-header p {
@@ -76,32 +77,33 @@ body {
 
 .header-stats {
   display: flex;
-  gap: 60px;
+  gap: 25px;
   flex-wrap: wrap;
+  width: auto;
 }
 
 .stat-card {
-  background: linear-gradient(135deg, rgba(255, 215, 0, 0.15), rgba(255, 215, 0, 0.05));
+  background: transparent;
   color: #FFD700;
   padding: 20px;
   border-radius: 10px;
   text-align: center;
-  width: 130px;
-  height: 160px;
-  box-shadow: 0 4px 8px rgba(255, 215, 0, 0.2);
-  border: 1px solid rgba(255, 215, 0, 0.3);
+  width: 60px;
+  height: 30px;
+  box-shadow: none;
+  border: none;
   transition: all 0.3s ease;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  gap: 8px;
+ 
 }
 
 .stat-card:hover {
   transform: translateY(-5px);
-  box-shadow: 0 8px 16px rgba(255, 215, 0, 0.4);
-  border-color: #FFD700;
-  background: linear-gradient(135deg, rgba(255, 215, 0, 0.25), rgba(255, 215, 0, 0.1));
+  box-shadow: none;
+  border-color: transparent;
+  background: transparent;
 }
 
 .stat-icon {
@@ -126,13 +128,14 @@ body {
 
 .stat-card.clickable {
   cursor: pointer;
+  width: 10%;
 }
 
 .stat-card.clickable:hover {
   transform: translateY(-8px);
-  box-shadow: 0 12px 24px rgba(255, 215, 0, 0.5);
-  border-color: #FFD700;
-  background: linear-gradient(135deg, rgba(255, 215, 0, 0.3), rgba(255, 215, 0, 0.15));
+  box-shadow: none;
+  border-color: transparent;
+  background: transparent;
 }
 
 /* Modal */
@@ -279,6 +282,55 @@ body {
   background: rgba(81, 207, 102, 0.2);
   color: #51cf66;
   border: 1px solid #51cf66;
+}
+
+.stats-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.stats-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  background: linear-gradient(135deg, rgba(255, 215, 0, 0.05), rgba(255, 215, 0, 0.02));
+  border: 1px solid rgba(255, 215, 0, 0.2);
+  border-radius: 8px;
+}
+
+.stats-title {
+  color: white;
+  font-weight: 600;
+  font-size: 15px;
+  flex: 1;
+}
+
+.stats-meta {
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 12px;
+}
+
+.stats-badge {
+  padding: 6px 12px;
+  border-radius: 14px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.stats-badge.active {
+  background: rgba(81, 207, 102, 0.2);
+  color: #51cf66;
+  border: 1px solid #51cf66;
+}
+
+.stats-badge.inactive {
+  background: rgba(255, 87, 87, 0.2);
+  color: #ff5757;
+  border: 1px solid #ff5757;
 }
 
 /* Controls */
@@ -494,9 +546,9 @@ body {
 
 /* Dashboard Sections */
 .dashboard-sections {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
-  gap: 30px;
+  display: flex;
+  flex-direction: column;
+  gap: 80px;
   margin-top: 30px;
 }
 
@@ -505,16 +557,21 @@ body {
   border: 1px solid rgba(255, 215, 0, 0.2);
   border-radius: 12px;
   padding: 25px;
-  width: 100%;
+  width: 50%;
   height: 100%;
+  
 }
 
 .dashboard-card h2 {
-  margin: 0 0 20px 0;
+  margin: 0 0 30px 0;
   color: #FFD700;
   font-size: 20px;
   font-weight: 600;
   width: 80%;
+}
+
+.recent-refresh-btn {
+  margin-right: 10px;
 }
 
 /* Recent Attempts */
@@ -533,6 +590,7 @@ body {
   border: 1px solid rgba(255, 215, 0, 0.2);
   border-radius: 8px;
   transition: all 0.2s ease;
+  width: 100%;
 }
 
 .attempt-item:hover {

@@ -16,10 +16,10 @@ export default function CreateQuiz() {
         </p>
         <button 
           className="restart-btn" 
-          onClick={() => navigate("/home")}
+          onClick={() => navigate("/dashboard")}
           style={{ marginTop: "1rem" }}
         >
-          Back to Home
+          Back to Dashboard
         </button>
       </div>
     </div>

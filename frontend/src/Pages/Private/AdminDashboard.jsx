@@ -12,6 +12,11 @@ function AdminDashboard() {
   const [activeTab, setActiveTab] = useState("quizzes");
   const [showAddQuiz, setShowAddQuiz] = useState(false);
   const [editingQuiz, setEditingQuiz] = useState(null);
+  const [addingQuestionsQuiz, setAddingQuestionsQuiz] = useState(null);
+  const [questions, setQuestions] = useState([
+    { question: "", options: ["", "", "", ""], correctIndex: 0 },
+  ]);
+  const optionLabels = ["A", "B", "C", "D"];
   const [formData, setFormData] = useState({
     title: "",
     description: "",
@@ -73,13 +78,66 @@ function AdminDashboard() {
     }));
   };
 
+  const handleQuestionChange = (index, value) => {
+    setQuestions((prev) =>
+      prev.map((q, i) => (i === index ? { ...q, question: value } : q))
+    );
+  };
+
+  const handleOptionChange = (questionIndex, optionIndex, value) => {
+    setQuestions((prev) =>
+      prev.map((q, i) => {
+        if (i !== questionIndex) return q;
+        const nextOptions = q.options.map((opt, idx) =>
+          idx === optionIndex ? value : opt
+        );
+        return { ...q, options: nextOptions };
+      })
+    );
+  };
+
+  const handleCorrectIndexChange = (questionIndex, value) => {
+    const parsed = Number(value);
+    setQuestions((prev) =>
+      prev.map((q, i) => (i === questionIndex ? { ...q, correctIndex: parsed } : q))
+    );
+  };
+
+  const handleAddQuestion = () => {
+    setQuestions((prev) => [
+      ...prev,
+      { question: "", options: ["", "", "", ""], correctIndex: 0 },
+    ]);
+  };
+
+  const handleRemoveQuestion = (index) => {
+    setQuestions((prev) => prev.filter((_, i) => i !== index));
+  };
+
   const handleAddQuiz = async (e) => {
     e.preventDefault();
     try {
+      const normalizedQuestions = questions
+        .map((q) => ({
+          question: q.question.trim(),
+          options: q.options.map((opt) => opt.trim()).filter(Boolean),
+          correctIndex: q.correctIndex,
+        }))
+        .filter((q) => q.question && q.options.length >= 2);
+
+      const payload = {
+        ...formData,
+        totalQuestions:
+          normalizedQuestions.length > 0
+            ? normalizedQuestions.length
+            : formData.totalQuestions,
+        questions: normalizedQuestions,
+      };
+
       const response = await fetch("http://localhost:5000/api/quizzes", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
+        body: JSON.stringify(payload),
       });
 
       if (!response.ok) throw new Error("Failed to create quiz");
@@ -95,10 +153,57 @@ function AdminDashboard() {
         totalQuestions: 10,
         passingScore: 60,
       });
+      setQuestions([{ question: "", options: ["", "", "", ""], correctIndex: 0 }]);
       loadData();
     } catch (error) {
       console.error("Error creating quiz:", error);
       alert("Failed to create quiz");
+    }
+  };
+
+  const handleOpenAddQuestions = (quiz) => {
+    setAddingQuestionsQuiz(quiz);
+    setShowAddQuiz(false);
+    setEditingQuiz(null);
+    setQuestions([{ question: "", options: ["", "", "", ""], correctIndex: 0 }]);
+  };
+
+  const handleAddQuestionsToQuiz = async (e) => {
+    e.preventDefault();
+    if (!addingQuestionsQuiz) return;
+
+    try {
+      const normalizedQuestions = questions
+        .map((q) => ({
+          question: q.question.trim(),
+          options: q.options.map((opt) => opt.trim()).filter(Boolean),
+          correctIndex: q.correctIndex,
+        }))
+        .filter((q) => q.question && q.options.length >= 2);
+
+      if (normalizedQuestions.length === 0) {
+        alert("Please add at least one valid question.");
+        return;
+      }
+
+      const response = await fetch(
+        `http://localhost:5000/api/quizzes/${addingQuestionsQuiz.id}/questions`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ questions: normalizedQuestions }),
+        }
+      );
+
+      if (!response.ok) throw new Error("Failed to add questions");
+
+      alert("Questions added successfully!");
+      setAddingQuestionsQuiz(null);
+      setQuestions([{ question: "", options: ["", "", "", ""], correctIndex: 0 }]);
+      loadData();
+    } catch (error) {
+      console.error("Error adding questions:", error);
+      alert("Failed to add questions");
     }
   };
 
@@ -199,6 +304,7 @@ function AdminDashboard() {
                 onClick={() => {
                   setShowAddQuiz(!showAddQuiz);
                   setEditingQuiz(null);
+                  setAddingQuestionsQuiz(null);
                 }}
               >
                 {showAddQuiz ? "Cancel" : "+ Add Quiz"}
@@ -208,30 +314,46 @@ function AdminDashboard() {
             {showAddQuiz && (
               <form className="quiz-form" onSubmit={handleAddQuiz}>
                 <h3>Create New Quiz</h3>
+                <label className="form-label" htmlFor="create-title">
+                  Quiz Title
+                </label>
                 <input
                   type="text"
                   name="title"
+                  id="create-title"
                   placeholder="Quiz Title"
                   value={formData.title}
                   onChange={handleInputChange}
                   required
                 />
+                <label className="form-label" htmlFor="create-description">
+                  Quiz Description
+                </label>
                 <textarea
                   name="description"
+                  id="create-description"
                   placeholder="Quiz Description"
                   value={formData.description}
                   onChange={handleInputChange}
                 />
+                <label className="form-label" htmlFor="create-category">
+                  Category
+                </label>
                 <input
                   type="text"
                   name="category"
+                  id="create-category"
                   placeholder="Category"
                   value={formData.category}
                   onChange={handleInputChange}
                   required
                 />
+                <label className="form-label" htmlFor="create-difficulty">
+                  Difficulty
+                </label>
                 <select
                   name="difficulty"
+                  id="create-difficulty"
                   value={formData.difficulty}
                   onChange={handleInputChange}
                 >
@@ -239,28 +361,97 @@ function AdminDashboard() {
                   <option value="medium">Medium</option>
                   <option value="hard">Hard</option>
                 </select>
+                <label className="form-label" htmlFor="create-totalQuestions">
+                  Total Questions
+                </label>
                 <input
                   type="number"
                   name="totalQuestions"
-                  placeholder="Total Questions"
+                  id="create-totalQuestions"
+                  placeholder="Total Questions (e.g., 10)"
                   value={formData.totalQuestions}
                   onChange={handleInputChange}
                   required
                 />
+                <label className="form-label" htmlFor="create-timeLimit">
+                  Time Limit (seconds)
+                </label>
                 <input
                   type="number"
                   name="timeLimit"
-                  placeholder="Time Limit (seconds)"
+                  id="create-timeLimit"
+                  placeholder="Time Limit in Seconds (e.g., 300)"
                   value={formData.timeLimit}
                   onChange={handleInputChange}
                 />
+                <label className="form-label" htmlFor="create-passingScore">
+                  Passing Score (%)
+                </label>
                 <input
                   type="number"
                   name="passingScore"
-                  placeholder="Passing Score"
+                  id="create-passingScore"
+                  placeholder="Passing Score % (e.g., 60)"
                   value={formData.passingScore}
                   onChange={handleInputChange}
                 />
+                <div className="question-builder">
+                  <h4>Questions</h4>
+                  {questions.map((q, index) => (
+                    <div className="question-item" key={`q-${index}`}>
+                      <div className="question-item-header">
+                        <span>Question {index + 1}</span>
+                        {questions.length > 1 && (
+                          <button
+                            type="button"
+                            className="delete-btn"
+                            onClick={() => handleRemoveQuestion(index)}
+                          >
+                            Remove
+                          </button>
+                        )}
+                      </div>
+                      <input
+                        type="text"
+                        placeholder={`Question ${index + 1}`}
+                        value={q.question}
+                        onChange={(e) => handleQuestionChange(index, e.target.value)}
+                        required
+                      />
+                      <div className="question-options">
+                        {q.options.map((opt, optIndex) => (
+                          <input
+                            key={`q-${index}-opt-${optIndex}`}
+                            type="text"
+                            placeholder={`Option ${optionLabels[optIndex]}`}
+                            value={opt}
+                            onChange={(e) =>
+                              handleOptionChange(index, optIndex, e.target.value)
+                            }
+                            required
+                          />
+                        ))}
+                      </div>
+                      <select
+                        value={q.correctIndex}
+                        onChange={(e) => handleCorrectIndexChange(index, e.target.value)}
+                      >
+                        {optionLabels.map((label, optIndex) => (
+                          <option key={`q-${index}-correct-${label}`} value={optIndex}>
+                            Correct: {label}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                  ))}
+                  <button
+                    type="button"
+                    className="add-btn"
+                    onClick={handleAddQuestion}
+                  >
+                    + Add Question
+                  </button>
+                </div>
                 <button type="submit" className="submit-btn">
                   Create Quiz
                 </button>
@@ -270,30 +461,46 @@ function AdminDashboard() {
             {editingQuiz && (
               <form className="quiz-form" onSubmit={handleUpdateQuiz}>
                 <h3>Edit Quiz: {editingQuiz.title}</h3>
+                <label className="form-label" htmlFor="edit-title">
+                  Quiz Title
+                </label>
                 <input
                   type="text"
                   name="title"
+                  id="edit-title"
                   placeholder="Quiz Title"
                   value={formData.title}
                   onChange={handleInputChange}
                   required
                 />
+                <label className="form-label" htmlFor="edit-description">
+                  Quiz Description
+                </label>
                 <textarea
                   name="description"
+                  id="edit-description"
                   placeholder="Quiz Description"
                   value={formData.description}
                   onChange={handleInputChange}
                 />
+                <label className="form-label" htmlFor="edit-category">
+                  Category
+                </label>
                 <input
                   type="text"
                   name="category"
+                  id="edit-category"
                   placeholder="Category"
                   value={formData.category}
                   onChange={handleInputChange}
                   required
                 />
+                <label className="form-label" htmlFor="edit-difficulty">
+                  Difficulty
+                </label>
                 <select
                   name="difficulty"
+                  id="edit-difficulty"
                   value={formData.difficulty}
                   onChange={handleInputChange}
                 >
@@ -301,25 +508,37 @@ function AdminDashboard() {
                   <option value="medium">Medium</option>
                   <option value="hard">Hard</option>
                 </select>
+                <label className="form-label" htmlFor="edit-totalQuestions">
+                  Total Questions
+                </label>
                 <input
                   type="number"
                   name="totalQuestions"
-                  placeholder="Total Questions"
+                  id="edit-totalQuestions"
+                  placeholder="Total Questions (e.g., 10)"
                   value={formData.totalQuestions}
                   onChange={handleInputChange}
                   required
                 />
+                <label className="form-label" htmlFor="edit-timeLimit">
+                  Time Limit (seconds)
+                </label>
                 <input
                   type="number"
                   name="timeLimit"
-                  placeholder="Time Limit (seconds)"
+                  id="edit-timeLimit"
+                  placeholder="Time Limit in Seconds (e.g., 300)"
                   value={formData.timeLimit}
                   onChange={handleInputChange}
                 />
+                <label className="form-label" htmlFor="edit-passingScore">
+                  Passing Score (%)
+                </label>
                 <input
                   type="number"
                   name="passingScore"
-                  placeholder="Passing Score"
+                  id="edit-passingScore"
+                  placeholder="Passing Score % (e.g., 60)"
                   value={formData.passingScore}
                   onChange={handleInputChange}
                 />
@@ -349,6 +568,81 @@ function AdminDashboard() {
               </form>
             )}
 
+            {addingQuestionsQuiz && (
+              <form className="quiz-form" onSubmit={handleAddQuestionsToQuiz}>
+                <h3>Add Questions: {addingQuestionsQuiz.title}</h3>
+                <div className="question-builder">
+                  <h4>Questions</h4>
+                  {questions.map((q, index) => (
+                    <div className="question-item" key={`add-q-${index}`}>
+                      <div className="question-item-header">
+                        <span>Question {index + 1}</span>
+                        {questions.length > 1 && (
+                          <button
+                            type="button"
+                            className="delete-btn"
+                            onClick={() => handleRemoveQuestion(index)}
+                          >
+                            Remove
+                          </button>
+                        )}
+                      </div>
+                      <input
+                        type="text"
+                        placeholder={`Question ${index + 1}`}
+                        value={q.question}
+                        onChange={(e) => handleQuestionChange(index, e.target.value)}
+                        required
+                      />
+                      <div className="question-options">
+                        {q.options.map((opt, optIndex) => (
+                          <input
+                            key={`add-q-${index}-opt-${optIndex}`}
+                            type="text"
+                            placeholder={`Option ${optionLabels[optIndex]}`}
+                            value={opt}
+                            onChange={(e) =>
+                              handleOptionChange(index, optIndex, e.target.value)
+                            }
+                            required
+                          />
+                        ))}
+                      </div>
+                      <select
+                        value={q.correctIndex}
+                        onChange={(e) => handleCorrectIndexChange(index, e.target.value)}
+                      >
+                        {optionLabels.map((label, optIndex) => (
+                          <option key={`add-q-${index}-correct-${label}`} value={optIndex}>
+                            Correct: {label}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                  ))}
+                  <button
+                    type="button"
+                    className="add-btn"
+                    onClick={handleAddQuestion}
+                  >
+                    + Add Question
+                  </button>
+                </div>
+                <div className="form-actions">
+                  <button type="submit" className="submit-btn">
+                    Save Questions
+                  </button>
+                  <button
+                    type="button"
+                    className="cancel-btn"
+                    onClick={() => setAddingQuestionsQuiz(null)}
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </form>
+            )}
+
             <div className="quizzes-grid">
               {quizzes.map((quiz) => (
                 <div key={quiz.id} className="quiz-card">
@@ -361,21 +655,10 @@ function AdminDashboard() {
                   </p>
                   <div className="quiz-actions">
                     <button
-                      className="edit-btn"
-                      onClick={() => {
-                        setEditingQuiz(quiz);
-                        setFormData({
-                          title: quiz.title,
-                          description: quiz.description,
-                          category: quiz.category,
-                          difficulty: quiz.difficulty,
-                          timeLimit: quiz.timeLimit,
-                          totalQuestions: quiz.totalQuestions,
-                          passingScore: quiz.passingScore,
-                        });
-                      }}
+                      className="add-questions-btn"
+                      onClick={() => handleOpenAddQuestions(quiz)}
                     >
-                      Edit
+                      Add Questions
                     </button>
                     <button
                       className="delete-btn"

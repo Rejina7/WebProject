@@ -64,13 +64,15 @@ function Login() {
 
   const onLoginClick = async (loginData) => {
     console.log("Login form data:", loginData);
+    const normalizedUsername = String(loginData.username || "").trim();
+    const normalizedPassword = String(loginData.password || "");
 
     try {
       // 🔹 SEND USERNAME + PASSWORD (matches backend)
       const response = await apiCall("POST", "/auth/login", {
         data: {
-          username: loginData.username,
-          password: loginData.password,
+          username: normalizedUsername,
+          password: normalizedPassword,
         },
       });
 
@@ -78,6 +80,21 @@ function Login() {
       console.log("🔐 Login Response:", response);
       console.log("👤 User data:", response.user);
       setStoredUser(response.user, rememberMe);
+
+      try {
+        const profileResponse = await apiCall(
+          "GET",
+          `/auth/profile/${response.user.id}`
+        );
+        if (profileResponse?.user) {
+          setStoredUser(
+            { ...response.user, ...profileResponse.user },
+            rememberMe
+          );
+        }
+      } catch (profileError) {
+        console.warn("Profile refresh failed:", profileError);
+      }
       if (rememberMe) {
         setRememberedCredentials(loginData.username, loginData.password);
       } else {
@@ -92,8 +109,8 @@ function Login() {
         console.log("✅ Admin detected! Navigating to /admin/home");
         navigate("/admin/home");
       } else {
-        console.log("👤 Regular user detected! Navigating to /dashboard");
-        navigate("/dashboard");
+        console.log("👤 Regular user detected! Navigating to /home");
+        navigate("/home");
       }
     } catch (error) {
       alert(error.message || "Login failed");

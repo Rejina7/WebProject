@@ -2,51 +2,38 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import apiCall from "../../Utils/api";
 import "../../css/profile.css";
-import { clearStoredUser, getStoredUser } from "../../Utils/authStorage";
+import { clearStoredUser, getStoredUser, updateStoredUser } from "../../Utils/authStorage";
 
 export default function Profile() {
   const navigate = useNavigate();
   const [isEditing, setIsEditing] = useState(false);
 
-  // Get user data from localStorage
-  const getStoredUser = () => {
-    try {
-      const storedUser = getStoredUser();
-      const storedProfile = localStorage.getItem("userProfile");
-      
-      if (storedUser) {
-        const userData = storedUser;
-        const profileData = storedProfile ? JSON.parse(storedProfile) : {};
-        
-        return {
-          name: userData.username || "User",
-          email: userData.email || "user@example.com",
-          joinDate: new Date().toLocaleDateString("en-US", { year: "numeric", month: "long" }),
-          bio: profileData.bio || "Quiz enthusiast and knowledge seeker",
-          avatar: userData.username?.charAt(0).toUpperCase() || "👤",
-          id: userData.id,
-        };
-      }
-      return {
-        name: "Guest User",
-        email: "guest@example.com",
-        joinDate: "January 2024",
-        bio: "Quiz enthusiast and knowledge seeker",
-        avatar: "👤",
-      };
-    } catch (error) {
-      console.error("Error reading user data:", error);
-      return {
-        name: "Guest User",
-        email: "guest@example.com",
-        joinDate: "January 2024",
-        bio: "Quiz enthusiast and knowledge seeker",
-        avatar: "👤",
-      };
-    }
+  const formatJoinDate = (createdAt) => {
+    if (!createdAt) return "";
+    const parsed = new Date(createdAt);
+    if (Number.isNaN(parsed.getTime())) return String(createdAt);
+    return parsed.toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    });
   };
 
-  const [userProfile, setUserProfile] = useState(getStoredUser());
+  const initialProfile = () => {
+    const storedUser = getStoredUser();
+    const createdAt = storedUser?.createdAt || storedUser?.created_at;
+    return {
+      id: storedUser?.id ?? null,
+      username: storedUser?.username || "User",
+      email: storedUser?.email || "user@example.com",
+      role: storedUser?.role || "user",
+      createdAt,
+      joinDate: formatJoinDate(createdAt),
+      avatar: storedUser?.username?.charAt(0).toUpperCase() || "👤",
+    };
+  };
+
+  const [userProfile, setUserProfile] = useState(initialProfile);
   const [editData, setEditData] = useState(userProfile);
   const [userStats, setUserStats] = useState({
     quizzesCompleted: 0,
@@ -63,10 +50,51 @@ export default function Profile() {
     publicProfile: localStorage.getItem("publicProfileEnabled") !== "false",
   });
 
-  // Fetch user stats from backend
+  // Fetch user profile + stats from backend
   useEffect(() => {
+    fetchUserProfile();
     fetchUserStats();
   }, []);
+
+  const fetchUserProfile = async () => {
+    try {
+      const user = getStoredUser();
+      if (!user || !user.id) {
+        return;
+      }
+
+      const response = await apiCall("GET", `/auth/profile/${user.id}`);
+      const profile = response.user;
+
+      if (profile) {
+        const storedUser = getStoredUser();
+        const createdAt =
+          profile.createdAt ||
+          profile.created_at ||
+          storedUser?.createdAt ||
+          storedUser?.created_at;
+        const joinDate = formatJoinDate(createdAt) || userProfile.joinDate;
+
+        if (createdAt && !storedUser?.createdAt && !storedUser?.created_at) {
+          updateStoredUser({ createdAt });
+        }
+
+        const nextProfile = {
+          id: profile.id,
+          username: profile.username || "User",
+          email: profile.email || "user@example.com",
+          role: profile.role || "user",
+          createdAt,
+          joinDate,
+          avatar: profile.username?.charAt(0).toUpperCase() || "👤",
+        };
+        setUserProfile(nextProfile);
+        setEditData(nextProfile);
+      }
+    } catch (error) {
+      console.error("Error fetching user profile:", error);
+    }
+  };
 
   const fetchUserStats = async () => {
     try {
@@ -98,15 +126,43 @@ export default function Profile() {
     setEditData({ ...editData, [field]: value });
   };
 
-  const handleSave = () => {
-    setUserProfile(editData);
-    // Save updated profile to localStorage
-    localStorage.setItem("userProfile", JSON.stringify({
-      bio: editData.bio,
-      name: editData.name,
-      email: editData.email,
-    }));
-    setIsEditing(false);
+  const handleSave = async () => {
+    try {
+      if (!userProfile.id) {
+        return;
+      }
+
+      const response = await apiCall("PUT", `/auth/profile/${userProfile.id}`, {
+        data: {
+          username: editData.username,
+          email: editData.email,
+        },
+      });
+
+      const updated = response.user || {};
+      const storedUser = getStoredUser();
+      const createdAt =
+        updated.createdAt ||
+        updated.created_at ||
+        storedUser?.createdAt ||
+        storedUser?.created_at;
+      const joinDate = formatJoinDate(createdAt) || userProfile.joinDate;
+
+      const nextProfile = {
+        id: updated.id || userProfile.id,
+        username: updated.username || editData.username,
+        email: updated.email || editData.email,
+        role: updated.role || userProfile.role,
+        joinDate,
+        avatar: (updated.username || editData.username || "U").charAt(0).toUpperCase(),
+      };
+
+      setUserProfile(nextProfile);
+      setEditData(nextProfile);
+      setIsEditing(false);
+    } catch (error) {
+      alert(error.message || "Failed to update profile");
+    }
   };
 
   const handleSettingChange = (setting) => {
@@ -127,6 +183,12 @@ export default function Profile() {
     clearStoredUser();
     navigate("/");
   };
+
+  const displayJoinDate =
+    userProfile.joinDate ||
+    formatJoinDate(userProfile.createdAt) ||
+    formatJoinDate(getStoredUser()?.createdAt || getStoredUser()?.created_at) ||
+    "Unknown";
 
   return (
     <div className={`profile-container ${settings.darkMode ? 'dark-mode' : ''}`}>
@@ -150,10 +212,10 @@ export default function Profile() {
 
             {!isEditing ? (
               <div className="profile-info">
-                <h1>{userProfile.name}</h1>
+                <h1>{userProfile.username}</h1>
                 <p className="email">{userProfile.email}</p>
-                <p className="bio">{userProfile.bio}</p>
-                <p className="join-date">Member since {userProfile.joinDate}</p>
+                <p className="role">Role: {userProfile.role}</p>
+                <p className="join-date">Member since {displayJoinDate}</p>
                 <button
                   className="edit-btn"
                   onClick={() => {
@@ -167,11 +229,11 @@ export default function Profile() {
             ) : (
               <div className="profile-edit">
                 <div className="edit-field">
-                  <label>Name</label>
+                  <label>Username</label>
                   <input
                     type="text"
-                    value={editData.name}
-                    onChange={(e) => handleEditChange("name", e.target.value)}
+                    value={editData.username}
+                    onChange={(e) => handleEditChange("username", e.target.value)}
                   />
                 </div>
                 <div className="edit-field">
@@ -180,13 +242,6 @@ export default function Profile() {
                     type="email"
                     value={editData.email}
                     onChange={(e) => handleEditChange("email", e.target.value)}
-                  />
-                </div>
-                <div className="edit-field">
-                  <label>Bio</label>
-                  <textarea
-                    value={editData.bio}
-                    onChange={(e) => handleEditChange("bio", e.target.value)}
                   />
                 </div>
                 <div className="edit-actions">
