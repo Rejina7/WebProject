@@ -1,0 +1,10 @@
+{
+  "name": "Quizzy Bee",
+  "icons": [
+    {
+      "src": "favicon.ico",
+      "sizes": "32x32 16x16 64x64",
+      "type": "image/x-icon"
+    }
+  ]
+}

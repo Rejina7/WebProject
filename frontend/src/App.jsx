@@ -4,8 +4,8 @@ import SplashScreen from "./Pages/Public/SplashScreen.jsx";
 import Landing from "./Pages/Public/Landing.jsx";
 import Login from "./Pages/Public/Login.jsx";
 import Signup from "./Pages/Public/Signup.jsx";
-import Dashboard from "./Pages/Private/Homepage.jsx";
-import Homepage from "./Pages/Private/Dashboard.jsx";
+import Dashboard from "./Pages/Private/Dashboard.jsx";
+import Homepage from "./Pages/Private/Homepage.jsx";
 import Profile from "./Pages/Private/Profile.jsx";
 import Quiz from "./Pages/Private/Quiz.jsx";
 import CreateQuiz from "./Pages/Private/CreateQuiz.jsx";
@@ -38,6 +38,7 @@ function App() {
       {/* User routes - Authentication required */}
       <Route path="/home" element={<PrivateRoute><Homepage /></PrivateRoute>} />
       <Route path="/dashboard" element={<PrivateRoute><Dashboard /></PrivateRoute>} />
+      
       <Route path="/profile" element={<PrivateRoute><Profile /></PrivateRoute>} />
       <Route path="/quiz/:category" element={<PrivateRoute><Quiz /></PrivateRoute>} />
       <Route path="/create-quiz" element={<PrivateRoute><CreateQuiz /></PrivateRoute>} />

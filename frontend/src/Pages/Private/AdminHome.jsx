@@ -473,15 +473,7 @@ function AdminHome() {
           </div>
         )}
 
-        {/* Controls */}
-        <div className="admin-controls">
-          <button
-            className="btn btn-primary"
-            onClick={() => navigate("/admin/create-quiz")}
-          >
-            + Add New Quiz
-          </button>
-        </div>
+        {/* Controls removed: Add New Quiz button deleted */}
 
         {/* Add/Edit Form */}
         {(showAddForm || showEditForm) && (
