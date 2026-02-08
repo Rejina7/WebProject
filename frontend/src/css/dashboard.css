@@ -1,3 +1,8 @@
+/* Hide all main containers and daily challenge when searching */
+.dashboard-container.searching-active .dashboard-main-content,
+.dashboard-container.searching-active .daily-challenge {
+  display: none !important;
+}
 /* Your Status Card (styled like Daily Challenge) */
 .status-card {
   background: linear-gradient(135deg, #2a2a00 0%, #1a1a00 100%);
@@ -543,6 +548,7 @@ body {
  
 }
 
+/* Move sections a little to the left */
 .recent-quizzes,
 .leaderboard {
   background: rgba(0, 0, 0, 0.4);
@@ -551,7 +557,10 @@ body {
   padding: 2rem;
   border: 1px solid rgba(255, 215, 0, 0.3);
   transition: all 0.3s ease;
-  width: 97%;
+  width: 115%;
+  min-width: 320px;
+  max-width: 440px;
+  margin-left: -18px;
 }
 
 .recent-quizzes:hover,
@@ -884,7 +893,7 @@ body {
   align-items: center;
   justify-content: center;
   
-  width: 90%;
+  width: 80%;
   margin-left: -10rem;
 
   

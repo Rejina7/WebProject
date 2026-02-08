@@ -153,18 +153,39 @@ export default function Dashboard() {
   };
 
   // Leaderboard
-  const leaderboard = [
-    { rank: 1, name: "Alex", points: 5280 },
-    { rank: 2, name: "Sarah", points: 4950 },
-    { rank: 3, name: "Mike", points: 4720 },
-  ];
+  const [leaderboard, setLeaderboard] = useState([]);
+
+  useEffect(() => {
+    fetchLeaderboard();
+  }, []);
+
+  const fetchLeaderboard = async () => {
+    try {
+      const response = await apiCall("GET", "/quizzes/leaderboard");
+      if (response.leaderboard) {
+        // Map leaderboard to expected format for rendering
+        setLeaderboard(
+          response.leaderboard.slice(0, 10).map((user, idx) => ({
+            rank: idx + 1,
+            name: user.username || user.email?.split("@")[0] || "User",
+            points: user.totalPoints,
+          }))
+        );
+      } else {
+        setLeaderboard([]);
+      }
+    } catch (error) {
+      setLeaderboard([]);
+    }
+  };
 
   const filteredQuizzes = quizzes.filter((q) =>
     q.title.toLowerCase().includes(search.toLowerCase())
   );
 
+  const isSearching = search.trim().length > 0;
   return (
-    <div className="dashboard-container" style={{ minHeight: '100vh', width: '100%' }}>
+    <div className={`dashboard-container${isSearching ? ' searching-active' : ''}`} style={{ minHeight: '100vh', width: '100%' }}>
       {/* Navbar on right */}
       <nav className="dashboard-navbar">
         <div className="dashboard-logo">
@@ -218,76 +239,78 @@ export default function Dashboard() {
         </section>
         </div>
         {/* Right: Hero image and main content */}
-        <div className="dashboard-main-content">
-          <section className="dashboard-hero">
-            <img src={hero} alt="Quiz Hero" />
-            <div className="hero-greeting">Hello, {userName}</div>
-          </section>
-          {/* Recent & Leaderboard Section */}
-          <section className="info-section">
-            {/* Recent Quizzes */}
-            <div className="recent-quizzes">
-              <h2 className="section-title">Recent Quizzes</h2>
-              <div className="recent-list">
-                {recentQuizzes.length > 0 ? (
-                  recentQuizzes.map((quiz) => (
-                    <div key={quiz.id} className="recent-item">
-                      <div className="recent-info">
-                        <h3>{quiz.title}</h3>
-                        <p className="recent-date">{quiz.date}</p>
+        {!isSearching && (
+          <div className="dashboard-main-content">
+            <section className="dashboard-hero">
+              <img src={hero} alt="Quiz Hero" />
+              <div className="hero-greeting">Hello, {userName}</div>
+            </section>
+            {/* Recent & Leaderboard Section */}
+            <section className="info-section">
+              {/* Recent Quizzes */}
+              <div className="recent-quizzes">
+                <h2 className="section-title">Recent Quizzes</h2>
+                <div className="recent-list">
+                  {recentQuizzes.length > 0 ? (
+                    recentQuizzes.map((quiz) => (
+                      <div key={quiz.id} className="recent-item">
+                        <div className="recent-info">
+                          <h3>{quiz.title}</h3>
+                          <p className="recent-date">{quiz.date}</p>
+                        </div>
+                        <div className="recent-score">{quiz.score}%</div>
                       </div>
-                      <div className="recent-score">{quiz.score}%</div>
-                    </div>
-                  ))
-                ) : (
-                  <p style={{ color: '#999', textAlign: 'center', padding: '2rem' }}>
-                    No quizzes attempted yet. Start your first quiz!
-                  </p>
-                )}
+                    ))
+                  ) : (
+                    <p style={{ color: '#999', textAlign: 'center', padding: '2rem' }}>
+                      No quizzes attempted yet. Start your first quiz!
+                    </p>
+                  )}
+                </div>
               </div>
-            </div>
 
-            {/* Leaderboard */}
-            <div className="leaderboard">
-              <h2 className="section-title">Top Players</h2>
-              <div className="leaderboard-list">
-                {leaderboard.map((player) => (
-                  <div key={player.rank} className="leaderboard-item">
-                    <div className="rank-badge">#{player.rank}</div>
-                    <div className="player-name">{player.name}</div>
-                    <div className="player-points">{player.points} pts</div>
-                  </div>
-                ))}
+              {/* Leaderboard */}
+              <div className="leaderboard">
+                <h2 className="section-title">Top Players</h2>
+                <div className="leaderboard-list">
+                  {leaderboard.map((player) => (
+                    <div key={player.rank} className="leaderboard-item">
+                      <div className="rank-badge">#{player.rank}</div>
+                      <div className="player-name">{player.name}</div>
+                      <div className="player-points">{player.points} pts</div>
+                    </div>
+                  ))}
+                </div>
               </div>
-            </div>
-          </section>
-          {/* Your Status at the very end, centered */}
-          <section className="stats-section dashboard-status-center">
-            <h2 className="section-title">Your Status</h2>
-            <div className="stats-grid">
-              <div className="stat-card">
-                <div className="stat-icon">📊</div>
-                <div className="stat-value">{userStats.quizzesCompleted}</div>
-                <div className="stat-label">Quizzes Completed</div>
+            </section>
+            {/* Your Status at the very end, centered */}
+            <section className="stats-section dashboard-status-center">
+              <h2 className="section-title">Your Status</h2>
+              <div className="stats-grid">
+                <div className="stat-card">
+                  <div className="stat-icon">📊</div>
+                  <div className="stat-value">{userStats.quizzesCompleted}</div>
+                  <div className="stat-label">Quizzes Completed</div>
+                </div>
+                <div className="stat-card">
+                  <div className="stat-icon">🎯</div>
+                  <div className="stat-value">{userStats.averageScore}%</div>
+                  <div className="stat-label">Average Score</div>
+                </div>
+                <div className="stat-card">
+                  <div className="stat-icon">⭐</div>
+                  <div className="stat-value">{userStats.totalPoints}</div>
+                  <div className="stat-label">Total Points</div>
+                </div>
+                <div className="stat-card">
+                  <div className="stat-icon">🔥</div>
+                  <div className="stat-value">{userStats.streak} days</div>
+                  <div className="stat-label">Current Streak</div>
+                </div>
               </div>
-              <div className="stat-card">
-                <div className="stat-icon">🎯</div>
-                <div className="stat-value">{userStats.averageScore}%</div>
-                <div className="stat-label">Average Score</div>
-              </div>
-              <div className="stat-card">
-                <div className="stat-icon">⭐</div>
-                <div className="stat-value">{userStats.totalPoints}</div>
-                <div className="stat-label">Total Points</div>
-              </div>
-              <div className="stat-card">
-                <div className="stat-icon">🔥</div>
-                <div className="stat-value">{userStats.streak} days</div>
-                <div className="stat-label">Current Streak</div>
-              </div>
-            </div>
-          </section>
-        </div>
+            </section>
+          </div>
+        )}
       </div>
     </div>
   );
