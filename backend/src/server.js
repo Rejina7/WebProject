@@ -4,7 +4,9 @@ import authRoutes from "./routes/authRoutes.js";
 import quizRoutes from "./routes/quizRoutes.js";
 import productRoutes from "./routes/productRoutes.js";
 import feedbackRoutes from "./routes/feedbackRoutes.js";
+import categoryRoutes from "./routes/category.js";
 import { sequelize } from "./db.js";
+
 
 import "./models/User.js";
 import "./models/Quiz.js";
@@ -35,6 +37,7 @@ app.use("/api/auth", authRoutes);
 app.use("/api/quizzes", quizRoutes);
 app.use("/api/products", productRoutes);
 app.use("/api/feedback", feedbackRoutes);
+app.use("/api/categories", categoryRoutes);
 
 // 404 Handler
 app.use((req, res) => {

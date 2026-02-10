@@ -33,6 +33,7 @@ const AppRoutes = () => (
 		   <Route path="/home" element={<PrivateRoute><Homepage /></PrivateRoute>} />
 		   <Route path="/dashboard" element={<PrivateRoute><Dashboard /></PrivateRoute>} />
 		   <Route path="/profile" element={<PrivateRoute><Profile /></PrivateRoute>} />
+		   <Route path="/quiz" element={<PrivateRoute><Quiz /></PrivateRoute>} />
 		   <Route path="/quiz/:category" element={<PrivateRoute><Quiz /></PrivateRoute>} />
 		   <Route path="/create-quiz" element={<PrivateRoute><CreateQuiz /></PrivateRoute>} />
 

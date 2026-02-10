@@ -1,48 +1,27 @@
 import express from "express";
 import {
-  getAllQuizzes,
-  getQuizzesByCategory,
-  getQuizById,
-  getQuizQuestionsById,
-  getQuizQuestionsByCategory,
-  addQuestionsToQuiz,
-  createQuiz,
-  deleteQuiz,
-  updateQuiz,
-  getAllQuizzesAdmin,
-  submitQuizResult,
-  getUserQuizResults,
-  getUserDashboardStats,
-  getLeaderboard,
-  getQuizStatistics,
-  getUserQuizStats,
-  getRecentAttempts,
+  addQuestion,
+  getQuizByCategory,
+  getCategories,
+  updateQuestion,
+  deleteQuestion,
+  submitQuiz,
+  getUserResults
 } from "../controllers/quizController.js";
 
 const router = express.Router();
 
-// Quiz results endpoints - MUST come before /:id routes
-router.post("/submit", submitQuizResult);
-router.get("/results/:userId", getUserQuizResults);
-router.get("/dashboard/:userId", getUserDashboardStats);
-router.get("/leaderboard", getLeaderboard);
+// categories
+router.get("/categories", getCategories);
 
-// Admin endpoints
-router.get("/admin/all", getAllQuizzesAdmin);
-router.get("/admin/recent-attempts", getRecentAttempts);
-router.get("/admin/stats", getUserQuizStats);
-router.get("/admin/statistics/:quizId", getQuizStatistics);
-router.get("/admin/statistics", getQuizStatistics);
-router.put("/admin/:id", updateQuiz);
-router.delete("/admin/:id", deleteQuiz);
+// questions
+router.post("/questions", addQuestion);
+router.get("/questions/:categoryId", getQuizByCategory);
+router.put("/questions/:id", updateQuestion);
+router.delete("/questions/:id", deleteQuestion);
 
-// Quiz endpoints
-router.get("/", getAllQuizzes);
-router.get("/category/:category/questions", getQuizQuestionsByCategory);
-router.get("/category/:category", getQuizzesByCategory);
-router.get("/:id/questions", getQuizQuestionsById);
-router.post("/:id/questions", addQuestionsToQuiz);
-router.get("/:id", getQuizById);
-router.post("/", createQuiz);
+// quiz
+router.post("/submit", submitQuiz);
+router.get("/results/:userId", getUserResults);
 
 export default router;

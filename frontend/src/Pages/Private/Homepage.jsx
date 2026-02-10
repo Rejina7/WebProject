@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import "../../css/dashboard.css";
+import "../../css/homepage.css";
 import logo from "../../assets/logo.png";
 import apiCall from "../../Utils/api";
 import { getStoredUser } from "../../Utils/authStorage";

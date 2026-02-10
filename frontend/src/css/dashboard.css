@@ -1,7 +1,46 @@
-/* Hide all main containers and daily challenge when searching */
-.dashboard-container.searching-active .dashboard-main-content,
-.dashboard-container.searching-active .daily-challenge {
-  display: none !important;
+/* Dropdown menu for categories in navbar */
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+.dropdown-toggle {
+  background: #222;
+  color: #FFD600;
+  border: 2px solid #FFD600;
+  border-radius: 8px;
+  font-weight: 700;
+  padding: 10px 24px;
+  font-size: 1rem;
+  cursor: pointer;
+  margin-right: 12px;
+}
+.dropdown-menu {
+  position: absolute;
+  background: #181818;
+  min-width: 180px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.18);
+  border: 1.5px solid #FFD600;
+  border-radius: 8px;
+  z-index: 9999;
+  margin-top: 8px;
+  right: 0;
+}
+.dropdown-item {
+  background: none;
+  color: #FFD600;
+  border: none;
+  width: 100%;
+  text-align: left;
+  padding: 12px 18px;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  border-radius: 0;
+  transition: background 0.18s;
+}
+.dropdown-item:hover {
+  background: #FFD60022;
+  color: #fff;
 }
 /* Your Status Card (styled like Daily Challenge) */
 .status-card {
@@ -84,8 +123,8 @@ body {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  width: 100%;
-  height: 100%;
+  width: 50%;
+  height: 50%;
   
   background: radial-gradient(circle at top right, #1a1a1a, #000000 70%);
   overflow-x: hidden;
@@ -548,7 +587,6 @@ body {
  
 }
 
-/* Move sections a little to the left */
 .recent-quizzes,
 .leaderboard {
   background: rgba(0, 0, 0, 0.4);
@@ -557,10 +595,7 @@ body {
   padding: 2rem;
   border: 1px solid rgba(255, 215, 0, 0.3);
   transition: all 0.3s ease;
-  width: 115%;
-  min-width: 320px;
-  max-width: 440px;
-  margin-left: -18px;
+  width: 97%;
 }
 
 .recent-quizzes:hover,
@@ -893,9 +928,8 @@ body {
   align-items: center;
   justify-content: center;
   
-  width: 80%;
+  width: 90%;
   margin-left: -10rem;
 
   
 }
-
