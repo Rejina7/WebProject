@@ -49,3 +49,8 @@ export const Quiz = sequelize.define("Quiz", {
 }, {
   tableName: "quizzes",
 });
+
+// Association (add after both models are defined)
+import { QuizResult } from "./QuizResult.js";
+Quiz.hasMany(QuizResult, { foreignKey: "quizId" });
+QuizResult.belongsTo(Quiz, { foreignKey: "quizId" });

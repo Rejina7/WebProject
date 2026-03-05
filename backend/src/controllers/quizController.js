@@ -1,3 +1,38 @@
+// Get user dashboard stats
+export const getUserDashboardStats = async (req, res) => {
+  const { userId } = req.params;
+  try {
+    // Completed quizzes
+    const [completed] = await sequelize.query(
+      "SELECT COUNT(*) AS completedQuizzes FROM quiz_results WHERE user_id=$1",
+      { bind: [userId] }
+    );
+    // Average score
+    const [avg] = await sequelize.query(
+      "SELECT AVG(score) AS averageScore FROM quiz_results WHERE user_id=$1",
+      { bind: [userId] }
+    );
+    // Total points (sum of scores)
+    const [total] = await sequelize.query(
+      "SELECT SUM(score) AS totalPoints FROM quiz_results WHERE user_id=$1",
+      { bind: [userId] }
+    );
+    // Current streak (dummy value for now)
+    const currentStreak = 0;
+
+    res.json({
+      stats: {
+        completedQuizzes: Number(completed[0].completedQuizzes) || 0,
+        averageScore: Math.round(Number(avg[0].averageScore) || 0),
+        totalPoints: Number(total[0].totalPoints) || 0,
+        currentStreak,
+      },
+      recentActivities: [], // You can add recent quiz attempts here if needed
+    });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
 import { sequelize } from "../db.js";
 
 // Admin adds a new question
@@ -99,6 +134,26 @@ export const getUserResults = async (req, res) => {
     res.json(results);
   } catch (err) {
     res.status(500).json({ error: err.message });
+  }
+};
+
+// GET /api/quizzes/admin/all - List all quizzes
+export const getAllQuizzesAdmin = async (req, res) => {
+  try {
+    const quizzes = await Quiz.findAll();
+    res.json({ quizzes });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
+// POST /api/quizzes - Create a new quiz
+export const createQuiz = async (req, res) => {
+  try {
+    const quiz = await Quiz.create(req.body);
+    res.status(201).json({ quiz });
+  } catch (err) {
+    res.status(400).json({ error: err.message });
   }
 };
 

@@ -86,18 +86,19 @@ function AdminHome() {
     try {
       setLoading(true);
       
-      // Fetch quizzes
-      const quizzesResponse = await fetch("http://localhost:5000/api/quizzes/admin/all");
-      const quizzesData = await quizzesResponse.json();
-      
       // Fetch users
       let usersData = { users: [] };
       try {
         const usersResponse = await fetch("http://localhost:5000/api/auth/users");
         if (usersResponse.ok) {
           usersData = await usersResponse.json();
-          console.log("📊 Admin Stats - Users Response:", usersData);
           setAllUsers(usersData.users || []);
+          // Update totalUsers stat immediately after fetching users
+          const regularUsers = usersData.users?.filter(u => u.role !== 'admin') || [];
+          setStats(prev => ({
+            ...prev,
+            totalUsers: regularUsers.length
+          }));
         } else {
           console.error("❌ Failed to fetch users:", usersResponse.status, usersResponse.statusText);
         }
@@ -105,33 +106,23 @@ function AdminHome() {
         console.error("❌ Error fetching users:", userError);
       }
 
+      // Fetch quizzes
+      const quizzesResponse = await fetch("http://localhost:5000/api/quizzes/admin/all");
+      const quizzesData = await quizzesResponse.json();
       if (quizzesData.quizzes) {
         setQuizzes(quizzesData.quizzes);
-        // Extract unique categories
+        // Update all stats immediately after fetching quizzes
         const uniqueCategories = [
           ...new Set(quizzesData.quizzes.map((q) => q.category)),
         ];
-        setCategories(uniqueCategories);
-
-        // Calculate stats
         const activeQuizzes = quizzesData.quizzes.filter(q => q.isActive).length;
-        const regularUsers = usersData.users?.filter(u => u.role !== 'admin') || [];
-        const totalUsers = regularUsers.length;
-        
-        setStats({
-          totalUsers: totalUsers,
+        setStats(prev => ({
+          ...prev,
           totalQuizzes: quizzesData.quizzes.length,
           activeQuizzes: activeQuizzes,
-          totalCategories: uniqueCategories.length,
-        });
-
-        console.log("📊 Admin Stats Updated:", {
-          totalUsers,
-          regularUsers: regularUsers.length,
-          totalQuizzes: quizzesData.quizzes.length,
-          activeQuizzes,
           totalCategories: uniqueCategories.length
-        });
+        }));
+        setCategories(uniqueCategories);
       }
     } catch (error) {
       console.error("❌ Error loading data:", error);

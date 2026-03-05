@@ -1,23 +1,21 @@
-// backend/routes/authRoutes.js
-import express from "express";
 import { signup, login, getUserProfile, updateUserProfile, getAllUsers } from "../controllers/authController.js";
-import { validateSignup, validateLogin } from "../middleware/validationMiddleware.js";
 
+import express from "express";
 const router = express.Router();
 
-// POST /api/auth/signup
-router.post("/signup", validateSignup, signup);
+// POST /signup
+router.post("/signup", signup);
 
-// POST /api/auth/login
-router.post("/login", validateLogin, login);
+// POST /login
+router.post("/login", login);
 
-// GET /api/auth/users (get all users)
+// GET /users
 router.get("/users", getAllUsers);
 
-// GET /api/auth/profile/:id
+// GET /profile/:id
 router.get("/profile/:id", getUserProfile);
 
-// PUT /api/auth/profile/:id
+// PUT /profile/:id
 router.put("/profile/:id", updateUserProfile);
 
 export default router;

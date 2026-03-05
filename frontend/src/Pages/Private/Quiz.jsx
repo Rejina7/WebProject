@@ -1,4 +1,4 @@
-  // Submit feedback handler
+// Submit feedback handler
   async function handleFeedbackSubmit(goToCategories = false) {
     if (!feedbackText.trim()) return;
     setFeedbackSubmitting(true);
@@ -11,9 +11,10 @@
           comment: feedbackText.trim(),
           category,
           title: category ? `${category} Quiz` : undefined,
+          recipient: "admin",
         },
       });
-      setFeedbackStatus({ type: 'success', message: 'Thank you for your feedback!' });
+      setFeedbackStatus({ type: 'success', message: 'Submitted!' });
       setFeedbackText("");
       if (goToCategories) {
         setTimeout(() => navigate('/quiz'), 500);
@@ -32,6 +33,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import apiCall from "../../Utils/api";
 import { getStoredUser } from "../../Utils/authStorage";
 import "../../css/quiz.css";
+import logo from "../../assets/logo.png";
 
 export default function Quiz() {
   const { category } = useParams();
@@ -107,6 +109,15 @@ export default function Quiz() {
   }, [category]);
 
   useEffect(() => {
+    // Reset all quiz state when category changes
+    setQuestions([]);
+    setCurrent(0);
+    setScore(0);
+    setCompleted(false);
+    setSelected(null);
+    setFeedback(null);
+    setError("");
+    setLoading(true);
     if (!category) return;
     async function fetchQuizQuestions() {
       setLoading(true);
@@ -120,7 +131,6 @@ export default function Quiz() {
           return;
         }
         const data = await apiCall("GET", `/categories/${found.id}/questions`);
-        console.log('Fetched questions for category', category, data);
         if (Array.isArray(data) && data.length > 0) {
           setQuestions(data.map(q => ({
             question: q.question,
@@ -141,75 +151,43 @@ export default function Quiz() {
   // Main render logic (after all hooks)
   if (!category) {
     return (
-      <div className="quiz-categories-list enhanced-ui">
-        <div className="quiz-top-btns">
-          <button
-            className="quiz-next-btn quiz-nav-btn"
-            onClick={() => navigate('/dashboard')}
-          >
-            Dashboard
-          </button>
-          <button
-            className="quiz-next-btn quiz-nav-btn"
-            onClick={() => navigate('/home')}
-          >
-            Home
-          </button>
-        </div>
-        <h2 className="quiz-categories-title">Choose Your Quiz Category</h2>
-        {catLoading && <div className="quiz-categories-loading">Loading categories...</div>}
-        {catError && <div className="quiz-categories-error">{catError}</div>}
-        {!catLoading && !catError && !categories.length && <div className="quiz-categories-empty">No categories available.</div>}
-        <div className="quiz-categories-grid">
-          {categories.map(cat => (
-            <div
-              key={cat.id}
-              className="quiz-category-card"
-              onClick={() => navigate(`/quiz/${encodeURIComponent(cat.name)}`)}
-              tabIndex={0}
-              role="button"
-              onKeyDown={e => (e.key === 'Enter' || e.key === ' ') && navigate(`/quiz/${encodeURIComponent(cat.name)}`)}
-            >
-              <div className="quiz-category-icon">📝</div>
-              <div className="quiz-category-name">{cat.name}</div>
-            </div>
-          ))}
+      <div>
+        <nav className="quiz-navbar">
+          <div className="quiz-navbar-logo">
+            <img src={logo} alt="Quizzy Bee Logo" />
+            <span style={{fontWeight:700, fontSize:'1.3rem', color:'#FFD600'}}>Quizzy Bee</span>
+          </div>
+          <div className="quiz-navbar-buttons">
+            <button className="nav-btn" onClick={() => navigate('/dashboard')}>Dashboard</button>
+            <button className="nav-btn" onClick={() => navigate('/home')}>Home</button>
+          </div>
+        </nav>
+        <div className="quiz-categories-list enhanced-ui">
+          <h2 className="quiz-category-heading">Choose Your Quiz Category</h2>
+          {catLoading && <div className="quiz-categories-loading">Loading categories...</div>}
+          {catError && <div className="quiz-categories-error">{catError}</div>}
+          {!catLoading && !catError && !categories.length && <div className="quiz-categories-empty">No categories available.</div>}
+          <div className="categories-container">
+            {categories.map(cat => (
+              <div
+                key={cat.id}
+                className="category-card"
+                onClick={() => navigate(`/quiz/${encodeURIComponent(cat.name)}`)}
+                tabIndex={0}
+                role="button"
+                onKeyDown={e => (e.key === 'Enter' || e.key === ' ') && navigate(`/quiz/${encodeURIComponent(cat.name)}`)}
+              >
+                <div className="quiz-category-icon">📝</div>
+                <div className="quiz-category-name">{cat.name}</div>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     );
   }
 
-  useEffect(() => {
-    if (!category) return;
-    async function fetchQuizQuestions() {
-      setLoading(true);
-      setError("");
-      try {
-        const categories = await apiCall("GET", "/categories");
-        const found = categories.find(c => c.name.toLowerCase() === category.toLowerCase());
-        if (!found) {
-          setError("Category not found.");
-          setLoading(false);
-          return;
-        }
-        const data = await apiCall("GET", `/categories/${found.id}/questions`);
-        console.log('Fetched questions for category', category, data);
-        if (Array.isArray(data) && data.length > 0) {
-          setQuestions(data.map(q => ({
-            question: q.question,
-            options: [q.option_a, q.option_b, q.option_c, q.option_d],
-            correctIndex: q.correct_option.charCodeAt(0) - 65
-          })));
-        } else {
-          setError("No questions found for this quiz.");
-        }
-      } catch (err) {
-        setError("Failed to load quiz questions. " + (err?.message || ""));
-      }
-      setLoading(false);
-    }
-    fetchQuizQuestions();
-  }, [category]);
+  // ...existing code...
 
 
     const handleNext = () => {
@@ -250,9 +228,15 @@ export default function Quiz() {
                 quizTitle: category,
               },
             }).then(() => {
-              // Optionally, you can trigger a dashboard refresh here
+              // Refresh user stats after quiz completion
+              apiCall("GET", `/quizzes/dashboard/${user.id}`).then((response) => {
+                if (response.stats) {
+                  // Optionally, use a global state manager or event to update Dashboard/Profile
+                  // For now, store in localStorage for Dashboard/Profile to pick up
+                  localStorage.setItem("userStats", JSON.stringify(response.stats));
+                }
+              });
             }).catch((err) => {
-              // Optionally handle error
               console.error("Quiz result submission failed:", err);
             });
           }

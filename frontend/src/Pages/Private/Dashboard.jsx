@@ -119,6 +119,29 @@ export default function Dashboard() {
     }
   };
 
+  // Fetch user dashboard stats
+  const fetchUserStats = async () => {
+    try {
+      const user = getStoredUser();
+      if (!user || !user.id) return;
+      const response = await apiCall("GET", `/dashboard/${user.id}`);
+      if (response.stats) {
+        setUserStats({
+          quizzesCompleted: response.stats.completedQuizzes || 0,
+          averageScore: response.stats.successRate || 0,
+          totalPoints: response.stats.totalPoints || 0,
+          streak: response.stats.currentStreak || 0,
+        });
+      }
+    } catch (error) {
+      setUserStats({ quizzesCompleted: 0, averageScore: 0, totalPoints: 0, streak: 0 });
+    }
+  };
+
+  useEffect(() => {
+    fetchUserStats();
+  }, []);
+
   // Remove duplicate categories by name (case-insensitive)
   const uniqueCategories = categories.filter((cat, idx, arr) =>
     arr.findIndex(c => (c.name || '').toLowerCase() === (cat.name || '').toLowerCase()) === idx
@@ -191,15 +214,14 @@ export default function Dashboard() {
         </div>
       )}
 
-      {/* Right: Hero image and main content */}
+      {/* Only render main dashboard content if not searching */}
       {!isSearching && (
-        <div className="dashboard-main-content">
+        <>
           <section className="dashboard-hero">
             <img src={hero} alt="Quiz Hero" />
             <div className="hero-greeting">Hello, {userName}</div>
           </section>
 
-          {/* Recent & Leaderboard Section */}
           <section className="info-section">
             {/* Recent Quizzes */}
             <div className="recent-quizzes">
@@ -238,7 +260,6 @@ export default function Dashboard() {
             </div>
           </section>
 
-          {/* Your Status at the very end */}
           <section className="stats-section dashboard-status-center">
             <h2 className="section-title">Your Status</h2>
             <div className="stats-grid">
@@ -265,7 +286,6 @@ export default function Dashboard() {
             </div>
           </section>
 
-          {/* Daily Challenge */}
           <section className="daily-challenge" style={{ marginTop: 32 }}>
             <div className="challenge-card">
               <div className="challenge-badge">Daily Challenge</div>
@@ -275,7 +295,7 @@ export default function Dashboard() {
               <button className="challenge-button">Start Challenge</button>
             </div>
           </section>
-        </div>
+        </>
       )}
     </div>
   );

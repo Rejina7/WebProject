@@ -1,0 +1,23 @@
+{
+  "development": {
+    "username": "postgres",
+    "password": "Admin12",
+    "database": "webproject_individual",
+    "host": "localhost",
+    "dialect": "postgres"
+  },
+  "test": {
+    "username": "postgres",
+    "password": "Admin12",
+    "database": "webproject_individual",
+    "host": "localhost",
+    "dialect": "postgres"
+  },
+  "production": {
+    "username": "postgres",
+    "password": "Admin12",
+    "database": "webproject_individual",
+    "host": "localhost",
+    "dialect": "postgres"
+  }
+}

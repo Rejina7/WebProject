@@ -44,17 +44,18 @@
 }
 /* Your Status Card (styled like Daily Challenge) */
 .status-card {
-  background: linear-gradient(135deg, #2a2a00 0%, #1a1a00 100%);
   border-radius: 18px;
   padding: 3rem;
   text-align: center;
-  box-shadow: 0 10px 40px rgba(255, 215, 0, 0.3);
   position: relative;
   overflow: hidden;
   transition: all 0.3s ease;
-  border: 1px solid rgba(255, 215, 0, 0.3);
   width: 83%;
-  margin-left: 5rem;
+}
+.status-card:hover {
+  box-shadow: none;
+  border: 1px solid rgba(255, 215, 0, 0.08);
+  transform: none;
 }
 
 .status-card:hover {
@@ -70,7 +71,7 @@
   right: -50%;
   width: 200%;
   height: 200%;
-  background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(255,255,255,0.02) 0%, transparent 90%);
   animation: pulse 4s ease-in-out infinite;
 }
 
@@ -126,7 +127,7 @@ body {
   width: 50%;
   height: 50%;
   
-  background: radial-gradient(circle at top right, #1a1a1a, #000000 70%);
+  background: #181818;
   overflow-x: hidden;
 }
 
@@ -324,7 +325,9 @@ body {
   right: -60%;
   padding: 1.2rem 2.5rem;
   background: linear-gradient(135deg, #ffd700, #ffed4e);
-  color: #000;
+    box-shadow: none;
+    border: 1px solid rgba(255, 215, 0, 0.4);
+    background: rgba(0, 0, 0, 0.5);
   font-weight: 700;
   font-size: 1.15rem;
   border: 2px solid rgba(255, 215, 0, 0.8);
@@ -442,7 +445,7 @@ body {
 .stats-section {
   padding: 2rem 2rem;
   margin-top: 2rem;
-  margin-left: -10rem;
+  margin-left: 23rem;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -583,7 +586,7 @@ body {
   padding: 2rem;
   margin-top: 4rem;
   width: 85%;
-  margin-left: -5rem;
+  margin-left: 10rem;
  
 }
 
@@ -687,29 +690,32 @@ body {
 /* ============================= */
 /* Daily Challenge */
 .daily-challenge {
-  padding: 6rem 2rem;
+  padding: 3rem 2rem;
   margin-top: 60px;
-  margin-left: 20rem;
-  margin-right: auto;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 120%;
+  margin-left: 25rem;
+  
+  float: none;
+  display: block;
+  width: 700px;
+  min-width: 400px;
+  max-width: 900px;
+  text-align: center;
 }
 
 
 .challenge-card {
   background: linear-gradient(135deg, #2a2a00 0%, #1a1a00 100%);
   border-radius: 18px;
-  padding: 3rem;
+  padding: 4rem;
   text-align: center;
   box-shadow: 0 10px 40px rgba(255, 215, 0, 0.3);
-  position: relative;
+  position: center;
   overflow: hidden;
   transition: all 0.3s ease;
   border: 1px solid rgba(255, 215, 0, 0.3);
-  width: 98%;
-  margin: 0 auto;
+  width: 170%;
+  height: 100%;
+  margin:  auto;
 }
 
 .challenge-card:hover {
@@ -932,4 +938,42 @@ body {
   margin-left: -10rem;
 
   
+}
+
+.quiz-navbar {
+  width: 100%;
+  background: #181818;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 2rem;
+  margin-bottom: 2rem;
+}
+.quiz-navbar-logo {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+.quiz-navbar-logo img {
+  height: 40px;
+}
+.quiz-navbar-buttons {
+  display: flex;
+  gap: 1rem;
+}
+.quiz-navbar .nav-btn {
+  background: #21c464;
+  color: #fff;
+  font-weight: 700;
+  border-radius: 10px;
+  border: none;
+  padding: 0.7rem 2rem;
+  font-size: 1.1rem;
+  box-shadow: 0 2px 8px rgba(33,196,100,0.15);
+  transition: background 0.2s, box-shadow 0.2s;
+}
+.quiz-navbar .nav-btn:hover {
+  background: #179a4a;
+  box-shadow: 0 4px 16px rgba(33,196,100,0.25);
 }

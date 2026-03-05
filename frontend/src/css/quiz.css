@@ -383,6 +383,18 @@ body {
   align-items: center;
   gap: 16px;
   margin-bottom: 18px;
+
+
+}
+
+.quiz-category-heading {
+  text-align: center;
+  font-size: 2rem;
+  font-weight: 500;
+  color: #FFD600;
+  margin: 1rem 0 2.5rem 0;
+  letter-spacing: 1px;
+  margin-left: -6rem;
 }
 
 .quiz-category-pill {

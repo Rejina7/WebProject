@@ -21,20 +21,18 @@ export default function Homepage() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    fetchDashboardData();
-    
+    fetchHomepageData();
     // Also fetch when user returns to the tab
     const handleVisibilityChange = () => {
       if (document.visibilityState === 'visible') {
-        fetchDashboardData();
+        fetchHomepageData();
       }
     };
-    
     document.addEventListener('visibilitychange', handleVisibilityChange);
     return () => document.removeEventListener('visibilitychange', handleVisibilityChange);
   }, []);
 
-  const fetchDashboardData = async () => {
+  const fetchHomepageData = async () => {
     try {
       // Get user from localStorage
       const user = getStoredUser();
@@ -47,59 +45,41 @@ export default function Homepage() {
 
       setUserName(user.username || user.email?.split("@")[0] || "User");
 
-      // Fetch dashboard stats and available quizzes
-      const [dashboardResponse, quizzesResponse] = await Promise.all([
-        apiCall("GET", `/quizzes/dashboard/${user.id}`),
-        apiCall("GET", "/quizzes")
-      ]);
+      // Fetch homepage stats
+      const homepageResponse = await apiCall("GET", `/homepage/${user.id}`);
       
-      if (dashboardResponse.stats) {
+      if (homepageResponse.stats) {
         setStats([
-          { 
-            id: 1, 
-            title: "Quizzes Completed", 
-            value: dashboardResponse.stats.completedQuizzes.toString(), 
-            icon: "📊" 
+          {
+            id: 1,
+            title: "Total Quizzes",
+            value: homepageResponse.stats.totalQuizzes.toString(),
+            icon: "📚"
           },
-          { 
-            id: 2, 
-            title: "Average Score", 
-            value: `${Math.round(dashboardResponse.stats.averageScore)}%`, 
-            icon: "🎯" 
+          {
+            id: 2,
+            title: "Completed",
+            value: homepageResponse.stats.completedQuizzes.toString(),
+            icon: "✅"
           },
-          { 
-            id: 3, 
-            title: "Total Points", 
-            value: dashboardResponse.stats.totalPoints.toString(), 
-            icon: "⭐" 
+          {
+            id: 3,
+            title: "Active Learners",
+            value: homepageResponse.stats.activeLearners.toString(),
+            icon: "👥"
           },
-          { 
-            id: 4, 
-            title: "Current Streak", 
-            value: `${dashboardResponse.stats.currentStreak} days`, 
-            icon: "🔥" 
+          {
+            id: 4,
+            title: "Success Rate",
+            value: `${homepageResponse.stats.successRate}%`,
+            icon: "🏆"
           },
         ]);
       }
 
-      // Show user's recent quiz attempts only
-      if (dashboardResponse.recentActivities && dashboardResponse.recentActivities.length > 0) {
-        const activities = dashboardResponse.recentActivities.map((activity, index) => {
-          const status = activity.isPassed ? "✅ Passed" : "❌ Failed";
-          const scoreText = `${activity.score}/${activity.totalQuestions * 10}`;
-          return {
-            id: index + 1,
-            activity: `${status} "${activity.title}" - Score: ${scoreText}`,
-          };
-        });
-        setRecentActivities(activities);
-      } else {
-        setRecentActivities([]);
-      }
-
       setLoading(false);
     } catch (error) {
-      console.error("Error fetching dashboard data:", error);
+      console.error("Error fetching homepage data:", error);
       setLoading(false);
       // Keep default values on error
     }

@@ -36,31 +36,7 @@ function Login() {
     // Users must type first to trigger autofill
   }, []);
 
-  useEffect(() => {
-    if (usernameValue.length === 0) return;
-
-    // Try to get saved credentials for the username being typed
-    const allCredsStr = localStorage.getItem("rememberedCredentials") || "{}";
-    let allCreds = {};
-    try {
-      allCreds = JSON.parse(allCredsStr);
-    } catch {
-      return;
-    }
-
-    // Find a saved username that starts with what user typed
-    for (const savedUsername in allCreds) {
-      if (savedUsername.toLowerCase().startsWith(usernameValue.toLowerCase())) {
-        const savedCreds = allCreds[savedUsername];
-        if (savedCreds?.password) {
-          setValue("username", savedUsername, { shouldValidate: true });
-          setValue("password", savedCreds.password, { shouldValidate: true });
-          setRememberMe(true);
-          break;
-        }
-      }
-    }
-  }, [usernameValue, setValue]);
+  // ...existing code...
 
   const onLoginClick = async (loginData) => {
     console.log("Login form data:", loginData);
